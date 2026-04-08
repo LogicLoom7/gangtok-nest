@@ -1,36 +1,21 @@
-/* * GANGTOK NEST - Project Style Sheet
- * Refined for readability and maintainability
- */
-
- :root {
+/* Application Configuration */
+:root {
     --primary-navy: #00253b;
-    --accent-emerald: #059669;
-    --bg-slate: #F8FAFC;
     --white: #ffffff;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* --- Layout & Typography --- */
-.font-headline { 
-    font-family: 'Manrope', sans-serif; 
-}
+.font-headline { font-family: 'Manrope', sans-serif; }
+.font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-.font-body { 
-    font-family: 'Plus Jakarta Sans', sans-serif; 
-}
-
-/* --- Navigation System --- */
+/* Navigation Styling */
 .nav-pill {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 24px;
     border-radius: 50px;
     font-weight: 700;
-    font-size: 0.85rem;
     color: #64748b;
     transition: var(--transition);
-    cursor: pointer;
 }
 
 .nav-active {
@@ -38,39 +23,33 @@
     color: var(--primary-navy);
 }
 
-/* --- Form Interaction Elements --- */
+/* Form Design */
 .input-style {
     width: 100%;
-    padding: 1.15rem;
+    padding: 1rem;
     background-color: #F8FAFC;
     border: 1.5px solid #E2E8F0;
-    border-radius: 1.25rem;
+    border-radius: 1rem;
     outline: none;
     transition: var(--transition);
+    font-size: 0.875rem;
 }
 
 .input-style:focus {
     border-color: var(--primary-navy);
     background-color: var(--white);
-    box-shadow: 0 0 0 4px rgba(0, 37, 59, 0.05);
 }
 
-.input-style.border-red-500 {
-    border-color: #ef4444 !important;
-    background-color: #fef2f2;
-}
-
-/* --- Buttons --- */
+/* Buttons & Interactions */
 .primary-btn {
     width: 100%;
     background: var(--primary-navy);
     color: var(--white);
-    padding: 1.3rem;
-    border-radius: 1.5rem;
+    padding: 1.15rem;
+    border-radius: 1.25rem;
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
-    border: none;
     transition: var(--transition);
 }
 
@@ -83,52 +62,31 @@
     width: 100%;
     background: transparent;
     color: var(--primary-navy);
-    padding: 1.25rem;
+    padding: 1.15rem;
     border: 2px solid var(--primary-navy);
-    border-radius: 1.5rem;
+    border-radius: 1.25rem;
     font-weight: 800;
-    cursor: pointer;
-    transition: var(--transition);
+    font-size: 0.9rem;
 }
 
-/* --- Room Cards & Animations --- */
+/* Card Presentation & Animation */
 @keyframes fadeInUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(20px); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0); 
-    }
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .room-card {
     background: var(--white);
-    border-radius: 2.2rem;
+    border-radius: 1.75rem;
     overflow: hidden;
     border: 1px solid #F1F5F9;
-    box-shadow: 0 25px 30px -10px rgba(0, 0, 0, 0.04);
-    animation: fadeInUp 0.5s ease backwards;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    animation: fadeInUp 0.4s ease backwards;
 }
 
-.room-img {
-    width: 100%;
-    height: 240px;
-    object-fit: cover;
-    background: #F1F5F9;
-}
+.room-img { width: 100%; height: 220px; object-fit: cover; }
+.room-details { padding: 1.25rem; }
 
-.room-details {
-    padding: 1.75rem;
-}
-
-/* --- Scrollbar Customization --- */
-#roomContainer::-webkit-scrollbar {
-    width: 4px;
-}
-
-#roomContainer::-webkit-scrollbar-thumb {
-    background: #E2E8F0;
-    border-radius: 20px;
-}
+/* Utility Scrollbar */
+#roomContainer::-webkit-scrollbar { width: 4px; }
+#roomContainer::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 20px; }
