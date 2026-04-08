@@ -1,10 +1,8 @@
-/* Client Configuration */
 const supabaseClient = window.supabase.createClient(
     'https://vafsigyuefiovfxfbwlp.supabase.co', 
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZnNpZ3l1ZWZpb3ZmeGZid2xwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MjEyNDksImV4cCI6MjA5MTE5NzI0OX0.2JygpUTPkuIC56s8BIDWfbWRHwyw9rnHBy2Ctae18Gs'
 );
 
-/* Navigation Control */
 function togglePassword() {
     const pwd = document.getElementById('authPassword');
     const icon = document.getElementById('passwordIcon');
@@ -35,13 +33,12 @@ async function showLandlordView() {
     }
 }
 
-/* Authentication Engine */
 async function handleAuth(type) {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
     if (type === 'signup') {
         const { error } = await supabaseClient.auth.signUp({ email, password });
-        if (error) alert(error.message); else alert("Registration successful! Please check your email.");
+        if (error) alert(error.message); else alert("Check your email!");
     } else {
         const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
         if (error) alert(error.message); else showLandlordView();
@@ -50,13 +47,10 @@ async function handleAuth(type) {
 
 async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
 
-/* Property Data Handler */
 document.getElementById('landlordForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const phoneInput = document.getElementById('phone');
     const phoneError = document.getElementById('phoneError');
-
-    // Regex Validation: Exactly 10 digits
     if (!/^[0-9]{10}$/.test(phoneInput.value)) {
         phoneError.classList.remove('hidden');
         return;
@@ -64,7 +58,7 @@ document.getElementById('landlordForm').addEventListener('submit', async (e) => 
     phoneError.classList.add('hidden');
     
     const btn = document.getElementById('submitBtn');
-    btn.innerText = "Uploading..."; btn.disabled = true;
+    btn.innerText = "Processing..."; btn.disabled = true;
 
     const { data: { user } } = await supabaseClient.auth.getUser();
     const photoFile = document.getElementById('roomPhoto').files[0];
@@ -90,11 +84,10 @@ document.getElementById('landlordForm').addEventListener('submit', async (e) => 
         user_id: user.id
     }]);
 
-    if (!error) { alert("Listing Published!"); showTenantView(); } else { alert(error.message); }
+    if (!error) { alert("Successfully Listed!"); showTenantView(); } else { alert(error.message); }
     btn.innerText = "Post My Room"; btn.disabled = false;
 });
 
-/* Feed Logic */
 async function fetchRooms() {
     const { data } = await supabaseClient.from('listings').select('*').eq('is_rented', false).order('created_at', { ascending: false });
     renderRooms(data || []);
@@ -109,33 +102,27 @@ async function searchRooms() {
 function renderRooms(rooms) {
     const container = document.getElementById('roomContainer');
     const counter = document.getElementById('resultCount');
-    
     counter.innerText = rooms.length ? `${rooms.length} Results` : "";
-    container.innerHTML = rooms.length ? '' : '<div class="text-center py-10 opacity-40">No nests found in this area.</div>';
-    
+    container.innerHTML = rooms.length ? '' : '<div class="text-center py-10 opacity-40 text-sm">No nests available here.</div>';
     rooms.forEach(r => {
         const img = r.image_url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=600';
         container.innerHTML += `
         <div class="room-card">
             <img src="${img}" class="room-img" loading="lazy">
             <div class="room-details">
-                <div class="flex justify-between items-start mb-2">
+                <div class="flex justify-between items-start mb-1">
                     <h3 class="font-bold text-lg text-[#00253b]">${r.title}</h3>
-                    <div class="text-right">
-                        <span class="text-emerald-600 font-black">₹${r.rent.toLocaleString('en-IN')}</span>
-                        <p class="text-[9px] uppercase font-bold text-slate-400">Monthly</p>
-                    </div>
+                    <span class="text-emerald-600 font-black">₹${r.rent.toLocaleString('en-IN')}</span>
                 </div>
-                <p class="text-slate-500 text-[11px] mb-4">📍 ${r.location}</p>
-                <div class="flex gap-2 mb-5">
-                    <span class="bg-slate-100 text-[9px] font-black px-2 py-1 rounded">💧 ${r.water}</span>
-                    <span class="bg-slate-100 text-[9px] font-black px-2 py-1 rounded">🚽 ${r.washroom}</span>
+                <p class="text-slate-500 text-[11px] mb-3">📍 ${r.location}</p>
+                <div class="flex gap-2 mb-4">
+                    <span class="bg-slate-100 text-[9px] font-black px-2 py-0.5 rounded">💧 ${r.water}</span>
+                    <span class="bg-slate-100 text-[9px] font-black px-2 py-0.5 rounded">🚽 ${r.washroom}</span>
                 </div>
-                <a href="tel:${r.contact}" class="primary-btn block text-center py-3 text-xs">Call Landlord</a>
+                <a href="tel:${r.contact}" class="primary-btn block text-center py-2.5 text-[11px]">Call Landlord</a>
             </div>
         </div>`;
     });
 }
 
-/* Initial Load */
 showLandlordView();

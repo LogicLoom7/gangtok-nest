@@ -1,14 +1,14 @@
-/* Application Configuration */
 :root {
     --primary-navy: #00253b;
     --white: #ffffff;
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Typography */
 .font-headline { font-family: 'Manrope', sans-serif; }
 .font-body { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-/* Navigation Styling */
+/* Navigation */
 .nav-pill {
     display: flex;
     align-items: center;
@@ -23,7 +23,12 @@
     color: var(--primary-navy);
 }
 
-/* Form Design */
+/* Hero Section Image Fix */
+.lg\:h-full img {
+    object-position: center; /* Ensures Gangtok landscape stays centered */
+}
+
+/* Form Styles */
 .input-style {
     width: 100%;
     padding: 1rem;
@@ -40,7 +45,7 @@
     background-color: var(--white);
 }
 
-/* Buttons & Interactions */
+/* Buttons */
 .primary-btn {
     width: 100%;
     background: var(--primary-navy);
@@ -69,7 +74,7 @@
     font-size: 0.9rem;
 }
 
-/* Card Presentation & Animation */
+/* Listing Cards */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
@@ -84,9 +89,9 @@
     animation: fadeInUp 0.4s ease backwards;
 }
 
-.room-img { width: 100%; height: 220px; object-fit: cover; }
+.room-img { width: 100%; height: 200px; object-fit: cover; }
 .room-details { padding: 1.25rem; }
 
-/* Utility Scrollbar */
+/* Custom Scrollbar */
 #roomContainer::-webkit-scrollbar { width: 4px; }
 #roomContainer::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 20px; }
