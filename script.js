@@ -85,7 +85,12 @@ function toggleAuthMode() {
     document.getElementById('authBtnInner').innerText = isSignUpMode ? "Sign In Securely" : "Create Account";
     document.getElementById('authToggleIcon').innerText = isSignUpMode ? "login" : "person_add";
     document.getElementById('authToggleMsg').innerText = isSignUpMode ? "Already have an account?" : "New to GangtokNest?";
-    document.getElementById('nameWrapper').style.display = isSignUpMode ? 'block' : 'none';
+    const nameWrapper = document.getElementById('nameWrapper');
+    if (isSignUpMode) {
+        nameWrapper.classList.remove('hidden');
+    } else {
+        nameWrapper.classList.add('hidden');
+    }
 }
 
 function togglePassword() {
@@ -126,16 +131,17 @@ function loadDashboard(user) {
     const role = user.user_metadata?.role || authRole;
     closeAuthModal();
     
-    document.getElementById('header-landing').style.display = 'none';
-    document.getElementById('header-dashboard').style.display = 'flex';
+    document.getElementById('header-landing').classList.add('hidden');
+    document.getElementById('header-dashboard').classList.remove('hidden');
     document.getElementById('userGreeting').innerText = `${user.user_metadata?.full_name || role}`;
     
     if (role === 'landlord') {
-        document.getElementById('view-landing').style.display = 'none';
-        document.getElementById('view-landlord').style.display = 'block';
+        document.getElementById('view-landing').classList.add('hidden');
+        document.getElementById('view-landlord').classList.remove('hidden');
         fetchLandlordData(user.id);
     } else {
-        document.getElementById('view-landing').style.display = 'block';
+        document.getElementById('view-landing').classList.remove('hidden');
+        document.getElementById('view-landlord').classList.add('hidden');
         fetchTenantData();
     }
 }
