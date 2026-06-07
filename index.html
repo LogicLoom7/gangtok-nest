@@ -183,46 +183,53 @@
 
         <!-- Tenant Authenticated View (Only shown when logged in as Tenant) -->
         <div id="landing-tenant" class="hidden">
-            <main class="pt-[110px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-10">
-                <!-- Welcome greeting -->
-                <div class="bg-gradient-to-r from-primary/10 via-surface-container to-accent/5 p-8 rounded-[2rem] border border-outline-variant/20">
-                    <h1 class="text-3xl font-headline font-extrabold text-primary">Verified Accommodations Feed</h1>
-                    <p class="text-on-surface-variant text-sm mt-1">Hello <span id="tenantName" class="font-black text-accent">Renter</span>, explore and match room coordinates across Gangtok.</p>
+            <main class="pt-[100px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-6">
+                <!-- Compact Greeting and View Switcher Header (Saves vertical space) -->
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-outline-variant/30 pb-4">
+                    <div>
+                        <h1 class="text-2xl font-headline font-extrabold text-primary tracking-tight flex items-center gap-2">
+                            <span class="material-symbols-outlined text-accent text-2xl animate-pulse">explore</span> Verified Listings
+                        </h1>
+                        <p class="text-on-surface-variant text-xs mt-0.5">Welcome, <span id="tenantName" class="font-black text-accent">Renter</span>! Explore rooms across Gangtok.</p>
+                    </div>
+                    
+                    <!-- View Mode Toggle -->
+                    <div class="flex bg-surface-container p-1 rounded-xl border border-outline-variant/30 w-full md:w-auto shadow-sm">
+                        <button id="btn-view-grid" onclick="setTenantView('grid')" class="flex-grow md:flex-none px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-sm transition-all">Grid Feed</button>
+                        <button id="btn-view-map" onclick="setTenantView('map')" class="flex-grow md:flex-none px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all">Map View</button>
+                    </div>
                 </div>
 
-                <!-- Interactive Filters & Listings -->
-                <section id="listings-section" class="space-y-8">
-                    <div class="flex flex-col lg:flex-row gap-6 items-end justify-between border-b border-outline-variant/20 pb-6 transition-colors">
-                        <div>
-                            <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">Featured Accommodations</h2>
-                            <p class="text-on-surface-variant text-sm mt-1">Filter listings by BHK size, specific Gangtok locality, or price budget.</p>
-                        </div>
-                        
-                        <!-- Neighborhood Fast-Filter Pills -->
-                        <div class="flex flex-wrap gap-2 max-w-2xl justify-start lg:justify-end">
-                            <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 self-center mr-1">Localities:</span>
-                            <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white dark:text-surface transition-all shadow-sm">All Areas</button>
-                            <button onclick="filterByLocality('Tadong', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Tadong</button>
-                            <button onclick="filterByLocality('Sichey', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Sichey</button>
-                            <button onclick="filterByLocality('Majhitar', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Majhitar</button>
-                            <button onclick="filterByLocality('Ranipool', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Ranipool</button>
-                        </div>
-                    </div>
+                <!-- Locality Pills (Fast Selection) directly under the header -->
+                <div class="flex flex-wrap gap-1.5 items-center bg-surface-container/50 border border-outline-variant/30 p-2.5 rounded-2xl transition-colors">
+                    <span class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant/70 px-2">Localities:</span>
+                    <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-3 py-1.5 rounded-lg text-[10px] font-bold bg-primary text-white dark:text-surface transition-all shadow-sm">All</button>
+                    <button onclick="filterByLocality('Tadong', this)" class="loc-pill px-3 py-1.5 rounded-lg text-[10px] font-bold bg-surface-container-lowest text-on-surface hover:bg-outline-variant/30 transition-all">Tadong</button>
+                    <button onclick="filterByLocality('Sichey', this)" class="loc-pill px-3 py-1.5 rounded-lg text-[10px] font-bold bg-surface-container-lowest text-on-surface hover:bg-outline-variant/30 transition-all">Sichey</button>
+                    <button onclick="filterByLocality('Majhitar', this)" class="loc-pill px-3 py-1.5 rounded-lg text-[10px] font-bold bg-surface-container-lowest text-on-surface hover:bg-outline-variant/30 transition-all">Majhitar</button>
+                    <button onclick="filterByLocality('Ranipool', this)" class="loc-pill px-3 py-1.5 rounded-lg text-[10px] font-bold bg-surface-container-lowest text-on-surface hover:bg-outline-variant/30 transition-all">Ranipool</button>
+                </div>
 
-                    <!-- View Mode Toggle (Unique and Stylish) -->
-                    <div class="flex justify-between items-center bg-surface-container p-1.5 rounded-2xl max-w-sm transition-colors mb-6 shadow-sm border border-outline-variant/30">
-                        <button id="btn-view-grid" onclick="setTenantView('grid')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-md transition-all">Grid Feed</button>
-                        <button id="btn-view-map" onclick="setTenantView('map')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/30 transition-all">Interactive Map</button>
-                    </div>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <!-- Sidebar Filters (Control Center) -->
+                    <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
+                        <header class="pb-3 border-b border-outline-variant/30">
+                            <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-[1.15rem] text-accent">tune</span> Smart Search Filter
+                            </h3>
+                        </header>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <!-- Sidebar Filters (Control Center) -->
-                        <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
-                            <header class="pb-3 border-b border-outline-variant/30">
-                                <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                    <span class="material-symbols-outlined text-[1.15rem] text-accent">tune</span> Smart Search Filter
-                                </h3>
-                            </header>
+                        <!-- Keyword Search (Added back with explicit search button) -->
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Keywords Search</label>
+                            <div class="relative flex items-center group">
+                                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] pointer-events-none group-focus-within:text-accent transition-colors">search</span>
+                                <input id="tn-search" onkeyup="filterTenantRooms()" class="w-full pl-9 pr-10 py-2.5 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-accent outline-none text-xs font-bold text-on-surface transition-all" placeholder="Tadong, Sichey...">
+                                <button onclick="filterTenantRooms()" class="absolute right-2 text-accent hover:text-accent/80 transition-colors p-1 flex items-center justify-center" title="Apply Search">
+                                    <span class="material-symbols-outlined text-[1.2rem]">arrow_forward</span>
+                                </button>
+                            </div>
+                        </div>
 
                             <!-- BHK Size -->
                             <div class="space-y-2.5">
@@ -329,115 +336,104 @@
 
     <div id="view-landlord" class="hidden min-h-screen">
         <div class="flex flex-col lg:flex-row min-h-screen pt-16">
-            
-            <div class="lg:w-2/5 xl:w-1/3 relative h-[30vh] lg:h-[calc(100vh-64px)] lg:sticky lg:top-16 border-r border-outline-variant/20 hidden md:block transition-colors">
-                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1000" alt="Premium Modern Apartment Interior" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/40 to-transparent"></div>
-                <div class="absolute bottom-0 left-0 w-full p-8 md:p-12">
-                    <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl">
-                        <span class="material-symbols-outlined text-accent text-3xl mb-3 block">verified</span>
-                        <h2 class="text-2xl font-headline font-extrabold text-white mb-2 tracking-tight">Elevate Your Listings.</h2>
-                        <p class="text-white/80 text-sm font-medium leading-relaxed">High-quality photos and accurate details significantly increase your booking rate with premium students and professionals across Sikkim.</p>
-                    </div>
+            <!-- Left Sidebar: Live Portfolio -->
+            <div class="lg:w-2/5 xl:w-1/3 p-6 border-r border-outline-variant/20 bg-surface-container-lowest overflow-y-auto lg:h-[calc(100vh-64px)] lg:sticky lg:top-16 transition-colors">
+                <header class="pb-3 border-b border-outline-variant/30 mb-6 flex justify-between items-center">
+                    <h2 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
+                        <span class="material-symbols-outlined text-accent">apartment</span> Your Listings
+                    </h2>
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                </header>
+                
+                <!-- Active Grid inside sidebar -->
+                <div id="ll-active-grid" class="space-y-4">
+                    <!-- Loaded dynamically via fetchLandlordData(uid) -->
                 </div>
             </div>
 
-            <main class="lg:w-3/5 xl:w-2/3 flex-1 px-4 md:px-12 lg:px-20 pt-2 pb-32">
-                <div class="flex border-b border-outline-variant/30 mb-5 max-w-sm transition-colors">
-                    <button class="tab-btn active flex-1 py-4 font-bold text-on-surface-variant border-b-2 border-transparent transition-all text-sm uppercase tracking-widest" onclick="switchTab('list-tab', this)">List Property</button>
-                    <button class="tab-btn flex-1 py-4 font-bold text-on-surface-variant border-b-2 border-transparent transition-all text-sm uppercase tracking-widest" onclick="switchTab('active-tab', this)">Your Portfolio</button>
-                </div>
-
-                <section class="active-content space-y-4 max-w-4xl" data-tab-content id="list-tab">
-                    <header class="mb-4">
-                        <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-primary">Publish Property</h1>
-                        <p class="text-on-surface-variant mt-1 text-sm md:text-base">Enter accurate details to attract verified renters.</p>
-                    </header>
-                    
-                    <form id="landlordForm" class="relative bg-surface-container-lowest/70 backdrop-blur-2xl p-6 md:p-8 rounded-[1.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-outline-variant/30 transition-colors" onsubmit="event.preventDefault(); publishListing();">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative z-10">
-                            <div class="space-y-4">
-                                <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">1. Property Specs</h3>
-                                <div class="space-y-3">
+            <!-- Right Column: Publish Form -->
+            <main class="lg:w-3/5 xl:w-2/3 flex-1 px-4 md:px-12 lg:px-20 pt-8 pb-32 overflow-y-auto">
+                <header class="mb-6">
+                    <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-primary">Publish Property</h1>
+                    <p class="text-on-surface-variant mt-1 text-sm">Enter accurate details to list your room instantly.</p>
+                </header>
+                
+                <form id="landlordForm" class="relative bg-surface-container-lowest/70 backdrop-blur-2xl p-6 md:p-8 rounded-[1.5rem] shadow-xl border border-outline-variant/30 transition-colors" onsubmit="event.preventDefault(); publishListing();">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative z-10">
+                        <div class="space-y-4">
+                            <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">1. Property Specs</h3>
+                            <div class="space-y-3">
+                                <div class="relative flex items-center group">
+                                    <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">apartment</span>
+                                    <input id="ll-title" class="form-input-sm pl-10" placeholder="Listing Title (e.g. Modern Studio)" required>
+                                </div>
+                                <div class="flex flex-col gap-2">
                                     <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">apartment</span>
-                                        <input id="ll-title" class="form-input-sm pl-10" placeholder="Listing Title (e.g. Modern Studio)" required>
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">pin_drop</span>
+                                        <input id="ll-loc" class="form-input-sm pl-10" placeholder="Specific Locality (e.g. Sichey)" required>
                                     </div>
-                                    <div class="flex flex-col gap-2">
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">pin_drop</span>
-                                            <input id="ll-loc" class="form-input-sm pl-10" placeholder="Specific Locality (e.g. Sichey)" required>
-                                        </div>
-                                        <button type="button" onclick="detectLocation()" id="btn-detect-loc" class="w-full py-2.5 bg-surface-container border border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-on-surface hover:bg-outline-variant/30 transition-colors shadow-sm">
-                                            <span class="material-symbols-outlined text-sm">my_location</span>
-                                            <span id="loc-text">Capture GPS Location</span>
-                                        </button>
+                                    <button type="button" onclick="detectLocation()" id="btn-detect-loc" class="w-full py-2.5 bg-surface-container border border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-on-surface hover:bg-outline-variant/30 transition-colors shadow-sm">
+                                        <span class="material-symbols-outlined text-sm">my_location</span>
+                                        <span id="loc-text">Capture GPS Location</span>
+                                    </button>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">currency_rupee</span>
+                                        <input id="ll-rent" type="number" class="form-input-sm pl-10" placeholder="Rent / Mo" required>
                                     </div>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">currency_rupee</span>
-                                            <input id="ll-rent" type="number" class="form-input-sm pl-10" placeholder="Rent / Mo" required>
-                                        </div>
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">meeting_room</span>
-                                            <select id="ll-bhk" class="form-input-sm pl-10 cursor-pointer">
-                                                <option value="1">1 BHK</option><option value="2">2 BHK</option><option value="3">3 BHK</option><option value="4">4+ / Homestay</option>
-                                            </select>
-                                        </div>
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">meeting_room</span>
+                                        <select id="ll-bhk" class="form-input-sm pl-10 cursor-pointer">
+                                            <option value="1">1 BHK</option><option value="2">2 BHK</option><option value="3">3 BHK</option><option value="4">4+ / Homestay</option>
+                                        </select>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="space-y-4">
-                                <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">2. Logistics</h3>
-                                <div class="space-y-3">
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">stairs</span>
-                                            <input id="ll-floor" class="form-input-sm pl-10" placeholder="Floor Level" required>
-                                        </div>
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">chat</span>
-                                            <input id="ll-phone" class="form-input-sm pl-10" placeholder="WhatsApp No." type="tel" required>
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-2 gap-3">
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">water_drop</span>
-                                            <select id="ll-water" class="form-input-sm pl-10 cursor-pointer"><option value="24/7">Water: 24/7</option><option value="Scheduled">Scheduled</option></select>
-                                        </div>
-                                        <div class="relative flex items-center group">
-                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">add_road</span>
-                                            <select id="ll-road" class="form-input-sm pl-10 cursor-pointer"><option value="On Road">On Road</option><option value="5m Walk">5m Walk</option></select>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-3 px-2 rounded-xl transition-colors">
-                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-sun" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Sunlight</label>
-                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-park" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Parking</label>
-                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-balc" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Balcony</label>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="md:col-span-2 pt-2">
-                                <label class="border-2 border-dashed border-outline-variant bg-surface-container-lowest/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1.5 hover:border-accent/50 hover:shadow-md transition-all cursor-pointer relative group">
-                                    <span class="material-symbols-outlined text-primary/60 text-3xl group-hover:text-accent transition-colors">add_photo_alternate</span>
-                                    <span class="font-extrabold text-sm text-on-surface" id="upload-text">Upload Room Image</span>
-                                    <span class="text-[10px] text-on-surface-variant font-medium">Clear, bright photos perform best.</span>
-                                    <input type="file" id="ll-photo" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" required onchange="document.getElementById('upload-text').innerText = this.files[0].name;">
-                                </label>
                             </div>
                         </div>
-                        <button type="submit" id="ll-submit" class="w-full mt-5 py-4 cta-gradient text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 hover:-translate-y-0.5 transition-all relative z-10">Publish to Cloud</button>
-                    </form>
-                </section>
-                
-                <section class="hidden-content space-y-6 max-w-4xl" data-tab-content id="active-tab">
-                    <header class="mb-8">
-                        <h2 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-primary">Your Portfolio</h2>
-                    </header>
-                    <div id="ll-active-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </section>
+                        
+                        <div class="space-y-4">
+                            <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">2. Logistics</h3>
+                            <div class="space-y-3">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">stairs</span>
+                                        <input id="ll-floor" class="form-input-sm pl-10" placeholder="Floor Level" required>
+                                    </div>
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">chat</span>
+                                        <input id="ll-phone" class="form-input-sm pl-10" placeholder="WhatsApp No." type="tel" required>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">water_drop</span>
+                                        <select id="ll-water" class="form-input-sm pl-10 cursor-pointer"><option value="24/7">Water: 24/7</option><option value="Scheduled">Scheduled</option></select>
+                                    </div>
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">add_road</span>
+                                        <select id="ll-road" class="form-input-sm pl-10 cursor-pointer"><option value="On Road">On Road</option><option value="5m Walk">5m Walk</option></select>
+                                    </div>
+                                </div>
+                                <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-3 px-2 rounded-xl transition-colors">
+                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-sun" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Sunlight</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-park" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Parking</label>
+                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-balc" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Balcony</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="md:col-span-2 pt-2">
+                            <label class="border-2 border-dashed border-outline-variant bg-surface-container-lowest/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1.5 hover:border-accent/50 hover:shadow-md transition-all cursor-pointer relative group">
+                                <span class="material-symbols-outlined text-primary/60 text-3xl group-hover:text-accent transition-colors">add_photo_alternate</span>
+                                <span class="font-extrabold text-sm text-on-surface" id="upload-text">Upload Room Image</span>
+                                <span class="text-[10px] text-on-surface-variant font-medium">Clear, bright photos perform best.</span>
+                                <input type="file" id="ll-photo" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" required onchange="document.getElementById('upload-text').innerText = this.files[0].name;">
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" id="ll-submit" class="w-full mt-5 py-4 cta-gradient text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 hover:-translate-y-0.5 transition-all relative z-10">Publish to Cloud</button>
+                </form>
             </main>
         </div>
     </div>

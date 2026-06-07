@@ -266,7 +266,6 @@ async function publishListing() {
         document.getElementById('btn-detect-loc').classList.add('bg-surface-container', 'text-on-surface');
 
         fetchLandlordData(user.id);
-        switchTab('active-tab', document.querySelectorAll('.tab-btn')[1]);
     } catch (e) { alert(e.message); } finally { btn.innerText = original; }
 }
 
