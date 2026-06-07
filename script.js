@@ -119,8 +119,19 @@ async function handleAuthAction() {
             res = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: name, role: authRole }}});
         } else {
             res = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (res.error) throw res.error;
+            if (res.data.user) {
+                const user = res.data.user;
+                if (!user.user_metadata?.role || user.user_metadata?.role !== authRole) {
+                    const { data: { user: updatedUser }, error: updateError } = await supabaseClient.auth.updateUser({
+                        data: { role: authRole }
+                    });
+                    if (!updateError && updatedUser) {
+                        res.data.user = updatedUser;
+                    }
+                }
+            }
         }
-        if (res.error) throw res.error;
         if (res.data.user) loadDashboard(res.data.user);
     } catch (e) { alert(e.message); btn.innerHTML = original; }
 }
@@ -385,6 +396,7 @@ function closeMapModal() {
 
 // Modal controls for landlord portal
 function openAuthModal() {
+    selectRole('landlord');
     document.getElementById('auth-modal').classList.remove('hidden');
 }
 
