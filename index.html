@@ -54,7 +54,8 @@
                 <button onclick="toggleDarkMode()" class="text-primary hover:text-accent transition-colors flex items-center justify-center p-2 rounded-full hover:bg-outline-variant/20">
                     <span class="material-symbols-outlined theme-icon text-[22px]">dark_mode</span>
                 </button>
-                <button onclick="openAuthModal()" class="bg-primary text-white px-6 py-2 rounded-full font-bold text-sm hover:opacity-80 transition-colors">Partner Login</button>
+                <button onclick="openTenantAuthModal()" class="text-primary hover:text-accent font-bold text-xs md:text-sm transition-colors uppercase tracking-wider">Tenant Portal</button>
+                <button onclick="openAuthModal()" class="bg-primary text-white px-4 md:px-6 py-2 rounded-full font-bold text-xs md:text-sm hover:opacity-80 transition-colors uppercase tracking-wider">Landlord Login</button>
             </div>
         </div>
     </header>
@@ -81,86 +82,157 @@
     </header>
 
     <div id="view-landing">
-        <main class="pt-[90px] pb-8 max-w-7xl mx-auto px-4 md:px-8">
-            <!-- Hero Banner Section -->
-            <section class="mb-12 text-center py-12 relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary/10 via-surface-container to-accent/5 border border-outline-variant/20 transition-colors">
-                <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                <div class="relative z-10 max-w-3xl mx-auto px-4">
-                    <span class="inline-block bg-accent/10 text-accent font-black text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full mb-4 border border-accent/20">Sikkim's Trusted Peer-to-Peer Housing Network</span>
-                    <h1 class="font-headline text-4xl md:text-6xl font-extrabold text-primary mb-4 leading-tight tracking-tight">
-                        Find Your Perfect Rooms in <span class="bg-gradient-to-r from-accent to-amber-600 bg-clip-text text-transparent">Gangtok</span>.
-                    </h1>
-                    <p class="text-on-surface-variant font-medium text-base md:text-lg tracking-wide opacity-90 max-w-xl mx-auto leading-relaxed mb-8">
-                        Verified rooms, flats, and homestays tailored specifically for students and working professionals. Search and contact local owners instantly.
-                    </p>
-                    
-                    <!-- Search input inside Hero -->
-                    <div class="bg-surface-container-lowest p-2 rounded-2xl md:rounded-full shadow-2xl border border-outline-variant/30 max-w-2xl mx-auto flex flex-col md:flex-row gap-2 items-center transition-colors">
-                        <div class="flex items-center gap-2 px-3 w-full border-r border-outline-variant/30 last:border-0">
-                            <span class="material-symbols-outlined text-accent text-xl">location_on</span>
-                            <input id="tn-search" onkeyup="filterTenantRooms()" class="w-full bg-transparent border-none focus:ring-0 outline-none text-sm font-bold text-on-surface" placeholder="Search Tadong, Sichey, Majhitar...">
+        <!-- Anonymous View (Only shown when not logged in) -->
+        <div id="landing-anonymous" class="block">
+            <main class="pt-[110px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-20">
+                <!-- Anonymous Hero Section -->
+                <section class="text-center py-20 relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary/10 via-surface-container to-accent/5 border border-outline-variant/20 transition-colors">
+                    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
+                    <div class="relative z-10 max-w-3xl mx-auto px-4">
+                        <span class="inline-block bg-accent/10 text-accent font-black text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full mb-4 border border-accent/20">Sikkim's Trusted Peer-to-Peer Housing Network</span>
+                        <h1 class="font-headline text-4xl md:text-6xl font-extrabold text-primary mb-6 leading-tight tracking-tight">
+                            Find Your Perfect Rooms in <span class="bg-gradient-to-r from-accent to-amber-600 bg-clip-text text-transparent">Gangtok</span>.
+                        </h1>
+                        <p class="text-on-surface-variant font-medium text-base md:text-lg tracking-wide opacity-90 max-w-2xl mx-auto leading-relaxed mb-10">
+                            Verified rooms, flats, and homestays tailored specifically for students and working professionals. Create an account to search localities and contact local owners instantly.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                            <button onclick="openTenantAuthModal()" class="w-full sm:w-auto cta-gradient text-white hover:opacity-90 px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[1.2rem]">search</span> Explore Rooms (Login Required)
+                            </button>
+                            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-surface-container border border-outline-variant/50 text-on-surface hover:bg-outline-variant/30 px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-sm flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined text-[1.2rem]">apartment</span> Landlord Portal
+                            </button>
                         </div>
-                        <button onclick="document.getElementById('listings-section').scrollIntoView({behavior: 'smooth'})" class="w-full md:w-auto bg-primary text-white hover:bg-accent px-8 py-3.5 rounded-xl md:rounded-full font-extrabold text-xs uppercase tracking-widest transition-all duration-300 shadow-md flex items-center justify-center gap-1.5">
-                            <span class="material-symbols-outlined text-sm">search</span> Search Rooms
-                        </button>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            <!-- Interactive Filters & Listings -->
-            <section id="listings-section" class="space-y-8 scroll-mt-24">
-                <div class="flex flex-col lg:flex-row gap-6 items-end justify-between border-b border-outline-variant/20 pb-6 transition-colors">
-                    <div>
-                        <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">Explore Accommodations</h2>
-                        <p class="text-on-surface-variant text-sm mt-1">Filter verified local listings by neighborhood, BHK size, or price range.</p>
+                <!-- Features Section -->
+                <section class="space-y-12">
+                    <div class="text-center max-w-xl mx-auto">
+                        <h2 class="text-3xl font-headline font-extrabold text-primary tracking-tight">Simple. Direct. Broker-Free.</h2>
+                        <p class="text-on-surface-variant text-sm mt-2">Everything you need to secure verified housing near Sikkim University and major gangtok hubs.</p>
                     </div>
-                    
-                    <!-- Neighborhood Fast-Filter Pills -->
-                    <div class="flex flex-wrap gap-2 max-w-2xl justify-start lg:justify-end">
-                        <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 self-center mr-1">Localities:</span>
-                        <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white transition-all shadow-sm">All Areas</button>
-                        <button onclick="filterByLocality('Tadong', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Tadong</button>
-                        <button onclick="filterByLocality('Sichey', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Sichey</button>
-                        <button onclick="filterByLocality('Majhitar', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Majhitar</button>
-                        <button onclick="filterByLocality('Ranipool', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Ranipool</button>
-                    </div>
-                </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <!-- Sidebar Filters -->
-                    <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">BHK Size</label>
-                            <div class="flex flex-wrap gap-1.5">
-                                <button onclick="setTenantBHK(1, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">1 BHK</button>
-                                <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">2 BHK</button>
-                                <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">3 BHK</button>
-                                <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">4+ BHK</button>
-                                <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[9px] font-black bg-primary text-white shadow-md uppercase transition-colors">ALL</button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/20 shadow-md flex flex-col justify-between">
+                            <div>
+                                <span class="material-symbols-outlined text-accent text-3xl mb-4">pin_drop</span>
+                                <h3 class="font-headline font-bold text-lg text-primary mb-2">Locality Search</h3>
+                                <p class="text-on-surface-variant text-xs leading-relaxed">Search specifically within local zones like Tadong, Sichey, Majhitar, and Ranipool.</p>
                             </div>
                         </div>
 
-                        <div class="space-y-2.5">
-                            <div class="flex justify-between items-center">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Max Rent</label>
-                                <span id="tn-price-label" class="text-sm font-black text-accent">₹25,000</span>
+                        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/20 shadow-md flex flex-col justify-between">
+                            <div>
+                                <span class="material-symbols-outlined text-accent text-3xl mb-4">chat</span>
+                                <h3 class="font-headline font-bold text-lg text-primary mb-2">Direct Contact</h3>
+                                <p class="text-on-surface-variant text-xs leading-relaxed">One-tap WhatsApp redirect to contact local landlords directly with zero brokerage fee.</p>
                             </div>
-                            <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/20 shadow-md flex flex-col justify-between">
+                            <div>
+                                <span class="material-symbols-outlined text-accent text-3xl mb-4">map</span>
+                                <h3 class="font-headline font-bold text-lg text-primary mb-2">Map Previews</h3>
+                                <p class="text-on-surface-variant text-xs leading-relaxed">Interactive Leaflet map coordinates to trace walking routes before your visit.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-6 rounded-[2rem] border border-outline-variant/20 shadow-md flex flex-col justify-between">
+                            <div>
+                                <span class="material-symbols-outlined text-accent text-3xl mb-4">verified</span>
+                                <h3 class="font-headline font-bold text-lg text-primary mb-2">Detailed Logistics</h3>
+                                <p class="text-on-surface-variant text-xs leading-relaxed">Detailed specifications on sunlight exposure, 24/7 water supply, parking, and road distance.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Statistics Section -->
+                <section class="bg-surface-container p-10 rounded-[2.5rem] border border-outline-variant/20 transition-colors">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                        <div>
+                            <div class="font-headline text-4xl font-extrabold text-accent mb-1">50+</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Verified Rooms listed</div>
+                        </div>
+                        <div>
+                            <div class="font-headline text-4xl font-extrabold text-accent mb-1">0%</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Broker Commissions</div>
+                        </div>
+                        <div>
+                            <div class="font-headline text-4xl font-extrabold text-accent mb-1">100%</div>
+                            <div class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Direct Peer-to-Peer Connect</div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Tenant Authenticated View (Only shown when logged in as Tenant) -->
+        <div id="landing-tenant" class="hidden">
+            <main class="pt-[110px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-10">
+                <!-- Welcome greeting -->
+                <div class="bg-gradient-to-r from-primary/10 via-surface-container to-accent/5 p-8 rounded-[2rem] border border-outline-variant/20">
+                    <h1 class="text-3xl font-headline font-extrabold text-primary">Verified Accommodations Feed</h1>
+                    <p class="text-on-surface-variant text-sm mt-1">Hello <span id="tenantName" class="font-black text-accent">Renter</span>, explore and match room coordinates across Gangtok.</p>
+                </div>
+
+                <!-- Interactive Filters & Listings -->
+                <section id="listings-section" class="space-y-8">
+                    <div class="flex flex-col lg:flex-row gap-6 items-end justify-between border-b border-outline-variant/20 pb-6 transition-colors">
+                        <div>
+                            <h2 class="text-2xl font-headline font-extrabold text-primary tracking-tight">Featured Accommodations</h2>
+                            <p class="text-on-surface-variant text-sm mt-1">Filter listings by BHK size, specific Gangtok locality, or price budget.</p>
                         </div>
                         
-                        <div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
-                            <span>Direct Connection</span>
-                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <!-- Neighborhood Fast-Filter Pills -->
+                        <div class="flex flex-wrap gap-2 max-w-2xl justify-start lg:justify-end">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 self-center mr-1">Localities:</span>
+                            <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white transition-all shadow-sm">All Areas</button>
+                            <button onclick="filterByLocality('Tadong', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Tadong</button>
+                            <button onclick="filterByLocality('Sichey', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Sichey</button>
+                            <button onclick="filterByLocality('Majhitar', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Majhitar</button>
+                            <button onclick="filterByLocality('Ranipool', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Ranipool</button>
                         </div>
                     </div>
 
-                    <!-- Room Grid -->
-                    <div class="lg:col-span-8">
-                        <div id="tn-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                        <!-- Sidebar Filters -->
+                        <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
+                            <div class="space-y-2.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">BHK Size</label>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button onclick="setTenantBHK(1, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">1 BHK</button>
+                                    <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">2 BHK</button>
+                                    <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">3 BHK</button>
+                                    <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">4+ BHK</button>
+                                    <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[9px] font-black bg-primary text-white shadow-md uppercase transition-colors">ALL</button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-2.5">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Max Rent</label>
+                                    <span id="tn-price-label" class="text-sm font-black text-accent">₹25,000</span>
+                                </div>
+                                <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer">
+                            </div>
+                            
+                            <div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                                <span>Direct Connection</span>
+                                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            </div>
+                        </div>
+
+                        <!-- Room Grid -->
+                        <div class="lg:col-span-8">
+                            <div id="tn-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                        </div>
                     </div>
-                </div>
-            </section>
-        </main>
+                </section>
+            </main>
+        </div>
 
         <footer class="bg-surface-container-high py-16 border-t border-outline-variant/30 mt-6 transition-colors">
             <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
@@ -328,7 +400,7 @@
 
                 <div class="text-center space-y-1">
                     <h2 id="loginHeading" class="font-headline text-2xl font-extrabold text-primary tracking-tight">Landlord Access</h2>
-                    <p class="text-on-surface-variant text-xs font-medium">Log in to manage your listings portfolio</p>
+                    <p id="loginSubheading" class="text-on-surface-variant text-xs font-medium">Log in to manage your listings portfolio</p>
                 </div>
 
                 <form class="space-y-4" onsubmit="event.preventDefault(); handleAuthAction();">

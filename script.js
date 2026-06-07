@@ -53,7 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (user) {
         loadDashboard(user);
     } else {
-        fetchTenantData();
+        document.getElementById('header-landing').classList.remove('hidden');
+        document.getElementById('header-dashboard').classList.add('hidden');
+        document.getElementById('view-landing').classList.remove('hidden');
+        document.getElementById('view-landlord').classList.add('hidden');
+        document.getElementById('landing-anonymous').classList.remove('hidden');
+        document.getElementById('landing-tenant').classList.add('hidden');
     }
 });
 
@@ -76,6 +81,13 @@ function selectRole(role) {
     }
 
     document.getElementById('loginHeading').innerText = role === 'landlord' ? "Landlord Access" : "Tenant Access";
+    
+    const sub = document.getElementById('loginSubheading');
+    if (sub) {
+        sub.innerText = role === 'landlord' 
+            ? "Log in to manage your listings portfolio" 
+            : "Log in to search and contact room owners";
+    }
 }
 
 // UPDATED: Dynamic text and icon handling for the new Create Account button
@@ -153,6 +165,9 @@ function loadDashboard(user) {
     } else {
         document.getElementById('view-landing').classList.remove('hidden');
         document.getElementById('view-landlord').classList.add('hidden');
+        document.getElementById('landing-anonymous').classList.add('hidden');
+        document.getElementById('landing-tenant').classList.remove('hidden');
+        document.getElementById('tenantName').innerText = user.user_metadata?.full_name || 'Renter';
         fetchTenantData();
     }
 }
@@ -397,6 +412,11 @@ function closeMapModal() {
 // Modal controls for landlord portal
 function openAuthModal() {
     selectRole('landlord');
+    document.getElementById('auth-modal').classList.remove('hidden');
+}
+
+function openTenantAuthModal() {
+    selectRole('tenant');
     document.getElementById('auth-modal').classList.remove('hidden');
 }
 
