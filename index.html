@@ -86,21 +86,33 @@
         <div id="landing-anonymous" class="block">
             <main class="pt-[110px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-20">
                 <!-- Anonymous Hero Section -->
-                <section class="text-center py-20 relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary/10 via-surface-container to-accent/5 border border-outline-variant/20 transition-colors">
-                    <div class="absolute inset-0 bg-grid-pattern opacity-10"></div>
-                    <div class="relative z-10 max-w-3xl mx-auto px-4">
-                        <span class="inline-block bg-accent/10 text-accent font-black text-[10px] tracking-widest uppercase px-3 py-1.5 rounded-full mb-4 border border-accent/20">Sikkim's Trusted Peer-to-Peer Housing Network</span>
-                        <h1 class="font-headline text-4xl md:text-6xl font-extrabold text-primary mb-6 leading-tight tracking-tight">
+                <section class="text-center py-20 relative overflow-hidden rounded-[2.5rem] hero-mesh-bg border border-outline-variant/30 transition-colors shadow-2xl">
+                    <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
+                    
+                    <!-- Decorative Minimalist Mountains SVG -->
+                    <div class="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none opacity-20 dark:opacity-30">
+                        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto translate-y-4">
+                            <path d="M0 200 L300 90 L600 160 L900 60 L1200 130 L1440 200 Z" fill="var(--color-secondary)" opacity="0.3"></path>
+                            <path d="M0 200 L450 110 L950 170 L1440 90 L1440 200 Z" fill="var(--color-primary)" opacity="0.15"></path>
+                        </svg>
+                    </div>
+
+                    <div class="relative z-10 max-w-3xl mx-auto px-6 space-y-6">
+                        <span class="inline-flex items-center gap-1.5 bg-accent/10 text-accent font-black text-[10px] tracking-widest uppercase px-4 py-2 rounded-full border border-accent/30 backdrop-blur-md animate-float">
+                            <span class="material-symbols-outlined text-sm">terrain</span>
+                            Sikkim's Trusted Peer-to-Peer Housing Network
+                        </span>
+                        <h1 class="font-headline text-4xl md:text-6xl font-extrabold text-primary leading-tight tracking-tight">
                             Find Your Perfect Rooms in <span class="bg-gradient-to-r from-accent to-amber-600 bg-clip-text text-transparent">Gangtok</span>.
                         </h1>
-                        <p class="text-on-surface-variant font-medium text-base md:text-lg tracking-wide opacity-90 max-w-2xl mx-auto leading-relaxed mb-10">
+                        <p class="text-on-surface-variant font-medium text-sm md:text-base tracking-wide opacity-90 max-w-xl mx-auto leading-relaxed">
                             Verified rooms, flats, and homestays tailored specifically for students and working professionals. Create an account to search localities and contact local owners instantly.
                         </p>
-                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                            <button onclick="openTenantAuthModal()" class="w-full sm:w-auto cta-gradient text-white hover:opacity-90 px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
+                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
+                            <button onclick="openTenantAuthModal()" class="w-full sm:w-auto cta-gradient text-white hover:opacity-90 hover:scale-105 active:scale-95 px-8 py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-[1.2rem]">search</span> Explore Rooms (Login Required)
                             </button>
-                            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-surface-container border border-outline-variant/50 text-on-surface hover:bg-outline-variant/30 px-8 py-4 rounded-full font-black text-sm uppercase tracking-widest transition-all duration-300 shadow-sm flex items-center justify-center gap-2">
+                            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-surface-lowest border border-outline-variant/60 text-on-surface hover:bg-surface-container hover:scale-105 active:scale-95 px-8 py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest transition-all duration-300 shadow-md flex items-center justify-center gap-2">
                                 <span class="material-symbols-outlined text-[1.2rem]">apartment</span> Landlord Portal
                             </button>
                         </div>

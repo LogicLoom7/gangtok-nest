@@ -2,29 +2,29 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #0f172a;
-    --color-secondary: #1e293b;
-    --color-accent: #ea580c;
-    --color-surface: #f8fafc;
-    --color-surface-container: #f1f5f9;
+    --color-primary: #062c30;          /* Deep Forest Teal */
+    --color-secondary: #0f5257;        /* Slate Teal */
+    --color-accent: #f08a5d;           /* Warm Apricot */
+    --color-surface: #f9f7f7;          /* Creamy Ash Background */
+    --color-surface-container: #ecebeb;/* Subtle Off-white */
     --color-surface-lowest: #ffffff;
-    --color-surface-high: #e2e8f0;
-    --color-on-surface: #0f172a;
-    --color-on-surface-variant: #475569;
-    --color-outline-variant: #cbd5e1;
+    --color-surface-high: #dedede;
+    --color-on-surface: #062c30;
+    --color-on-surface-variant: #40686a;
+    --color-outline-variant: #ccd5d6;
 }
 
 html.dark {
-    --color-primary: #f8fafc;
-    --color-secondary: #94a3b8;
-    --color-accent: #ea580c;
-    --color-surface: #020617;
-    --color-surface-container: #0f172a;
-    --color-surface-lowest: #0b0f19;
-    --color-surface-high: #1e293b;
-    --color-on-surface: #f8fafc;
-    --color-on-surface-variant: #94a3b8;
-    --color-outline-variant: #334155;
+    --color-primary: #f9f7f7;
+    --color-secondary: #89a5a8;
+    --color-accent: #f08a5d;
+    --color-surface: #04171a;          /* Deep Forest Teal Black */
+    --color-surface-container: #082326;/* Elevated Forest Teal */
+    --color-surface-lowest: #020e10;
+    --color-surface-high: #0d3236;
+    --color-on-surface: #f9f7f7;
+    --color-on-surface-variant: #89a5a8;
+    --color-outline-variant: #164246;
 }
 
 /* ============================================== */
@@ -39,14 +39,38 @@ html.dark {
     -webkit-backdrop-filter: blur(16px); 
 }
 
-.hero-gradient { background: linear-gradient(135deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 41, 59, 0.4) 100%); }
-.cta-gradient { background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%); }
-.soft-elevation { box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15); }
-.segmented-control-active { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
+.hero-gradient { background: linear-gradient(135deg, rgba(6, 44, 48, 0.9) 0%, rgba(15, 82, 87, 0.5) 100%); }
+.cta-gradient { background: linear-gradient(135deg, #f08a5d 0%, #e27341 100%); }
+.soft-elevation { box-shadow: 0 20px 50px -10px rgba(6, 44, 48, 0.15); }
+.segmented-control-active { box-shadow: 0 4px 15px rgba(6, 44, 48, 0.1); }
 
-/* Mountain Pattern adapting to Dark Mode */
-html:not(.dark) .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L15 5 L30 20 L45 0 L65 20 L80 10 L100 20' fill='none' stroke='%230f172a' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E"); }
-html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L15 5 L30 20 L45 0 L65 20 L80 10 L100 20' fill='none' stroke='%23f8fafc' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E"); }
+/* Premium Mesh Gradient for Hero Background */
+.hero-mesh-bg {
+    background: radial-gradient(at 0% 0%, rgba(240, 138, 93, 0.12) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(15, 82, 87, 0.15) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(6, 44, 48, 0.04) 0px, transparent 50%),
+                var(--color-surface-container);
+}
+html.dark .hero-mesh-bg {
+    background: radial-gradient(at 0% 0%, rgba(240, 138, 93, 0.22) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(15, 82, 87, 0.3) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, rgba(2, 14, 16, 0.4) 0px, transparent 50%),
+                var(--color-surface-container);
+}
+
+/* Float Animations for Premium Micro-Interactions */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+    100% { transform: translateY(0px); }
+}
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Mountain Pattern adapting to Dark Mode & Selected Palette */
+html:not(.dark) .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L15 5 L30 20 L45 0 L65 20 L80 10 L100 20' fill='none' stroke='%23062c30' stroke-width='0.5' opacity='0.04'/%3E%3C/svg%3E"); }
+html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 20 L15 5 L30 20 L45 0 L65 20 L80 10 L100 20' fill='none' stroke='%23f9f7f7' stroke-width='0.5' opacity='0.04'/%3E%3C/svg%3E"); }
 
 /* ============================================== */
 /* PREMIUM RICH INPUTS */
