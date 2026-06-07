@@ -69,7 +69,7 @@ function selectRole(role) {
     const btnT = document.getElementById('btn-role-tenant');
     const btnL = document.getElementById('btn-role-landlord');
 
-    const activeClass = "py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white shadow-md";
+    const activeClass = "py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white dark:text-surface shadow-md";
     const inactiveClass = "py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-on-surface hover:bg-outline-variant/20";
 
     if(role === 'tenant') {
@@ -287,7 +287,7 @@ async function fetchTenantData() {
 function setTenantBHK(b, btn) {
     activeBHK = b;
     document.querySelectorAll('.tn-bhk-btn').forEach(x => x.className = "tn-bhk-btn flex-1 py-3 rounded-xl text-[10px] font-black bg-surface-container text-on-surface uppercase transition-colors");
-    btn.className = "tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[10px] font-black bg-primary text-white shadow-md uppercase transition-colors";
+    btn.className = "tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[10px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
     filterTenantRooms();
 }
 
@@ -349,7 +349,7 @@ function filterTenantRooms() {
         <article class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/30 flex flex-col group hover:-translate-y-1 transition-all">
             <div class="h-48 relative overflow-hidden">
                 <img src="${escapedImage}" class="w-full h-full object-cover">
-                <div class="absolute bottom-3 right-3 bg-primary text-white px-3 py-1.5 rounded-lg font-black text-sm shadow-xl">₹${r.rent}</div>
+                <div class="absolute bottom-3 right-3 bg-primary text-white dark:text-surface px-3 py-1.5 rounded-lg font-black text-sm shadow-xl">₹${r.rent}</div>
             </div>
             <div class="p-5 flex flex-col flex-grow">
                 <h3 class="text-lg font-black text-primary mb-1 truncate">${escapedTitle}</h3>
@@ -431,6 +431,6 @@ function filterByLocality(locName, btn) {
     document.querySelectorAll('.loc-pill').forEach(b => {
         b.className = "loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all";
     });
-    btn.className = "loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white transition-all shadow-sm";
+    btn.className = "loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white dark:text-surface transition-all shadow-sm";
     filterTenantRooms();
 }

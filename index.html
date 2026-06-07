@@ -55,7 +55,7 @@
                     <span class="material-symbols-outlined theme-icon text-[22px]">dark_mode</span>
                 </button>
                 <button onclick="openTenantAuthModal()" class="text-primary hover:text-accent font-bold text-xs md:text-sm transition-colors uppercase tracking-wider">Tenant Portal</button>
-                <button onclick="openAuthModal()" class="bg-primary text-white px-4 md:px-6 py-2 rounded-full font-bold text-xs md:text-sm hover:opacity-80 transition-colors uppercase tracking-wider">Landlord Login</button>
+                <button onclick="openAuthModal()" class="bg-primary text-white dark:text-surface px-4 md:px-6 py-2 rounded-full font-bold text-xs md:text-sm hover:opacity-80 transition-colors uppercase tracking-wider">Landlord Login</button>
             </div>
         </div>
     </header>
@@ -201,7 +201,7 @@
                         <!-- Neighborhood Fast-Filter Pills -->
                         <div class="flex flex-wrap gap-2 max-w-2xl justify-start lg:justify-end">
                             <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant/70 self-center mr-1">Localities:</span>
-                            <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white transition-all shadow-sm">All Areas</button>
+                            <button onclick="filterByLocality('', this)" class="loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white dark:text-surface transition-all shadow-sm">All Areas</button>
                             <button onclick="filterByLocality('Tadong', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Tadong</button>
                             <button onclick="filterByLocality('Sichey', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Sichey</button>
                             <button onclick="filterByLocality('Majhitar', this)" class="loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all">Majhitar</button>
@@ -219,7 +219,7 @@
                                     <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">2 BHK</button>
                                     <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">3 BHK</button>
                                     <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">4+ BHK</button>
-                                    <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[9px] font-black bg-primary text-white shadow-md uppercase transition-colors">ALL</button>
+                                    <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">ALL</button>
                                 </div>
                             </div>
 
@@ -406,7 +406,7 @@
             <div class="p-8 space-y-6">
                 <!-- Role selector inside modal -->
                 <div class="grid grid-cols-2 gap-2 bg-surface-container p-1 rounded-2xl transition-colors">
-                    <button id="btn-role-landlord" onclick="selectRole('landlord')" class="py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white shadow-md">Landlord</button>
+                    <button id="btn-role-landlord" onclick="selectRole('landlord')" class="py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white dark:text-surface shadow-md">Landlord</button>
                     <button id="btn-role-tenant" onclick="selectRole('tenant')" class="py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-on-surface hover:bg-outline-variant/20">Tenant</button>
                 </div>
 
