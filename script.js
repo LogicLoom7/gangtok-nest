@@ -540,7 +540,6 @@ function filterTenantRooms() {
         }
     }
 }
-}
 
 function openMapModal(lat, lng, title) {
     document.getElementById('map-modal').classList.remove('hidden');
