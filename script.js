@@ -58,6 +58,9 @@ let filterSunlight = false;
 let filterParking = false;
 let filterBalcony = false;
 
+// Favorites Database
+let favorites = JSON.parse(localStorage.getItem('gn_favorites') || '[]');
+
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
@@ -221,9 +224,32 @@ async function publishListing() {
     const btn = document.getElementById('ll-submit');
     const original = btn.innerText;
     
-    if (!currentLat || !currentLng) {
-        alert("Please click 'Capture GPS Location' before publishing.");
+    const selectedLocality = document.getElementById('ll-loc').value;
+    if (!selectedLocality) {
+        alert("Please select a locality.");
         return;
+    }
+    
+    let lat = currentLat;
+    let lng = currentLng;
+    
+    if (!lat || !lng) {
+        // Fallback coordinates for Gangtok localities
+        const coordMap = {
+            'Tadong': { lat: 27.3168, lng: 88.6053 },
+            'Sichey': { lat: 27.3364, lng: 88.6067 },
+            'Majhitar': { lat: 27.1895, lng: 88.5888 },
+            'Ranipool': { lat: 27.2995, lng: 88.5947 }
+        };
+        const fallback = coordMap[selectedLocality];
+        if (fallback) {
+            lat = fallback.lat;
+            lng = fallback.lng;
+        } else {
+            // Default center of Gangtok
+            lat = 27.3314;
+            lng = 88.6138;
+        }
     }
 
     btn.innerText = "Syncing Cloud...";
@@ -239,7 +265,7 @@ async function publishListing() {
         const { data: { user } } = await supabaseClient.auth.getUser();
         await supabaseClient.from('listings').insert([{
             title: document.getElementById('ll-title').value,
-            location: document.getElementById('ll-loc').value,
+            location: selectedLocality,
             rent: parseInt(document.getElementById('ll-rent').value),
             bhk: parseInt(document.getElementById('ll-bhk').value),
             floor_level: document.getElementById('ll-floor').value,
@@ -251,8 +277,8 @@ async function publishListing() {
             balcony: document.getElementById('ll-balc').checked,
             image_url: url, 
             user_id: user.id,
-            lat: currentLat,
-            lng: currentLng
+            lat: lat,
+            lng: lng
         }]);
         
         alert("Published successfully!");
@@ -271,7 +297,20 @@ async function publishListing() {
 
 async function fetchLandlordData(uid) {
     const { data } = await supabaseClient.from('listings').select('*').eq('user_id', uid).order('created_at', { ascending: false });
-    document.getElementById('ll-active-grid').innerHTML = (data || []).map(r => `
+    
+    const listings = data || [];
+    const totalActive = listings.length;
+    const totalRent = listings.reduce((sum, r) => sum + (r.rent || 0), 0);
+    const avgRent = totalActive > 0 ? Math.round(totalRent / totalActive) : 0;
+    
+    const totalEl = document.getElementById('ll-metric-total');
+    const avgEl = document.getElementById('ll-metric-avg');
+    const valEl = document.getElementById('ll-metric-val');
+    if (totalEl) totalEl.innerText = totalActive;
+    if (avgEl) avgEl.innerText = `₹${avgRent.toLocaleString()}`;
+    if (valEl) valEl.innerText = `₹${totalRent.toLocaleString()}`;
+
+    document.getElementById('ll-active-grid').innerHTML = listings.map(r => `
         <div class="bg-surface-container-lowest p-4 rounded-2xl shadow flex items-center gap-4 border border-outline-variant/30 transition-colors">
             <img src="${escapeHtml(r.image_url)}" class="w-16 h-16 rounded-xl object-cover">
             <div class="flex-1"><h4 class="font-bold text-sm text-primary truncate">${escapeHtml(r.title)}</h4><p class="text-xs text-accent font-black">₹${r.rent}</p></div>
@@ -290,6 +329,32 @@ async function deleteListing(id) {
 async function fetchTenantData() {
     const { data } = await supabaseClient.from('listings').select('*').order('created_at', { ascending: false });
     allRooms = data || [];
+    
+    // Render Featured Accommodation (Latest room listing)
+    const featured = allRooms[0];
+    const featContainer = document.getElementById('tn-featured-container');
+    const featCard = document.getElementById('tn-featured-card');
+    
+    if (featured && featContainer && featCard) {
+        featContainer.classList.remove('hidden');
+        featCard.innerHTML = `
+            <div class="relative rounded-xl overflow-hidden h-24 mb-2">
+                <img src="${escapeHtml(featured.image_url)}" class="w-full h-full object-cover">
+                <div class="absolute bottom-2 right-2 bg-primary text-white dark:text-surface px-2 py-0.5 rounded text-[10px] font-black">₹${featured.rent}</div>
+            </div>
+            <h4 class="font-bold text-[11px] text-primary truncate">${escapeHtml(featured.title)}</h4>
+            <p class="text-[9px] text-on-surface-variant flex items-center gap-0.5 truncate"><span class="material-symbols-outlined text-[10px]">location_on</span>${escapeHtml(featured.location)}</p>
+            <div class="flex gap-1.5 mt-2">
+                <a href="https://wa.me/91${featured.contact}" target="_blank" class="flex-grow text-center py-1.5 bg-accent text-white text-[9px] font-extrabold uppercase rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-1" style="text-decoration: none;">
+                    <span class="material-symbols-outlined text-[10px]">chat</span> WhatsApp
+                </a>
+                <button onclick="scrollToRoom('${featured.id}')" class="px-2.5 py-1.5 bg-surface-container hover:bg-outline-variant/30 text-on-surface text-[9px] font-bold uppercase rounded-lg transition-all">Details</button>
+            </div>
+        `;
+    } else if (featContainer) {
+        featContainer.classList.add('hidden');
+    }
+    
     filterTenantRooms();
 }
 
@@ -332,31 +397,65 @@ function filterTenantRooms() {
     const s = document.getElementById('tn-search').value.toLowerCase();
     const p = parseInt(document.getElementById('tn-price').value);
     document.getElementById('tn-price-label').innerText = `₹${p.toLocaleString()}`;
-    const f = allRooms.filter(r => 
-        (r.location.toLowerCase().includes(s)) && 
-        (activeLocality === '' || r.location.toLowerCase().includes(activeLocality.toLowerCase())) && 
-        r.rent <= p && 
-        (activeBHK === 0 || r.bhk === activeBHK) &&
-        (filterWater === 'all' || r.water === filterWater) &&
-        (filterRoad === 'all' || r.road_dist === filterRoad) &&
-        (!filterSunlight || r.sunlight) &&
-        (!filterParking || r.parking) &&
-        (!filterBalcony || r.balcony)
-    );
+    
+    const favoritesOnly = document.getElementById('filter-favorites').checked;
+    
+    let filtered = allRooms.filter(r => {
+        const matchesSearch = r.location.toLowerCase().includes(s) || r.title.toLowerCase().includes(s);
+        const matchesLocality = activeLocality === '' || r.location.toLowerCase().includes(activeLocality.toLowerCase());
+        const matchesPrice = r.rent <= p;
+        const matchesBHK = activeBHK === 0 || r.bhk === activeBHK;
+        const matchesFavorites = !favoritesOnly || favorites.includes(r.id);
+        
+        return matchesSearch && matchesLocality && matchesPrice && matchesBHK && matchesFavorites;
+    });
+    
+    filtered = filtered.map(r => {
+        let totalPrefs = 0;
+        let matchedPrefs = 0;
+        
+        if (filterSunlight) {
+            totalPrefs++;
+            if (r.sunlight) matchedPrefs++;
+        }
+        if (filterParking) {
+            totalPrefs++;
+            if (r.parking) matchedPrefs++;
+        }
+        if (filterBalcony) {
+            totalPrefs++;
+            if (r.balcony) matchedPrefs++;
+        }
+        if (filterWater !== 'all') {
+            totalPrefs++;
+            if (r.water === filterWater) matchedPrefs++;
+        }
+        if (filterRoad !== 'all') {
+            totalPrefs++;
+            if (r.road_dist === filterRoad) matchedPrefs++;
+        }
+        
+        const score = totalPrefs > 0 ? Math.round((matchedPrefs / totalPrefs) * 100) : null;
+        return { ...r, matchScore: score };
+    });
+    
+    const hasPreferences = (filterSunlight || filterParking || filterBalcony || filterWater !== 'all' || filterRoad !== 'all');
+    if (hasPreferences) {
+        filtered.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
+    }
     
     // Sync map if active
     if (activeView === 'map') {
-        updateTenantMapMarkers(f);
+        updateTenantMapMarkers(filtered);
     }
     
-    document.getElementById('tn-grid').innerHTML = f.map(r => {
+    document.getElementById('tn-grid').innerHTML = filtered.map(r => {
         const hasMap = r.lat && r.lng; 
         const escapedTitle = escapeHtml(r.title);
         const escapedLocation = escapeHtml(r.location);
         const escapedFloor = escapeHtml(r.floor_level);
         const escapedRoad = escapeHtml(r.road_dist);
         const escapedImage = escapeHtml(r.image_url);
-        // Safe string escaping for inline Javascript parameter execution
         const safeTitleForClick = r.title.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
 
         let featuresHtml = '';
@@ -364,10 +463,25 @@ function filterTenantRooms() {
         if(r.parking) featuresHtml += `<span class="bg-blue-500/10 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400 px-2 py-1 rounded-md text-[8px] font-bold uppercase border border-blue-500/20">Parking</span>`;
         if(r.balcony) featuresHtml += `<span class="bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-md text-[8px] font-bold uppercase border border-emerald-500/20">Balcony</span>`;
 
+        const isFav = favorites.includes(r.id);
+
         return `
-        <article class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/30 flex flex-col group hover:-translate-y-1 transition-all">
+        <article id="room-${r.id}" class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/30 flex flex-col group hover:-translate-y-1 transition-all relative">
             <div class="h-48 relative overflow-hidden">
                 <img src="${escapedImage}" class="w-full h-full object-cover">
+                
+                <!-- Favorites button overlay -->
+                <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="absolute top-3 right-3 bg-surface-container-lowest/80 backdrop-blur-md text-error hover:scale-110 active:scale-95 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all z-10" title="${isFav ? 'Remove from Saved' : 'Save Room'}">
+                    <span class="material-symbols-outlined ${isFav ? 'font-filled' : ''} text-lg">favorite</span>
+                </button>
+                
+                <!-- Match Score Badge -->
+                ${r.matchScore !== null ? `
+                <div class="absolute top-3 left-3 bg-accent text-white dark:text-surface px-2.5 py-1.5 rounded-lg font-black text-[9px] uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-accent/20">
+                    <span class="material-symbols-outlined text-xs">verified</span> ${r.matchScore}% Match
+                </div>
+                ` : ''}
+                
                 <div class="absolute bottom-3 right-3 bg-primary text-white dark:text-surface px-3 py-1.5 rounded-lg font-black text-sm shadow-xl">₹${r.rent}</div>
             </div>
             <div class="p-5 flex flex-col flex-grow">
@@ -376,31 +490,56 @@ function filterTenantRooms() {
                 
                 <div class="flex flex-wrap gap-1.5 mb-4">
                     ${featuresHtml}
-                </div>
+                  </div>
 
-                <div class="grid grid-cols-2 gap-2 mb-4">
-                    <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Floor: ${escapedFloor}</div>
-                    <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Road: ${escapedRoad}</div>
-                </div>
-                
-                <div class="flex flex-col gap-2 mt-auto">
-                    <div class="flex gap-2">
-                        ${hasMap ? `
-                        <button onclick="openMapModal(${r.lat}, ${r.lng}, '${safeTitleForClick}')" class="flex-1 py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
-                            <span class="material-symbols-outlined text-[1rem]">map</span> Map
-                        </button>
-                        ` : ''}
-                        <button onclick="shareRoom('${r.id}')" class="${hasMap ? 'flex-1' : 'w-full'} py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
-                            <span class="material-symbols-outlined text-[1rem]">ios_share</span> Share
-                        </button>
-                    </div>
-                    <a href="https://wa.me/91${r.contact}" target="_blank" class="w-full py-3 rounded-xl bg-accent text-white font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-all shadow-md">
-                        <span class="material-symbols-outlined text-[1rem]">chat</span> WhatsApp Owner
-                    </a>
-                </div>
-            </div>
-        </article>`;
+                  <div class="grid grid-cols-2 gap-2 mb-4">
+                      <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Floor: ${escapedFloor}</div>
+                      <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Road: ${escapedRoad}</div>
+                  </div>
+                  
+                  <div class="flex flex-col gap-2 mt-auto">
+                      <div class="flex gap-2">
+                          ${hasMap ? `
+                          <button onclick="openMapModal(${r.lat}, ${r.lng}, '${safeTitleForClick}')" class="flex-1 py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
+                              <span class="material-symbols-outlined text-[1rem]">map</span> Map
+                          </button>
+                          ` : ''}
+                          <button onclick="shareRoom('${r.id}')" class="${hasMap ? 'flex-1' : 'w-full'} py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
+                              <span class="material-symbols-outlined text-[1rem]">ios_share</span> Share
+                          </button>
+                      </div>
+                      <a href="https://wa.me/91${r.contact}" target="_blank" class="w-full py-3 rounded-xl bg-accent text-white font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-all shadow-md">
+                          <span class="material-symbols-outlined text-[1rem]">chat</span> WhatsApp Owner
+                      </a>
+                  </div>
+              </div>
+          </article>`;
     }).join('');
+
+    // Render Saved Rooms list in the sidebar
+    const savedContainer = document.getElementById('tn-saved-container');
+    const savedList = document.getElementById('tn-saved-list');
+    
+    if (savedContainer && savedList) {
+        const savedRooms = allRooms.filter(r => favorites.includes(r.id));
+        if (savedRooms.length > 0) {
+            savedContainer.classList.remove('hidden');
+            savedList.innerHTML = savedRooms.map(r => `
+                <div class="bg-surface-container/60 p-2.5 rounded-xl flex items-center gap-3 border border-outline-variant/20 hover:border-accent/40 transition-all cursor-pointer group" onclick="scrollToRoom('${r.id}')">
+                    <img src="${escapeHtml(r.image_url)}" class="w-10 h-10 rounded-lg object-cover">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-[11px] text-primary truncate group-hover:text-accent transition-colors">${escapeHtml(r.title)}</h4>
+                        <p class="text-[9px] text-on-surface-variant font-medium">₹${r.rent.toLocaleString()}/mo</p>
+                    </div>
+                    <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="text-error material-symbols-outlined font-filled text-sm hover:bg-error/10 p-1.5 rounded-full transition-colors" title="Remove">favorite</button>
+                </div>
+            `).join('');
+        } else {
+            savedContainer.classList.add('hidden');
+            savedList.innerHTML = '';
+        }
+    }
+}
 }
 
 function openMapModal(lat, lng, title) {
@@ -444,7 +583,56 @@ function closeAuthModal() {
 }
 
 // Locality fast filter control
+// Mobile Filter Drawer toggle control
+function toggleMobileFilters() {
+    const filters = document.getElementById('tn-filters-container');
+    const backdrop = document.getElementById('tn-filters-backdrop');
+    const toggleText = document.getElementById('filter-toggle-text');
+    
+    if (!filters) return;
+    
+    if (filters.classList.contains('show-mobile')) {
+        filters.classList.remove('show-mobile');
+        filters.classList.add('hidden'); // Re-hide to prevent focus and layout issues
+        if (backdrop) {
+            backdrop.classList.add('opacity-0');
+            setTimeout(() => backdrop.classList.add('hidden'), 300);
+        }
+        if (toggleText) toggleText.innerText = "Show Filters";
+    } else {
+        filters.classList.remove('hidden');
+        // Force layout reflow
+        filters.offsetHeight;
+        filters.classList.add('show-mobile');
+        if (backdrop) {
+            backdrop.classList.remove('hidden');
+            backdrop.offsetHeight; // Force reflow
+            backdrop.classList.remove('opacity-0');
+        }
+        if (toggleText) toggleText.innerText = "Hide Filters";
+    }
+}
+
+// Locality drop-down handler
 let activeLocality = '';
+function handleLocalityChange(value) {
+    activeLocality = value;
+    filterTenantRooms();
+}
+
+// Favorites toggle state action
+function toggleFavorite(roomId) {
+    const idx = favorites.indexOf(roomId);
+    if (idx === -1) {
+        favorites.push(roomId);
+    } else {
+        favorites.splice(idx, 1);
+    }
+    localStorage.setItem('gn_favorites', JSON.stringify(favorites));
+    filterTenantRooms();
+}
+
+// Locality fast filter control (Retained for backwards compatibility)
 function filterByLocality(locName, btn) {
     activeLocality = locName;
     document.querySelectorAll('.loc-pill').forEach(b => {
@@ -573,4 +761,28 @@ function setFilterRoad(val, btn) {
     });
     btn.className = "road-pill active-road flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
     filterTenantRooms();
+}
+
+// Anchor navigation and smooth highlight scroll action
+function scrollToRoom(roomId) {
+    setTenantView('grid');
+    
+    // Close mobile filters drawer if open
+    const filters = document.getElementById('tn-filters-container');
+    if (filters && filters.classList.contains('show-mobile')) {
+        toggleMobileFilters();
+    }
+    
+    setTimeout(() => {
+        const el = document.getElementById(`room-${roomId}`);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Apply high contrast visual highlight ring
+            el.classList.add('ring-4', 'ring-accent', 'scale-[1.03]', 'shadow-2xl');
+            setTimeout(() => {
+                el.classList.remove('ring-4', 'ring-accent', 'scale-[1.03]', 'shadow-2xl');
+            }, 1800);
+        }
+    }, 100);
 }
