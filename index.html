@@ -209,9 +209,22 @@
                         </div>
                     </div>
 
+                    <!-- View Mode Toggle (Unique and Stylish) -->
+                    <div class="flex justify-between items-center bg-surface-container p-1.5 rounded-2xl max-w-sm transition-colors mb-6 shadow-sm border border-outline-variant/30">
+                        <button id="btn-view-grid" onclick="setTenantView('grid')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-md transition-all">Grid Feed</button>
+                        <button id="btn-view-map" onclick="setTenantView('map')" class="flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/30 transition-all">Interactive Map</button>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <!-- Sidebar Filters -->
+                        <!-- Sidebar Filters (Control Center) -->
                         <div class="lg:col-span-4 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
+                            <header class="pb-3 border-b border-outline-variant/30">
+                                <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
+                                    <span class="material-symbols-outlined text-[1.15rem] text-accent">tune</span> Smart Search Filter
+                                </h3>
+                            </header>
+
+                            <!-- BHK Size -->
                             <div class="space-y-2.5">
                                 <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">BHK Size</label>
                                 <div class="flex flex-wrap gap-1.5">
@@ -223,12 +236,49 @@
                                 </div>
                             </div>
 
+                            <!-- Price Budget -->
                             <div class="space-y-2.5">
                                 <div class="flex justify-between items-center">
                                     <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Max Rent</label>
                                     <span id="tn-price-label" class="text-sm font-black text-accent">₹25,000</span>
                                 </div>
                                 <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer">
+                            </div>
+
+                            <!-- Water Supply Specs -->
+                            <div class="space-y-2.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Water Supply</label>
+                                <div class="flex gap-2">
+                                    <button onclick="setFilterWater('all', this)" class="water-pill active-water flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">All</button>
+                                    <button onclick="setFilterWater('24/7', this)" class="water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">24/7</button>
+                                    <button onclick="setFilterWater('Scheduled', this)" class="water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">Scheduled</button>
+                                </div>
+                            </div>
+
+                            <!-- Road Accessibility Specs -->
+                            <div class="space-y-2.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Road Access</label>
+                                <div class="flex gap-2">
+                                    <button onclick="setFilterRoad('all', this)" class="road-pill active-road flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">All</button>
+                                    <button onclick="setFilterRoad('On Road', this)" class="road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">On Road</button>
+                                    <button onclick="setFilterRoad('5m Walk', this)" class="road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">Walkable</button>
+                                </div>
+                            </div>
+
+                            <!-- Interactive Amenities Toggles -->
+                            <div class="space-y-2.5">
+                                <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Amenities Needed</label>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <button onclick="toggleFilterAmenity('sunlight', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
+                                        <span class="material-symbols-outlined text-[1.1rem]">wb_sunny</span> Sunlight
+                                    </button>
+                                    <button onclick="toggleFilterAmenity('parking', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
+                                        <span class="material-symbols-outlined text-[1.1rem]">local_parking</span> Parking
+                                    </button>
+                                    <button onclick="toggleFilterAmenity('balcony', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
+                                        <span class="material-symbols-outlined text-[1.1rem]">balcony</span> Balcony
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
@@ -237,9 +287,17 @@
                             </div>
                         </div>
 
-                        <!-- Room Grid -->
-                        <div class="lg:col-span-8">
-                            <div id="tn-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                        <!-- Listings Display Area -->
+                        <div class="lg:col-span-8 space-y-6">
+                            <!-- Grid View -->
+                            <div id="tn-grid-view" class="block">
+                                <div id="tn-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                            </div>
+                            
+                            <!-- Map View -->
+                            <div id="tn-map-view" class="hidden">
+                                <div id="main-tenant-map-container" class="h-[600px] rounded-[2rem] border border-outline-variant/30 overflow-hidden shadow-xl z-0 transition-colors"></div>
+                            </div>
                         </div>
                     </div>
                 </section>

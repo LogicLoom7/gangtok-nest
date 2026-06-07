@@ -48,6 +48,16 @@ let currentLng = null;
 let tenantMap = null;
 let tenantMarker = null;
 
+// Modern Tenant Filters and Grid/Map View states
+let mainTenantMap = null;
+let mainTenantMarkers = [];
+let activeView = 'grid'; // 'grid' or 'map'
+let filterWater = 'all';
+let filterRoad = 'all';
+let filterSunlight = false;
+let filterParking = false;
+let filterBalcony = false;
+
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
     if (user) {
@@ -327,8 +337,18 @@ function filterTenantRooms() {
         (r.location.toLowerCase().includes(s)) && 
         (activeLocality === '' || r.location.toLowerCase().includes(activeLocality.toLowerCase())) && 
         r.rent <= p && 
-        (activeBHK === 0 || r.bhk === activeBHK)
+        (activeBHK === 0 || r.bhk === activeBHK) &&
+        (filterWater === 'all' || r.water === filterWater) &&
+        (filterRoad === 'all' || r.road_dist === filterRoad) &&
+        (!filterSunlight || r.sunlight) &&
+        (!filterParking || r.parking) &&
+        (!filterBalcony || r.balcony)
     );
+    
+    // Sync map if active
+    if (activeView === 'map') {
+        updateTenantMapMarkers(f);
+    }
     
     document.getElementById('tn-grid').innerHTML = f.map(r => {
         const hasMap = r.lat && r.lng; 
@@ -432,5 +452,126 @@ function filterByLocality(locName, btn) {
         b.className = "loc-pill px-4 py-2 rounded-full text-xs font-bold bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all";
     });
     btn.className = "loc-pill active-pill px-4 py-2 rounded-full text-xs font-bold bg-primary text-white dark:text-surface transition-all shadow-sm";
+    filterTenantRooms();
+}
+
+// ==========================================
+// ADVANCED SMART FILTERING & GRID/MAP VIEW SYSTEM
+// ==========================================
+function setTenantView(view) {
+    activeView = view;
+    const btnGrid = document.getElementById('btn-view-grid');
+    const btnMap = document.getElementById('btn-view-map');
+    const gridContainer = document.getElementById('tn-grid-view');
+    const mapContainer = document.getElementById('tn-map-view');
+    
+    const activeClass = "flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-md transition-all";
+    const inactiveClass = "flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/30 transition-all";
+    
+    if (view === 'grid') {
+        btnGrid.className = activeClass;
+        btnMap.className = inactiveClass;
+        gridContainer.classList.remove('hidden');
+        mapContainer.classList.add('hidden');
+    } else {
+        btnGrid.className = inactiveClass;
+        btnMap.className = activeClass;
+        gridContainer.classList.add('hidden');
+        mapContainer.classList.remove('hidden');
+        
+        // Initialize Map if not done
+        setTimeout(() => {
+            if (!mainTenantMap) {
+                mainTenantMap = L.map('main-tenant-map-container').setView([27.3314, 88.6138], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(mainTenantMap);
+            }
+            mainTenantMap.invalidateSize();
+            
+            // Re-run filtering to plot markers
+            filterTenantRooms();
+        }, 150);
+    }
+}
+
+function updateTenantMapMarkers(filteredRooms) {
+    if (!mainTenantMap) return;
+    
+    // Clear existing markers
+    mainTenantMarkers.forEach(m => mainTenantMap.removeLayer(m));
+    mainTenantMarkers = [];
+    
+    // Add new markers
+    filteredRooms.forEach(r => {
+        if (!r.lat || !r.lng) return;
+        
+        const m = L.marker([r.lat, r.lng]).addTo(mainTenantMap);
+        
+        const escapedTitle = escapeHtml(r.title);
+        const escapedImage = escapeHtml(r.image_url);
+        
+        const popupContent = `
+        <div class="p-1 space-y-2 text-primary max-w-[200px]" style="font-family: 'Inter', sans-serif;">
+            <img src="${escapedImage}" class="w-full h-20 object-cover rounded-lg shadow-sm">
+            <h4 class="font-bold text-xs truncate" style="margin: 4px 0; color: var(--color-primary);">${escapedTitle}</h4>
+            <div class="flex justify-between items-center text-[10px] font-black">
+                <span class="text-accent">₹${r.rent.toLocaleString()}/mo</span>
+                <span class="bg-surface-container px-1.5 py-0.5 rounded" style="color: var(--color-on-surface);">${r.bhk} BHK</span>
+            </div>
+            <a href="https://wa.me/91${r.contact}" target="_blank" class="block text-center py-1.5 bg-accent text-white text-[9px] font-extrabold uppercase rounded-lg shadow hover:opacity-90 transition-all" style="margin-top: 6px; text-decoration: none;">WhatsApp Owner</a>
+        </div>
+        `;
+        
+        m.bindPopup(popupContent);
+        mainTenantMarkers.push(m);
+    });
+    
+    // If there are markers, fit bounds
+    if (mainTenantMarkers.length > 0) {
+        const group = new L.featureGroup(mainTenantMarkers);
+        mainTenantMap.fitBounds(group.getBounds().pad(0.15));
+    }
+}
+
+function toggleFilterAmenity(type, btn) {
+    if (type === 'sunlight') {
+        filterSunlight = !filterSunlight;
+        toggleButtonState(btn, filterSunlight);
+    } else if (type === 'parking') {
+        filterParking = !filterParking;
+        toggleButtonState(btn, filterParking);
+    } else if (type === 'balcony') {
+        filterBalcony = !filterBalcony;
+        toggleButtonState(btn, filterBalcony);
+    }
+    filterTenantRooms();
+}
+
+function toggleButtonState(btn, isActive) {
+    if (isActive) {
+        btn.classList.add('bg-accent', 'text-white', 'dark:text-surface', 'border-accent/40');
+        btn.classList.remove('bg-surface-container', 'text-on-surface');
+    } else {
+        btn.classList.remove('bg-accent', 'text-white', 'dark:text-surface', 'border-accent/40');
+        btn.classList.add('bg-surface-container', 'text-on-surface');
+    }
+}
+
+function setFilterWater(val, btn) {
+    filterWater = val;
+    document.querySelectorAll('.water-pill').forEach(b => {
+        b.className = "water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors";
+    });
+    btn.className = "water-pill active-water flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
+    filterTenantRooms();
+}
+
+function setFilterRoad(val, btn) {
+    filterRoad = val;
+    document.querySelectorAll('.road-pill').forEach(b => {
+        b.className = "road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors";
+    });
+    btn.className = "road-pill active-road flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
     filterTenantRooms();
 }
