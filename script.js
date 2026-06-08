@@ -60,6 +60,7 @@ let filterBalcony = false;
 
 // Favorites Database
 let favorites = JSON.parse(localStorage.getItem('gn_favorites') || '[]');
+let filterFavorites = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const { data: { user } } = await supabaseClient.auth.getUser();
@@ -224,9 +225,9 @@ async function publishListing() {
     const btn = document.getElementById('ll-submit');
     const original = btn.innerText;
     
-    const selectedLocality = document.getElementById('ll-loc').value;
+    const selectedLocality = document.getElementById('ll-loc').value.trim();
     if (!selectedLocality) {
-        alert("Please select a locality.");
+        alert("Please enter the location details.");
         return;
     }
     
@@ -241,11 +242,19 @@ async function publishListing() {
             'Majhitar': { lat: 27.1895, lng: 88.5888 },
             'Ranipool': { lat: 27.2995, lng: 88.5947 }
         };
-        const fallback = coordMap[selectedLocality];
-        if (fallback) {
-            lat = fallback.lat;
-            lng = fallback.lng;
-        } else {
+        
+        const typedLoc = selectedLocality.toLowerCase();
+        let found = false;
+        for (const [key, coords] of Object.entries(coordMap)) {
+            if (typedLoc.includes(key.toLowerCase())) {
+                lat = coords.lat;
+                lng = coords.lng;
+                found = true;
+                break;
+            }
+        }
+        
+        if (!found) {
             // Default center of Gangtok
             lat = 27.3314;
             lng = 88.6138;
@@ -330,38 +339,19 @@ async function fetchTenantData() {
     const { data } = await supabaseClient.from('listings').select('*').order('created_at', { ascending: false });
     allRooms = data || [];
     
-    // Render Featured Accommodation (Latest room listing)
-    const featured = allRooms[0];
-    const featContainer = document.getElementById('tn-featured-container');
-    const featCard = document.getElementById('tn-featured-card');
-    
-    if (featured && featContainer && featCard) {
-        featContainer.classList.remove('hidden');
-        featCard.innerHTML = `
-            <div class="relative rounded-xl overflow-hidden h-24 mb-2">
-                <img src="${escapeHtml(featured.image_url)}" class="w-full h-full object-cover">
-                <div class="absolute bottom-2 right-2 bg-primary text-white dark:text-surface px-2 py-0.5 rounded text-[10px] font-black">₹${featured.rent}</div>
-            </div>
-            <h4 class="font-bold text-[11px] text-primary truncate">${escapeHtml(featured.title)}</h4>
-            <p class="text-[9px] text-on-surface-variant flex items-center gap-0.5 truncate"><span class="material-symbols-outlined text-[10px]">location_on</span>${escapeHtml(featured.location)}</p>
-            <div class="flex gap-1.5 mt-2">
-                <a href="https://wa.me/91${featured.contact}" target="_blank" class="flex-grow text-center py-1.5 bg-accent text-white text-[9px] font-extrabold uppercase rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center justify-center gap-1" style="text-decoration: none;">
-                    <span class="material-symbols-outlined text-[10px]">chat</span> WhatsApp
-                </a>
-                <button onclick="scrollToRoom('${featured.id}')" class="px-2.5 py-1.5 bg-surface-container hover:bg-outline-variant/30 text-on-surface text-[9px] font-bold uppercase rounded-lg transition-all">Details</button>
-            </div>
-        `;
-    } else if (featContainer) {
-        featContainer.classList.add('hidden');
-    }
-    
-    filterTenantRooms();
+    // Initialize the split screen Leaflet map dynamically
+    setTimeout(() => {
+        initTenantMap();
+        filterTenantRooms();
+    }, 100);
 }
 
 function setTenantBHK(b, btn) {
     activeBHK = b;
-    document.querySelectorAll('.tn-bhk-btn').forEach(x => x.className = "tn-bhk-btn flex-1 py-3 rounded-xl text-[10px] font-black bg-surface-container text-on-surface uppercase transition-colors");
-    btn.className = "tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[10px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
+    document.querySelectorAll('.tn-bhk-btn').forEach(x => {
+        x.className = "tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors";
+    });
+    btn.className = "tn-bhk-btn active-bhk px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
     filterTenantRooms();
 }
 
@@ -394,18 +384,21 @@ function shareRoom(roomId) {
 }
 
 function filterTenantRooms() {
-    const s = document.getElementById('tn-search').value.toLowerCase();
-    const p = parseInt(document.getElementById('tn-price').value);
-    document.getElementById('tn-price-label').innerText = `₹${p.toLocaleString()}`;
+    const searchInput = document.getElementById('tn-search');
+    const priceInput = document.getElementById('tn-price');
     
-    const favoritesOnly = document.getElementById('filter-favorites').checked;
+    if (!searchInput || !priceInput) return;
+    
+    const s = searchInput.value.toLowerCase();
+    const p = parseInt(priceInput.value);
+    document.getElementById('tn-price-label').innerText = `₹${(p/1000).toFixed(0)}K`;
     
     let filtered = allRooms.filter(r => {
         const matchesSearch = r.location.toLowerCase().includes(s) || r.title.toLowerCase().includes(s);
         const matchesLocality = activeLocality === '' || r.location.toLowerCase().includes(activeLocality.toLowerCase());
         const matchesPrice = r.rent <= p;
         const matchesBHK = activeBHK === 0 || r.bhk === activeBHK;
-        const matchesFavorites = !favoritesOnly || favorites.includes(r.id);
+        const matchesFavorites = !filterFavorites || favorites.includes(r.id);
         
         return matchesSearch && matchesLocality && matchesPrice && matchesBHK && matchesFavorites;
     });
@@ -445,11 +438,46 @@ function filterTenantRooms() {
     }
     
     // Sync map if active
-    if (activeView === 'map') {
+    if (mainTenantMap) {
         updateTenantMapMarkers(filtered);
     }
     
-    document.getElementById('tn-grid').innerHTML = filtered.map(r => {
+    // Render count
+    const countEl = document.getElementById('results-count');
+    if (countEl) {
+        countEl.innerText = filtered.length;
+    }
+    
+    // Render saved badge
+    const savedBadge = document.getElementById('saved-badge');
+    if (savedBadge) {
+        const favCount = allRooms.filter(r => favorites.includes(r.id)).length;
+        if (favCount > 0) {
+            savedBadge.innerText = favCount;
+            savedBadge.classList.remove('hidden');
+        } else {
+            savedBadge.classList.add('hidden');
+        }
+    }
+    
+    const gridContainer = document.getElementById('tn-grid');
+    if (!gridContainer) return;
+    
+    if (filtered.length === 0) {
+        gridContainer.innerHTML = `
+        <div class="col-span-full py-16 flex flex-col items-center justify-center text-center space-y-4">
+            <span class="material-symbols-outlined text-primary/30 text-6xl">search_off</span>
+            <div>
+                <h3 class="font-headline font-black text-base text-primary">No Rooms Found</h3>
+                <p class="text-on-surface-variant text-xs mt-1">We couldn't find any rooms matching your search and filter criteria.</p>
+            </div>
+            <button onclick="resetFilters()" class="px-5 py-2.5 bg-primary text-white dark:text-surface rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:opacity-95 transition-all">Clear All Filters</button>
+        </div>
+        `;
+        return;
+    }
+    
+    gridContainer.innerHTML = filtered.map(r => {
         const hasMap = r.lat && r.lng; 
         const escapedTitle = escapeHtml(r.title);
         const escapedLocation = escapeHtml(r.location);
@@ -464,9 +492,12 @@ function filterTenantRooms() {
         if(r.balcony) featuresHtml += `<span class="bg-emerald-500/10 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-2 py-1 rounded-md text-[8px] font-bold uppercase border border-emerald-500/20">Balcony</span>`;
 
         const isFav = favorites.includes(r.id);
+        const isFeatured = (allRooms.length > 0 && r.id === allRooms[0].id);
+        
+        const cardClass = `bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/30 flex flex-col group hover:-translate-y-1 transition-all relative cursor-pointer ${isFeatured ? 'featured-glow' : ''}`;
 
         return `
-        <article id="room-${r.id}" class="bg-surface-container-lowest rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/30 flex flex-col group hover:-translate-y-1 transition-all relative">
+        <article id="room-${r.id}" class="${cardClass}" onclick="focusMapOnRoom('${r.id}')" onmouseenter="highlightMapMarker('${r.id}')">
             <div class="h-48 relative overflow-hidden">
                 <img src="${escapedImage}" class="w-full h-full object-cover">
                 
@@ -475,12 +506,19 @@ function filterTenantRooms() {
                     <span class="material-symbols-outlined ${isFav ? 'font-filled' : ''} text-lg">favorite</span>
                 </button>
                 
-                <!-- Match Score Badge -->
-                ${r.matchScore !== null ? `
-                <div class="absolute top-3 left-3 bg-accent text-white dark:text-surface px-2.5 py-1.5 rounded-lg font-black text-[9px] uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-accent/20">
-                    <span class="material-symbols-outlined text-xs">verified</span> ${r.matchScore}% Match
+                <!-- Badges overlay -->
+                <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+                    ${isFeatured ? `
+                    <div class="bg-accent text-white dark:text-surface px-2.5 py-1.5 rounded-lg font-black text-[9px] uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-accent/20">
+                        <span class="material-symbols-outlined text-xs">grade</span> Featured Room
+                    </div>
+                    ` : ''}
+                    ${r.matchScore !== null ? `
+                    <div class="bg-primary text-white dark:text-surface px-2.5 py-1.5 rounded-lg font-black text-[9px] uppercase tracking-widest shadow-lg flex items-center gap-1.5 border border-primary/20">
+                        <span class="material-symbols-outlined text-xs">verified</span> ${r.matchScore}% Match
+                    </div>
+                    ` : ''}
                 </div>
-                ` : ''}
                 
                 <div class="absolute bottom-3 right-3 bg-primary text-white dark:text-surface px-3 py-1.5 rounded-lg font-black text-sm shadow-xl">₹${r.rent}</div>
             </div>
@@ -490,55 +528,31 @@ function filterTenantRooms() {
                 
                 <div class="flex flex-wrap gap-1.5 mb-4">
                     ${featuresHtml}
-                  </div>
-
-                  <div class="grid grid-cols-2 gap-2 mb-4">
-                      <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Floor: ${escapedFloor}</div>
-                      <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Road: ${escapedRoad}</div>
-                  </div>
-                  
-                  <div class="flex flex-col gap-2 mt-auto">
-                      <div class="flex gap-2">
-                          ${hasMap ? `
-                          <button onclick="openMapModal(${r.lat}, ${r.lng}, '${safeTitleForClick}')" class="flex-1 py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
-                              <span class="material-symbols-outlined text-[1rem]">map</span> Map
-                          </button>
-                          ` : ''}
-                          <button onclick="shareRoom('${r.id}')" class="${hasMap ? 'flex-1' : 'w-full'} py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
-                              <span class="material-symbols-outlined text-[1rem]">ios_share</span> Share
-                          </button>
-                      </div>
-                      <a href="https://wa.me/91${r.contact}" target="_blank" class="w-full py-3 rounded-xl bg-accent text-white font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-all shadow-md">
-                          <span class="material-symbols-outlined text-[1rem]">chat</span> WhatsApp Owner
-                      </a>
-                  </div>
-              </div>
-          </article>`;
-    }).join('');
-
-    // Render Saved Rooms list in the sidebar
-    const savedContainer = document.getElementById('tn-saved-container');
-    const savedList = document.getElementById('tn-saved-list');
-    
-    if (savedContainer && savedList) {
-        const savedRooms = allRooms.filter(r => favorites.includes(r.id));
-        if (savedRooms.length > 0) {
-            savedContainer.classList.remove('hidden');
-            savedList.innerHTML = savedRooms.map(r => `
-                <div class="bg-surface-container/60 p-2.5 rounded-xl flex items-center gap-3 border border-outline-variant/20 hover:border-accent/40 transition-all cursor-pointer group" onclick="scrollToRoom('${r.id}')">
-                    <img src="${escapeHtml(r.image_url)}" class="w-10 h-10 rounded-lg object-cover">
-                    <div class="flex-1 min-w-0">
-                        <h4 class="font-bold text-[11px] text-primary truncate group-hover:text-accent transition-colors">${escapeHtml(r.title)}</h4>
-                        <p class="text-[9px] text-on-surface-variant font-medium">₹${r.rent.toLocaleString()}/mo</p>
-                    </div>
-                    <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="text-error material-symbols-outlined font-filled text-sm hover:bg-error/10 p-1.5 rounded-full transition-colors" title="Remove">favorite</button>
                 </div>
-            `).join('');
-        } else {
-            savedContainer.classList.add('hidden');
-            savedList.innerHTML = '';
-        }
-    }
+
+                <div class="grid grid-cols-2 gap-2 mb-4">
+                    <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Floor: ${escapedFloor}</div>
+                    <div class="bg-surface-container p-2 rounded-lg text-[9px] font-bold text-center uppercase text-on-surface transition-colors">Road: ${escapedRoad}</div>
+                </div>
+                
+                <div class="flex flex-col gap-2 mt-auto">
+                    <div class="flex gap-2">
+                        ${hasMap ? `
+                        <button onclick="focusMapOnRoom('${r.id}'); event.stopPropagation();" class="flex-1 py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
+                            <span class="material-symbols-outlined text-[1rem]">map</span> View on Map
+                        </button>
+                        ` : ''}
+                        <button onclick="shareRoom('${r.id}'); event.stopPropagation();" class="${hasMap ? 'flex-1' : 'w-full'} py-3 rounded-xl bg-surface-container text-on-surface font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:bg-outline-variant/30 transition-all shadow-sm">
+                            <span class="material-symbols-outlined text-[1rem]">ios_share</span> Share
+                        </button>
+                    </div>
+                    <a href="https://wa.me/91${r.contact}" target="_blank" onclick="event.stopPropagation();" class="w-full py-3 rounded-xl bg-accent text-white font-black uppercase text-[10px] flex items-center justify-center gap-1.5 hover:opacity-90 transition-all shadow-md">
+                        <span class="material-symbols-outlined text-[1rem]">chat</span> WhatsApp Owner
+                    </a>
+                </div>
+            </div>
+        </article>`;
+    }).join('');
 }
 
 function openMapModal(lat, lng, title) {
@@ -642,42 +656,88 @@ function filterByLocality(locName, btn) {
 }
 
 // ==========================================
-// ADVANCED SMART FILTERING & GRID/MAP VIEW SYSTEM
+// ADVANCED SMART FILTERING & SPLIT-SCREEN VIEW SYSTEM
 // ==========================================
-function setTenantView(view) {
-    activeView = view;
-    const btnGrid = document.getElementById('btn-view-grid');
-    const btnMap = document.getElementById('btn-view-map');
-    const gridContainer = document.getElementById('tn-grid-view');
-    const mapContainer = document.getElementById('tn-map-view');
+let mobileActivePanel = 'listings'; // 'listings' or 'map'
+
+function initTenantMap() {
+    if (mainTenantMap) return;
+    const mapDiv = document.getElementById('main-tenant-map-container');
+    if (!mapDiv) return;
     
-    const activeClass = "flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-md transition-all";
-    const inactiveClass = "flex-grow sm:flex-grow-0 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/30 transition-all";
+    mainTenantMap = L.map('main-tenant-map-container').setView([27.3314, 88.6138], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(mainTenantMap);
     
-    if (view === 'grid') {
-        btnGrid.className = activeClass;
-        btnMap.className = inactiveClass;
-        gridContainer.classList.remove('hidden');
-        mapContainer.classList.add('hidden');
+    mainTenantMap.invalidateSize();
+}
+
+function setTenantTab(tab) {
+    filterFavorites = (tab === 'saved');
+    
+    const btnExplore = document.getElementById('btn-tab-explore');
+    const btnSaved = document.getElementById('btn-tab-saved');
+    const tabLabel = document.getElementById('tenant-current-tab-label');
+    
+    const activeClass = "px-3.5 py-2 rounded-lg bg-primary text-white dark:text-surface shadow transition-all";
+    
+    if (tab === 'saved') {
+        if (btnExplore) btnExplore.className = "px-3.5 py-2 rounded-lg bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all";
+        if (btnSaved) btnSaved.className = activeClass + " flex items-center gap-1";
+        if (tabLabel) tabLabel.innerText = "Saved Rooms";
     } else {
-        btnGrid.className = inactiveClass;
-        btnMap.className = activeClass;
-        gridContainer.classList.add('hidden');
-        mapContainer.classList.remove('hidden');
+        if (btnExplore) btnExplore.className = activeClass;
+        if (btnSaved) btnSaved.className = "px-3.5 py-2 rounded-lg bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all flex items-center gap-1";
+        if (tabLabel) tabLabel.innerText = "Explore Mode";
+    }
+    
+    filterTenantRooms();
+}
+
+function toggleMobileView() {
+    const listingsPanel = document.getElementById('tn-listings-panel');
+    const mapPanel = document.getElementById('tn-map-panel');
+    const toggleBtn = document.getElementById('btn-mobile-toggle-view');
+    const toggleText = document.getElementById('mobile-toggle-text');
+    
+    if (!listingsPanel || !mapPanel) return;
+    
+    if (mobileActivePanel === 'listings') {
+        mobileActivePanel = 'map';
         
-        // Initialize Map if not done
+        listingsPanel.classList.add('mobile-panel-hidden');
+        listingsPanel.classList.remove('mobile-panel-visible');
+        
+        mapPanel.classList.add('mobile-panel-visible');
+        mapPanel.classList.remove('mobile-panel-hidden');
+        
+        if (toggleText) toggleText.innerText = "Show List";
+        if (toggleBtn) {
+            const icon = toggleBtn.querySelector('.material-symbols-outlined');
+            if (icon) icon.innerText = "list";
+        }
+        
+        // Re-align Leaflet sizing and map pins
         setTimeout(() => {
-            if (!mainTenantMap) {
-                mainTenantMap = L.map('main-tenant-map-container').setView([27.3314, 88.6138], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(mainTenantMap);
-            }
+            initTenantMap();
             mainTenantMap.invalidateSize();
-            
-            // Re-run filtering to plot markers
             filterTenantRooms();
         }, 150);
+    } else {
+        mobileActivePanel = 'listings';
+        
+        listingsPanel.classList.add('mobile-panel-visible');
+        listingsPanel.classList.remove('mobile-panel-hidden');
+        
+        mapPanel.classList.add('mobile-panel-hidden');
+        mapPanel.classList.remove('mobile-panel-visible');
+        
+        if (toggleText) toggleText.innerText = "Show Map";
+        if (toggleBtn) {
+            const icon = toggleBtn.querySelector('.material-symbols-outlined');
+            if (icon) icon.innerText = "map";
+        }
     }
 }
 
@@ -710,13 +770,34 @@ function updateTenantMapMarkers(filteredRooms) {
         `;
         
         m.bindPopup(popupContent);
+        m.roomId = r.id; // Associate roomId
+        
         mainTenantMarkers.push(m);
     });
+}
+
+function focusMapOnRoom(roomId) {
+    const room = allRooms.find(r => r.id === roomId);
+    if (!room || !room.lat || !room.lng || !mainTenantMap) return;
     
-    // If there are markers, fit bounds
-    if (mainTenantMarkers.length > 0) {
-        const group = new L.featureGroup(mainTenantMarkers);
-        mainTenantMap.fitBounds(group.getBounds().pad(0.15));
+    // If on mobile and currently showing list, toggle to map panel first
+    if (window.innerWidth < 1024 && mobileActivePanel === 'listings') {
+        toggleMobileView();
+    }
+    
+    setTimeout(() => {
+        mainTenantMap.setView([room.lat, room.lng], 16);
+        const marker = mainTenantMarkers.find(m => m.roomId === roomId);
+        if (marker) {
+            marker.openPopup();
+        }
+    }, 100);
+}
+
+function highlightMapMarker(roomId) {
+    const marker = mainTenantMarkers.find(m => m.roomId === roomId);
+    if (marker) {
+        marker.openPopup();
     }
 }
 
@@ -747,24 +828,26 @@ function toggleButtonState(btn, isActive) {
 function setFilterWater(val, btn) {
     filterWater = val;
     document.querySelectorAll('.water-pill').forEach(b => {
-        b.className = "water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors";
+        b.className = "water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors";
     });
-    btn.className = "water-pill active-water flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
+    btn.className = "water-pill active-water flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
     filterTenantRooms();
 }
 
 function setFilterRoad(val, btn) {
     filterRoad = val;
     document.querySelectorAll('.road-pill').forEach(b => {
-        b.className = "road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors";
+        b.className = "road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors";
     });
-    btn.className = "road-pill active-road flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors";
+    btn.className = "road-pill active-road flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
     filterTenantRooms();
 }
 
 // Anchor navigation and smooth highlight scroll action
 function scrollToRoom(roomId) {
-    setTenantView('grid');
+    if (window.innerWidth < 1024 && mobileActivePanel === 'map') {
+        toggleMobileView();
+    }
     
     // Close mobile filters drawer if open
     const filters = document.getElementById('tn-filters-container');
@@ -778,10 +861,60 @@ function scrollToRoom(roomId) {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
             // Apply high contrast visual highlight ring
-            el.classList.add('ring-4', 'ring-accent', 'scale-[1.03]', 'shadow-2xl');
+            el.classList.add('ring-4', 'ring-accent', 'scale-[1.01]', 'shadow-2xl');
             setTimeout(() => {
-                el.classList.remove('ring-4', 'ring-accent', 'scale-[1.03]', 'shadow-2xl');
+                el.classList.remove('ring-4', 'ring-accent', 'scale-[1.01]', 'shadow-2xl');
             }, 1800);
         }
     }, 100);
+}
+
+// Collapsible advanced specs panel toggle
+function toggleAdvancedFilters() {
+    const adv = document.getElementById('tn-advanced-filters');
+    if (adv) {
+        adv.classList.toggle('hidden');
+    }
+}
+
+function resetFilters() {
+    document.getElementById('tn-search').value = '';
+    document.getElementById('tn-locality-select').value = '';
+    activeLocality = '';
+    
+    activeBHK = 0;
+    document.querySelectorAll('.tn-bhk-btn').forEach(btn => {
+        if (btn.innerText === 'ALL') {
+            btn.className = "tn-bhk-btn active-bhk px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
+        } else {
+            btn.className = "tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors";
+        }
+    });
+    
+    const priceInput = document.getElementById('tn-price');
+    if (priceInput) priceInput.value = 25000;
+    
+    filterSunlight = false;
+    filterParking = false;
+    filterBalcony = false;
+    document.querySelectorAll('#tn-advanced-filters input[type="checkbox"]').forEach(cb => cb.checked = false);
+    
+    filterWater = 'all';
+    filterRoad = 'all';
+    document.querySelectorAll('.water-pill').forEach(b => {
+        if (b.innerText === 'ALL') {
+            b.className = "water-pill active-water flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
+        } else {
+            b.className = "water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors";
+        }
+    });
+    document.querySelectorAll('.road-pill').forEach(b => {
+        if (b.innerText === 'ALL') {
+            b.className = "road-pill active-road flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors";
+        } else {
+            b.className = "road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors";
+        }
+    });
+    
+    filterTenantRooms();
 }

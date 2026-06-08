@@ -182,176 +182,140 @@
         </div>
 
         <!-- Tenant Authenticated View (Only shown when logged in as Tenant) -->
-        <div id="landing-tenant" class="hidden">
-            <main class="pt-[100px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-6">
-                <!-- Compact Greeting and View Switcher Header (Saves vertical space) -->
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-outline-variant/30 pb-4">
-                    <div>
-                        <h1 class="text-2xl font-headline font-extrabold text-primary tracking-tight flex items-center gap-2">
-                            <span class="material-symbols-outlined text-accent text-2xl animate-pulse">explore</span> Verified Listings
-                        </h1>
-                        <p class="text-on-surface-variant text-xs mt-0.5">Welcome, <span id="tenantName" class="font-black text-accent">Renter</span>! Explore rooms across Gangtok.</p>
-                    </div>
-                    
-                    <!-- View Mode Toggle -->
-                    <div class="flex bg-surface-container p-1 rounded-xl border border-outline-variant/30 w-full md:w-auto shadow-sm">
-                        <button id="btn-view-grid" onclick="setTenantView('grid')" class="flex-grow md:flex-none px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-primary text-white dark:text-surface shadow-sm transition-all">Grid Feed</button>
-                        <button id="btn-view-map" onclick="setTenantView('map')" class="flex-grow md:flex-none px-4 py-2 rounded-lg text-xs font-black uppercase tracking-wider bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all">Map View</button>
-                    </div>
-                </div>
-                <!-- Backdrop Overlay for Mobile Filters Drawer -->
-                <div id="tn-filters-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-xs z-[990] hidden opacity-0 transition-opacity duration-300" onclick="toggleMobileFilters()"></div>
-
-                <!-- Mobile Filter Toggle Button (Only visible on mobile) -->
-                <button onclick="toggleMobileFilters()" id="btn-toggle-filters" class="lg:hidden w-full py-3 bg-surface-container border border-outline-variant/30 text-on-surface font-black text-xs uppercase tracking-widest rounded-xl flex items-center justify-center gap-2 mb-4 shadow-sm transition-all hover:bg-outline-variant/10">
-                    <span class="material-symbols-outlined text-[1.1rem]">tune</span> 
-                    <span id="filter-toggle-text">Show Filters</span>
-                </button>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                    <!-- Sidebar Filters (Control Center) -->
-                    <div id="tn-filters-container" class="lg:col-span-3 bg-surface-container-lowest p-6 rounded-[2rem] shadow-xl border border-outline-variant/20 space-y-6 h-fit transition-colors">
-                        <header class="pb-3 border-b border-outline-variant/30 flex justify-between items-center">
-                            <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-[1.15rem] text-accent">tune</span> Smart Search Filter
-                            </h3>
-                            <button onclick="toggleMobileFilters()" class="lg:hidden material-symbols-outlined text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-outline-variant/20" title="Close Filters">close</button>
-                        </header>
-
-                        <!-- Featured Accommodation Section -->
-                        <div id="tn-featured-container" class="space-y-3 pb-4 border-b border-outline-variant/30 hidden">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-accent flex items-center gap-1">
-                                <span class="material-symbols-outlined text-xs animate-bounce">star</span> Featured Accommodation
-                            </label>
-                            <div id="tn-featured-card" class="bg-surface-container/40 border border-outline-variant/20 rounded-2xl overflow-hidden p-2.5 transition-all hover:shadow-md">
-                                <!-- Loaded dynamically in JS -->
-                            </div>
+        <div id="landing-tenant" class="hidden bg-surface h-screen pt-16 flex flex-col overflow-hidden">
+            
+            <!-- Full Width Horizontal Filter Bar -->
+            <div id="tn-horizontal-filters" class="bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm transition-colors relative z-20">
+                <!-- Main filters row -->
+                <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
+                    <!-- Left: Title, User, Search and Locality -->
+                    <div class="flex flex-col sm:flex-row gap-3 flex-1 lg:max-w-3xl items-stretch sm:items-center">
+                        <div class="hidden xl:block pr-2 border-r border-outline-variant/30">
+                            <h1 class="text-sm font-headline font-extrabold text-primary tracking-tight flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-accent animate-pulse text-[1.1rem]">explore</span> Explore
+                            </h1>
+                            <p class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Welcome, <span id="tenantName" class="font-black text-accent">Renter</span></p>
                         </div>
 
                         <!-- Keyword Search -->
-                        <div class="space-y-2">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Keywords Search</label>
-                            <div class="relative flex items-center group">
-                                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] pointer-events-none group-focus-within:text-accent transition-colors">search</span>
-                                <input id="tn-search" onkeyup="filterTenantRooms()" class="w-full pl-9 pr-10 py-2.5 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-accent outline-none text-xs font-bold text-on-surface transition-all" placeholder="Tadong, Sichey...">
-                                <button onclick="filterTenantRooms()" class="absolute right-2 text-accent hover:text-accent/80 transition-colors p-1 flex items-center justify-center" title="Apply Search">
-                                    <span class="material-symbols-outlined text-[1.2rem]">arrow_forward</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Locality Dropdown Selector (Dropdown Menu) -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Select Locality</label>
-                            <div class="relative flex items-center group">
-                                <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] pointer-events-none group-focus-within:text-accent transition-colors">location_on</span>
-                                <select id="tn-locality-select" onchange="handleLocalityChange(this.value)" class="form-input-sm pl-10 cursor-pointer text-xs font-bold text-on-surface bg-surface-container-lowest">
-                                    <option value="">All Areas (Gangtok)</option>
-                                    <option value="Tadong">Tadong</option>
-                                    <option value="Sichey">Sichey</option>
-                                    <option value="Majhitar">Majhitar</option>
-                                    <option value="Ranipool">Ranipool</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- BHK Size -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">BHK Size</label>
-                            <div class="flex flex-wrap gap-1.5">
-                                <button onclick="setTenantBHK(1, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">1 BHK</button>
-                                <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">2 BHK</button>
-                                <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">3 BHK</button>
-                                <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn flex-1 py-3 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">4+ BHK</button>
-                                <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk flex-1 py-3 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">ALL</button>
-                            </div>
-                        </div>
-
-                        <!-- Price Budget -->
-                        <div class="space-y-2.5">
-                            <div class="flex justify-between items-center">
-                                <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Max Rent</label>
-                                <span id="tn-price-label" class="text-sm font-black text-accent">₹25,000</span>
-                            </div>
-                            <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1.5 bg-surface-container rounded-lg appearance-none cursor-pointer">
-                        </div>
-
-                        <!-- Water Supply Specs -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Water Supply</label>
-                            <div class="flex gap-2">
-                                <button onclick="setFilterWater('all', this)" class="water-pill active-water flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">All</button>
-                                <button onclick="setFilterWater('24/7', this)" class="water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">24/7</button>
-                                <button onclick="setFilterWater('Scheduled', this)" class="water-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">Scheduled</button>
-                            </div>
-                        </div>
-
-                        <!-- Road Accessibility Specs -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Road Access</label>
-                            <div class="flex gap-2">
-                                <button onclick="setFilterRoad('all', this)" class="road-pill active-road flex-1 py-2.5 rounded-xl text-[9px] font-black bg-primary text-white dark:text-surface shadow-md uppercase transition-colors">All</button>
-                                <button onclick="setFilterRoad('On Road', this)" class="road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">On Road</button>
-                                <button onclick="setFilterRoad('5m Walk', this)" class="road-pill flex-1 py-2.5 rounded-xl text-[9px] font-black bg-surface-container text-on-surface uppercase transition-colors">Walkable</button>
-                            </div>
-                        </div>
-
-                        <!-- Interactive Amenities Toggles -->
-                        <div class="space-y-2.5">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Amenities Needed</label>
-                            <div class="grid grid-cols-3 gap-2">
-                                <button onclick="toggleFilterAmenity('sunlight', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
-                                    <span class="material-symbols-outlined text-[1.1rem]">wb_sunny</span> Sunlight
-                                </button>
-                                <button onclick="toggleFilterAmenity('parking', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
-                                    <span class="material-symbols-outlined text-[1.1rem]">local_parking</span> Parking
-                                </button>
-                                <button onclick="toggleFilterAmenity('balcony', this)" class="py-2.5 rounded-xl text-[8px] font-black bg-surface-container text-on-surface hover:bg-outline-variant/30 transition-all uppercase tracking-wider flex flex-col items-center gap-1 border border-transparent">
-                                    <span class="material-symbols-outlined text-[1.1rem]">balcony</span> Balcony
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Favorites Filter Toggle -->
-                        <div class="space-y-2.5 pt-2 border-t border-outline-variant/30">
-                            <label class="flex items-center justify-between p-3 bg-surface-container/50 border border-outline-variant/30 rounded-xl cursor-pointer text-xs font-bold text-on-surface hover:bg-outline-variant/20 transition-all">
-                                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-error font-filled text-[1.1rem]">favorite</span> Show Saved Only</span>
-                                <input id="filter-favorites" type="checkbox" onchange="filterTenantRooms()" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer bg-surface-container-lowest">
-                            </label>
-                        </div>
-
-                        <!-- Saved Properties (Favorites) Sidebar List -->
-                        <div id="tn-saved-container" class="space-y-3 pt-4 border-t border-outline-variant/30 hidden">
-                            <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-error font-filled text-sm">favorite</span> Your Saved Rooms
-                            </label>
-                            <div id="tn-saved-list" class="space-y-2.5 max-h-48 overflow-y-auto pr-1">
-                                <!-- Loaded dynamically in JS -->
-                            </div>
-                        </div>
-
-                        <!-- Prominent "Search Rooms" Button -->
-                        <button onclick="filterTenantRooms()" class="w-full py-3 bg-accent text-white dark:text-surface font-black text-xs uppercase tracking-widest rounded-xl hover:opacity-90 transition-all shadow-md flex items-center justify-center gap-2 mt-4">
-                            <span class="material-symbols-outlined text-[1.1rem]">search</span> Search Rooms
-                        </button>
-                    </div>
-
-                    <!-- Listings Display Area -->
-                    <div class="lg:col-span-9 space-y-6">
-                        <!-- Grid View -->
-                        <div id="tn-grid-view" class="block">
-                            <div id="tn-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
+                        <div class="relative flex items-center group flex-1">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-accent">search</span>
+                            <input id="tn-search" onkeyup="filterTenantRooms()" class="w-full pl-9 pr-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-accent outline-none text-[11px] font-bold text-on-surface transition-all" placeholder="Search Sichey, Tadong...">
                         </div>
                         
-                        <!-- Map View -->
-                        <div id="tn-map-view" class="hidden">
-                            <div id="main-tenant-map-container" class="h-[600px] rounded-[2rem] border border-outline-variant/30 overflow-hidden shadow-xl z-0 transition-colors"></div>
+                        <!-- Locality dropdown -->
+                        <div class="relative flex items-center group sm:w-48">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-accent z-10">location_on</span>
+                            <select id="tn-locality-select" onchange="handleLocalityChange(this.value)" class="form-input-sm pl-9 py-2 text-[11px] font-bold text-on-surface bg-surface-container-lowest">
+                                <option value="">All Areas (Gangtok)</option>
+                                <option value="Tadong">Tadong</option>
+                                <option value="Sichey">Sichey</option>
+                                <option value="Majhitar">Majhitar</option>
+                                <option value="Ranipool">Ranipool</option>
+                            </select>
                         </div>
                     </div>
+
+                    <!-- Right: BHK, Price, Specs, Tabs -->
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- BHK selectors -->
+                        <div class="flex gap-0.5 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
+                            <button onclick="setTenantBHK(1, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">1B</button>
+                            <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">2B</button>
+                            <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">3B</button>
+                            <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">4B+</button>
+                            <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">ALL</button>
+                        </div>
+
+                        <!-- Budget details slider -->
+                        <div class="flex items-center gap-2 bg-surface-container border border-outline-variant/30 px-3 py-1.5 rounded-xl w-48 sm:w-52">
+                            <span class="text-[9px] font-black uppercase text-on-surface-variant whitespace-nowrap">Max: <span id="tn-price-label" class="text-accent font-black">₹25K</span></span>
+                            <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1 bg-outline-variant rounded-lg appearance-none cursor-pointer">
+                        </div>
+
+                        <!-- Spec toggle -->
+                        <button onclick="toggleAdvancedFilters()" class="py-2.5 px-3 bg-surface-container border border-outline-variant/30 text-on-surface hover:bg-outline-variant/20 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
+                            <span class="material-symbols-outlined text-[1rem]">tune</span> Specs
+                        </button>
+
+                        <!-- Segmented Switcher (Explore/Saved) -->
+                        <div class="flex bg-surface-container p-0.5 rounded-xl border border-outline-variant/30 shadow-sm text-[10px] font-black uppercase tracking-wider">
+                            <button id="btn-tab-explore" onclick="setTenantTab('explore')" class="px-3.5 py-2 rounded-lg bg-primary text-white dark:text-surface shadow transition-all">Explore</button>
+                            <button id="btn-tab-saved" onclick="setTenantTab('saved')" class="px-3.5 py-2 rounded-lg bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all flex items-center gap-1">
+                                Saved <span id="saved-badge" class="bg-error text-white dark:text-surface font-black px-1.5 py-0.5 rounded-full text-[8px] hidden">0</span>
+                            </button>
+                        </div>
                     </div>
-                </section>
-            </main>
+                </div>
+
+                <!-- Collapsible Specs Section -->
+                <div id="tn-advanced-filters" class="hidden border-t border-outline-variant/20 transition-all">
+                    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                        <!-- Water supply -->
+                        <div class="space-y-1">
+                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Water Supply</label>
+                            <div class="flex gap-1 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
+                                <button onclick="setFilterWater('all', this)" class="water-pill active-water flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">All</button>
+                                <button onclick="setFilterWater('24/7', this)" class="water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">24/7</button>
+                                <button onclick="setFilterWater('Scheduled', this)" class="water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Sched</button>
+                            </div>
+                        </div>
+
+                        <!-- Road Accessibility -->
+                        <div class="space-y-1">
+                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Road Access</label>
+                            <div class="flex gap-1 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
+                                <button onclick="setFilterRoad('all', this)" class="road-pill active-road flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">All</button>
+                                <button onclick="setFilterRoad('On Road', this)" class="road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Road</button>
+                                <button onclick="setFilterRoad('5m Walk', this)" class="road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Walk</button>
+                            </div>
+                        </div>
+
+                        <!-- Amenities Checkboxes -->
+                        <div class="space-y-1 sm:col-span-2 md:col-span-1">
+                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Amenities</label>
+                            <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-2 px-1 rounded-xl transition-colors h-[34px]">
+                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('sunlight', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Sunlight</label>
+                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('parking', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Parking</label>
+                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('balcony', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Balcony</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Split Content Area -->
+            <div class="flex-grow flex overflow-hidden relative">
+                <!-- Left Panel: Listings scrollable feed -->
+                <div id="tn-listings-panel" class="w-full lg:w-[45%] xl:w-[40%] flex flex-col h-full bg-surface border-r border-outline-variant/30 relative z-10 transition-all duration-300">
+                    
+                    <!-- Search Results Summary Header -->
+                    <div class="px-6 py-3 bg-surface-container-lowest border-b border-outline-variant/20 flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-on-surface-variant">
+                        <span><span id="results-count" class="text-accent font-black">0</span> Rooms Found in Gangtok</span>
+                        <span id="tenant-current-tab-label" class="text-primary font-black">Explore Mode</span>
+                    </div>
+
+                    <!-- Scrollable Listings Feed Grid -->
+                    <div class="flex-grow scrollable-feed p-6 space-y-4">
+                        <div id="tn-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <!-- Cards populated dynamically via filterTenantRooms() -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Full screen Map Container -->
+                <div id="tn-map-panel" class="hidden lg:block lg:w-[55%] xl:w-[60%] h-full relative z-0 transition-all duration-300">
+                    <div id="main-tenant-map-container" class="w-full h-full"></div>
+                </div>
+
+                <!-- Floating Mobile Toggle Action Button -->
+                <button onclick="toggleMobileView()" id="btn-mobile-toggle-view" class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-accent text-white dark:text-surface px-5 py-3 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95">
+                    <span class="material-symbols-outlined text-sm">map</span>
+                    <span id="mobile-toggle-text">Show Map</span>
+                </button>
+            </div>
         </div>
+    </div>
 
         <footer class="bg-surface-container-high py-16 border-t border-outline-variant/30 mt-6 transition-colors">
             <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
@@ -428,13 +392,7 @@
                                 <div class="flex flex-col gap-2">
                                     <div class="relative flex items-center group">
                                         <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">pin_drop</span>
-                                        <select id="ll-loc" class="form-input-sm pl-10 cursor-pointer" required>
-                                            <option value="" disabled selected>Select Locality</option>
-                                            <option value="Tadong">Tadong</option>
-                                            <option value="Sichey">Sichey</option>
-                                            <option value="Majhitar">Majhitar</option>
-                                            <option value="Ranipool">Ranipool</option>
-                                        </select>
+                                        <input id="ll-loc" class="form-input-sm pl-10" placeholder="Enter Location Details (e.g. Near Sikkim University, Tadong)" required>
                                     </div>
                                     <button type="button" onclick="detectLocation()" id="btn-detect-loc" class="w-full py-2.5 bg-surface-container border border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-on-surface hover:bg-outline-variant/30 transition-colors shadow-sm">
                                         <span class="material-symbols-outlined text-sm">my_location</span>
