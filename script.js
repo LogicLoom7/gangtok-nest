@@ -95,15 +95,23 @@ function selectRole(role) {
 // UPDATED: Dynamic text and icon handling for the new Create Account button
 function toggleAuthMode() {
     isSignUpMode = !isSignUpMode;
-    document.getElementById('authBtnText').innerText = isSignUpMode ? "Register Account" : "Access Portal";
-    document.getElementById('authBtnInner').innerText = isSignUpMode ? "Sign In Securely" : "Create Account";
-    document.getElementById('authToggleIcon').innerText = isSignUpMode ? "login" : "person_add";
-    document.getElementById('authToggleMsg').innerText = isSignUpMode ? "Already have an account?" : "New to GangtokNest?";
+    const btnText = document.getElementById('authBtnText');
+    const btnInner = document.getElementById('authBtnInner');
+    const toggleIcon = document.getElementById('authToggleIcon');
+    const toggleMsg = document.getElementById('authToggleMsg');
+    
+    if (btnText) btnText.innerText = isSignUpMode ? "Register Account" : "Access Portal";
+    if (btnInner) btnInner.innerText = isSignUpMode ? "Sign In Securely" : "Sign up now";
+    if (toggleIcon) toggleIcon.innerText = isSignUpMode ? "login" : "person_add";
+    if (toggleMsg) toggleMsg.innerText = isSignUpMode ? "Already have an account?" : "New to GangtokNest?";
+    
     const nameWrapper = document.getElementById('nameWrapper');
-    if (isSignUpMode) {
-        nameWrapper.classList.remove('hidden');
-    } else {
-        nameWrapper.classList.add('hidden');
+    if (nameWrapper) {
+        if (isSignUpMode) {
+            nameWrapper.classList.remove('hidden');
+        } else {
+            nameWrapper.classList.add('hidden');
+        }
     }
 }
 
@@ -129,8 +137,31 @@ async function handleAuthAction() {
     try {
         let res;
         if (isSignUpMode) {
-            const name = document.getElementById('authName').value;
-            res = await supabaseClient.auth.signUp({ email, password, options: { data: { full_name: name, role: authRole }}});
+            const fName = document.getElementById('authFirstName').value.trim();
+            const lName = document.getElementById('authLastName').value.trim();
+            const location = document.getElementById('authLocation').value.trim();
+            const phone = document.getElementById('authPhone').value.trim();
+            
+            if (!fName || !location || !phone) {
+                throw new Error("First Name, Location, and Phone Number are required for registration.");
+            }
+            
+            const fullName = `${fName} ${lName}`.trim() || 'User';
+            
+            res = await supabaseClient.auth.signUp({ 
+                email, 
+                password, 
+                options: { 
+                    data: { 
+                        full_name: fullName, 
+                        first_name: fName,
+                        last_name: lName,
+                        location: location,
+                        phone: phone,
+                        role: authRole 
+                    }
+                }
+            });
         } else {
             res = await supabaseClient.auth.signInWithPassword({ email, password });
             if (res.error) throw res.error;
@@ -166,6 +197,17 @@ function loadDashboard(user) {
         document.getElementById('view-landing').classList.add('hidden');
         document.getElementById('view-landlord').classList.remove('hidden');
         if (headerLogout) headerLogout.classList.add('hidden');
+        
+        // Populate Profile
+        const pName = document.getElementById('ll-profile-name');
+        const pLoc = document.getElementById('ll-profile-location');
+        const pPhone = document.getElementById('ll-profile-phone');
+        const pEmail = document.getElementById('ll-profile-email');
+        if (pName) pName.innerText = user.user_metadata?.full_name || 'Landlord Name';
+        if (pLoc) pLoc.innerText = user.user_metadata?.location || 'Location not set';
+        if (pPhone) pPhone.innerText = user.user_metadata?.phone || 'Phone not set';
+        if (pEmail) pEmail.innerText = user.email || 'Email not set';
+        
         fetchLandlordData(user.id);
     } else {
         document.getElementById('view-landing').classList.remove('hidden');
@@ -1308,10 +1350,15 @@ function filterTenantRooms(explicitSearch = false) {
             <div class="h-48 relative overflow-hidden">
                 <img src="${escapedImage}" class="w-full h-full object-cover">
                 
-                <!-- Favorites button overlay -->
-                <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="absolute top-3 right-3 bg-surface-container-lowest/80 backdrop-blur-md text-error hover:scale-110 active:scale-95 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all z-10" title="${isFav ? 'Remove from Saved' : 'Save Room'}">
-                    <span class="material-symbols-outlined ${isFav ? 'font-filled' : ''} text-lg">favorite</span>
-                </button>
+                <!-- Action Buttons overlay -->
+                <div class="absolute top-3 right-3 flex flex-col gap-2 z-10">
+                    <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="bg-surface-container-lowest/80 backdrop-blur-md text-error hover:scale-110 active:scale-95 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all" title="${isFav ? 'Remove from Saved' : 'Save Room'}">
+                        <span class="material-symbols-outlined ${isFav ? 'font-filled' : ''} text-lg">favorite</span>
+                    </button>
+                    <button onclick="viewLandlordDetails('${r.id}'); event.stopPropagation();" class="bg-surface-container-lowest/80 backdrop-blur-md text-primary hover:scale-110 active:scale-95 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all" title="View Landlord Details">
+                        <span class="material-symbols-outlined text-lg font-filled">account_circle</span>
+                    </button>
+                </div>
                 
                 <!-- Badges overlay -->
                 <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
@@ -1990,6 +2037,22 @@ function getVisits() {
 }
 function saveVisits(visits) {
     localStorage.setItem('gn_visits', JSON.stringify(visits));
+}
+function viewLandlordDetails(roomId) {
+    const room = allRooms.find(r => r.id === roomId);
+    if (!room) return;
+    
+    document.getElementById('ld-modal-phone').innerText = `+91 ${room.contact}`;
+    document.getElementById('ld-modal-call-btn').href = `tel:${room.contact}`;
+    
+    const waMessage = `Hi! I found your property (${room.bhk} BHK in ${room.location}) on GangtokNest. I am interested to know more.`;
+    document.getElementById('ld-modal-wa-btn').href = `https://wa.me/91${room.contact}?text=${encodeURIComponent(waMessage)}`;
+    
+    document.getElementById('landlord-details-modal').classList.remove('hidden');
+}
+
+function closeLandlordDetails() {
+    document.getElementById('landlord-details-modal').classList.add('hidden');
 }
 
 function requestVisit(roomId) {

@@ -796,11 +796,22 @@
                     <p class="text-on-surface-variant text-sm">Manage landlord contact details, verification tags, and display avatar details.</p>
                     <div class="h-px bg-outline-variant/20 my-4"></div>
                     <div class="space-y-4">
-                        <div class="flex items-center gap-4 bg-surface-container/30 p-4 rounded-xl">
-                            <span class="material-symbols-outlined text-3xl text-primary">account_circle</span>
-                            <div>
-                                <h4 class="font-bold text-xs uppercase text-primary">Ajay Sharma</h4>
-                                <p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">MCA Sikkim University</p>
+                        <div class="flex items-center gap-4 bg-surface-container/30 p-6 rounded-xl border border-outline-variant/30 shadow-sm">
+                            <span class="material-symbols-outlined text-5xl text-primary">account_circle</span>
+                            <div class="space-y-1">
+                                <h4 id="ll-profile-name" class="font-black text-sm uppercase text-primary tracking-wide">Loading...</h4>
+                                <div class="flex items-center gap-2 text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                    <p id="ll-profile-location" class="text-xs font-semibold uppercase tracking-wider">Location not set</p>
+                                </div>
+                                <div class="flex items-center gap-2 text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-[14px]">call</span>
+                                    <p id="ll-profile-phone" class="text-xs font-semibold uppercase tracking-wider">Phone not set</p>
+                                </div>
+                                <div class="flex items-center gap-2 text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-[14px]">mail</span>
+                                    <p id="ll-profile-email" class="text-xs font-semibold lowercase tracking-wider">email@example.com</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -992,17 +1003,64 @@
         </div>
     </div>
 
+    <!-- Landlord Details Modal for Tenants -->
+    <div id="landlord-details-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center p-4">
+        <!-- Overlay -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" onclick="closeLandlordDetails()"></div>
+        
+        <!-- Modal Content -->
+        <div class="bg-surface w-full max-w-sm rounded-[2rem] shadow-2xl relative z-10 overflow-hidden transform transition-all border border-outline-variant/20 flex flex-col items-center p-8">
+            <button onclick="closeLandlordDetails()" class="absolute top-4 right-4 p-2 rounded-full hover:bg-surface-container text-on-surface-variant transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+            
+            <div class="relative mb-4">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-primary to-accent p-1 shadow-lg">
+                    <div class="w-full h-full bg-surface-container rounded-full flex items-center justify-center border-[3px] border-surface">
+                        <span class="material-symbols-outlined text-[3rem] text-primary">account_circle</span>
+                    </div>
+                </div>
+                <div class="absolute bottom-0 right-0 bg-white dark:bg-surface rounded-full p-0.5 shadow-md flex items-center justify-center">
+                    <span class="material-symbols-outlined text-blue-500 font-filled text-[22px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+                </div>
+            </div>
+            
+            <h3 class="text-xl font-black text-on-surface mb-1">Verified Landlord</h3>
+            <p class="text-sm text-on-surface-variant mb-6 font-medium text-center">This landlord has been verified by the GangtokNest security team.</p>
+            
+            <div class="w-full bg-surface-container/50 rounded-xl p-4 mb-6 border border-outline-variant/30 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-full">call</span>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider font-bold text-on-surface-variant">Contact Number</p>
+                        <p id="ld-modal-phone" class="font-black text-on-surface text-base">+91 0000000000</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 w-full">
+                <a id="ld-modal-call-btn" href="#" class="flex-1 bg-surface border border-outline-variant/50 hover:bg-primary/10 hover:border-primary/50 text-primary font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-sm text-sm uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-[18px]">phone</span> Call
+                </a>
+                <a id="ld-modal-wa-btn" target="_blank" href="#" class="flex-1 bg-[#25D366] hover:bg-[#1DA851] text-white font-black py-3 rounded-xl shadow-[0_4px_14px_rgba(37,211,102,0.4)] transition-all flex justify-center items-center gap-2 text-sm uppercase tracking-wider">
+                    <span class="material-symbols-outlined text-[18px]">forum</span> Message
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Landlord Portal Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
         <!-- Netflix-style Cinematic Background -->
-        <div class="absolute inset-0 z-0">
+        <div class="fixed inset-0 z-0 pointer-events-none">
             <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-60">
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
             <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
         </div>
 
-        <div class="z-10 w-full max-w-[450px] p-4 md:p-0">
-            <div class="bg-black/70 backdrop-blur-xl md:rounded-[2rem] rounded-3xl shadow-2xl w-full border border-white/10 relative overflow-hidden flex flex-col pt-12 pb-16 px-8 md:px-16 transition-all">
+        <!-- Scrollable Modal Content Wrapper -->
+        <div class="relative z-10 min-h-screen w-full flex flex-col items-center justify-center py-16 px-4 md:py-24">
+            <div class="w-full max-w-[450px] bg-black/70 backdrop-blur-xl md:rounded-[2rem] rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden flex flex-col pt-12 pb-16 px-8 md:px-16 transition-all mt-auto mb-auto">
                 <button onclick="closeAuthModal()" class="material-symbols-outlined absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 z-20">close</button>
                 
                 <div class="text-left space-y-2 mb-8">
@@ -1011,9 +1069,25 @@
                 </div>
 
                 <form class="space-y-5" onsubmit="event.preventDefault(); handleAuthAction();">
-                    <div id="nameWrapper" class="relative hidden">
-                        <input id="authName" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="text">
-                        <label for="authName" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Full Name</label>
+                    <div id="nameWrapper" class="hidden space-y-5">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="relative">
+                                <input id="authFirstName" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="text">
+                                <label for="authFirstName" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">First Name</label>
+                            </div>
+                            <div class="relative">
+                                <input id="authLastName" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="text">
+                                <label for="authLastName" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Last Name</label>
+                            </div>
+                        </div>
+                        <div class="relative">
+                            <input id="authLocation" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="text">
+                            <label for="authLocation" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">City / Location</label>
+                        </div>
+                        <div class="relative">
+                            <input id="authPhone" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="tel">
+                            <label for="authPhone" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Phone Number</label>
+                        </div>
                     </div>
                     
                     <div class="relative">
