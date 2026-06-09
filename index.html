@@ -27,10 +27,14 @@
                         "surface-container": "var(--color-surface-container)",
                         "surface-container-lowest": "var(--color-surface-lowest)",
                         "surface-container-high": "var(--color-surface-high)",
+                        "surface-lowest": "var(--color-surface-lowest)",
                         "on-surface": "var(--color-on-surface)",
                         "on-surface-variant": "var(--color-on-surface-variant)",
                         "outline-variant": "var(--color-outline-variant)",
                         "error": "#ef4444",
+                        "success": "var(--color-success)",
+                        "warning": "var(--color-warning)",
+                        "danger": "var(--color-danger)",
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "full": "9999px" },
                     fontFamily: { "headline": ["Manrope", "sans-serif"], "body": ["Inter", "sans-serif"] }
@@ -38,6 +42,7 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-surface text-on-surface font-body selection:bg-secondary/20 mountain-pattern min-h-screen transition-colors duration-300">
 
@@ -62,9 +67,12 @@
 
     <header id="header-dashboard" class="fixed top-0 left-0 w-full z-50 premium-glass shadow-md border-b border-outline-variant/30 hidden">
         <div class="flex justify-between items-center px-4 md:px-8 py-3 w-full">
-            <div class="flex items-center gap-2 md:gap-3 cursor-pointer hover:opacity-80 transition-opacity" onclick="softRefresh()">
+            <div class="flex items-center gap-2 md:gap-3">
+                
+                <div class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity" onclick="softRefresh()">
                 <span class="material-symbols-outlined text-primary text-2xl md:text-3xl">terrain</span>
                 <span class="text-xl md:text-2xl font-extrabold text-primary font-headline tracking-tight">GangtokNest</span>
+            </div>
             </div>
             <div class="flex items-center gap-3 md:gap-6">
                 <button onclick="toggleDarkMode()" class="text-primary hover:text-accent transition-colors flex items-center justify-center p-2 rounded-full hover:bg-outline-variant/20 hidden md:flex">
@@ -74,9 +82,7 @@
                     <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span id="userGreeting" class="text-primary font-bold uppercase text-[10px] tracking-widest"></span>
                 </div>
-                <button onclick="signOut()" class="flex items-center gap-1.5 bg-error/10 text-error hover:bg-error hover:text-white px-4 py-2 rounded-full font-bold text-xs md:text-sm transition-all">
-                    <span class="material-symbols-outlined !text-base">logout</span> Logout
-                </button>
+                
             </div>
         </div>
     </header>
@@ -84,40 +90,42 @@
     <div id="view-landing">
         <!-- Anonymous View (Only shown when not logged in) -->
         <div id="landing-anonymous" class="block">
-            <main class="pt-[110px] pb-16 max-w-7xl mx-auto px-4 md:px-8 space-y-20">
-                <!-- Anonymous Hero Section -->
-                <section class="text-center py-20 relative overflow-hidden rounded-[2.5rem] hero-mesh-bg border border-outline-variant/30 transition-colors shadow-2xl">
-                    <div class="absolute inset-0 bg-grid-pattern opacity-5"></div>
-                    
-                    <!-- Decorative Minimalist Mountains SVG -->
-                    <div class="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none opacity-20 dark:opacity-30">
-                        <svg viewBox="0 0 1440 200" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full h-auto translate-y-4">
-                            <path d="M0 200 L300 90 L600 160 L900 60 L1200 130 L1440 200 Z" fill="var(--color-secondary)" opacity="0.3"></path>
-                            <path d="M0 200 L450 110 L950 170 L1440 90 L1440 200 Z" fill="var(--color-primary)" opacity="0.15"></path>
-                        </svg>
-                    </div>
+            <!-- Full-width Cinematic Hero Section -->
+            <section class="relative w-full min-h-[90vh] flex items-center justify-center text-center overflow-hidden pt-20">
+                <!-- Cinematic Background Image & Gradients -->
+                <div class="absolute inset-0 z-0">
+                    <img src="https://images.unsplash.com/photo-1542314831-c6a4d14b8fc8?auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                    <!-- Deep fade from bottom to surface color -->
+                    <div class="absolute inset-0 bg-gradient-to-b from-[#0f172a]/60 via-[#0f172a]/80 to-surface"></div>
+                </div>
 
-                    <div class="relative z-10 max-w-3xl mx-auto px-6 space-y-6">
-                        <span class="inline-flex items-center gap-1.5 bg-accent/10 text-accent font-black text-[10px] tracking-widest uppercase px-4 py-2 rounded-full border border-accent/30 backdrop-blur-md animate-float">
-                            <span class="material-symbols-outlined text-sm">terrain</span>
-                            Sikkim's Trusted Peer-to-Peer Housing Network
-                        </span>
-                        <h1 class="font-headline text-4xl md:text-6xl font-extrabold text-primary leading-tight tracking-tight">
-                            Find Your Perfect Rooms in <span class="bg-gradient-to-r from-accent to-amber-600 bg-clip-text text-transparent">Gangtok</span>.
-                        </h1>
-                        <p class="text-on-surface-variant font-medium text-sm md:text-base tracking-wide opacity-90 max-w-xl mx-auto leading-relaxed">
-                            Verified rooms, flats, and homestays tailored specifically for students and working professionals. Create an account to search localities and contact local owners instantly.
-                        </p>
-                        <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-4">
-                            <button onclick="openTenantAuthModal()" class="w-full sm:w-auto cta-gradient text-white hover:opacity-90 hover:scale-105 active:scale-95 px-8 py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest transition-all duration-300 shadow-xl flex items-center justify-center gap-2">
-                                <span class="material-symbols-outlined text-[1.2rem]">search</span> Explore Rooms (Login Required)
-                            </button>
-                            <button onclick="openAuthModal()" class="w-full sm:w-auto bg-surface-lowest border border-outline-variant/60 text-on-surface hover:bg-surface-container hover:scale-105 active:scale-95 px-8 py-4 rounded-full font-black text-xs md:text-sm uppercase tracking-widest transition-all duration-300 shadow-md flex items-center justify-center gap-2">
-                                <span class="material-symbols-outlined text-[1.2rem]">apartment</span> Landlord Portal
-                            </button>
-                        </div>
+                <div class="relative z-10 w-full max-w-5xl mx-auto px-6 space-y-8 pb-20">
+                    <span class="inline-flex items-center gap-1.5 bg-white/10 text-white font-black text-xs tracking-widest uppercase px-5 py-2.5 rounded-full border border-white/20 backdrop-blur-md shadow-xl animate-float">
+                        <span class="material-symbols-outlined text-sm">terrain</span>
+                        Sikkim's Trusted Peer-to-Peer Housing
+                    </span>
+                    
+                    <h1 class="font-headline text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.1] tracking-tight drop-shadow-2xl">
+                        Find Your Perfect Rooms in <br><span class="bg-gradient-to-r from-blue-400 to-emerald-400 bg-clip-text text-transparent">Gangtok</span>.
+                    </h1>
+                    
+                    <p class="text-white/80 font-medium text-base md:text-xl tracking-wide max-w-2xl mx-auto leading-relaxed drop-shadow-md">
+                        Verified rooms, flats, and homestays tailored specifically for students and working professionals. Zero brokers. Direct contact.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center items-center gap-4 pt-8">
+                        <button onclick="openTenantAuthModal()" class="w-full sm:w-auto bg-[#E50914] text-white hover:bg-[#b80710] px-10 py-5 rounded-2xl font-black text-sm md:text-base uppercase tracking-widest transition-all duration-300 shadow-[0_8px_25px_rgba(229,9,20,0.5)] hover:shadow-[0_12px_30px_rgba(229,9,20,0.7)] hover:-translate-y-1 flex items-center justify-center gap-3">
+                            <span class="material-symbols-outlined text-[1.4rem]">search</span> Explore Rooms
+                        </button>
+                        
+                        <button onclick="openAuthModal()" class="w-full sm:w-auto bg-white/10 backdrop-blur-xl border border-white/20 text-white hover:bg-white/20 px-10 py-5 rounded-2xl font-black text-sm md:text-base uppercase tracking-widest transition-all duration-300 shadow-xl hover:-translate-y-1 flex items-center justify-center gap-3">
+                            <span class="material-symbols-outlined text-[1.4rem]">apartment</span> Landlord Portal
+                        </button>
                     </div>
-                </section>
+                </div>
+            </section>
+
+            <main class="max-w-7xl mx-auto px-4 md:px-8 space-y-24 py-12 relative z-10 -mt-10">
 
                 <!-- Features Section -->
                 <section class="space-y-12">
@@ -179,284 +187,795 @@
                     </div>
                 </section>
             </main>
+            
+            <footer class="bg-surface-container-high py-16 border-t border-outline-variant/30 mt-6 transition-colors">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
+                    <div class="md:col-span-6 space-y-4">
+                        <div class="flex items-center gap-2 mb-4">
+                            <span class="material-symbols-outlined text-primary text-3xl">terrain</span>
+                            <span class="text-2xl font-extrabold text-primary font-headline tracking-tight">GangtokNest</span>
+                        </div>
+                        <p class="text-on-surface-variant text-sm leading-relaxed max-w-md">GangtokNest is Sikkim’s premier digital rental platform, built to simplify housing for students, professionals, and locals. Developed as an MCA initiative at Sikkim University.</p>
+                    </div>
+                    <div class="md:col-span-6 flex flex-col items-start md:items-end">
+                        <h4 class="font-extrabold text-primary uppercase tracking-widest text-xs mb-4">Live Support</h4>
+                        <a href="https://wa.me/918116139401" target="_blank" class="inline-flex items-center gap-3 bg-[#25D366] text-white px-5 py-3.5 rounded-xl font-extrabold text-sm hover:bg-[#128C7E] transition-all shadow-md w-full md:w-auto justify-center">
+                            <span class="material-symbols-outlined">chat</span> WhatsApp Support
+                        </a>
+                    </div>
+                </div>
+                <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-outline-variant/40 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-extrabold text-on-surface-variant/70 tracking-widest uppercase">
+                    <p>© 2026 GangtokNest Properties</p>
+                    <p>Project by Ajay Sharma | Sikkim University MCA</p>
+                </div>
+            </footer>
         </div>
 
-        <!-- Tenant Authenticated View (Only shown when logged in as Tenant) -->
-        <div id="landing-tenant" class="hidden bg-surface h-screen pt-16 flex flex-col overflow-hidden">
+        <!-- Tenant Authenticated View -->
+        <div id="landing-tenant" class="hidden bg-surface h-screen pt-16 flex overflow-hidden">
             
-            <!-- Full Width Horizontal Filter Bar -->
-            <div id="tn-horizontal-filters" class="bg-surface-container-lowest border-b border-outline-variant/30 shadow-sm transition-colors relative z-20">
-                <!-- Main filters row -->
-                <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col lg:flex-row gap-3 lg:items-center lg:justify-between">
-                    <!-- Left: Title, User, Search and Locality -->
-                    <div class="flex flex-col sm:flex-row gap-3 flex-1 lg:max-w-3xl items-stretch sm:items-center">
-                        <div class="hidden xl:block pr-2 border-r border-outline-variant/30">
-                            <h1 class="text-sm font-headline font-extrabold text-primary tracking-tight flex items-center gap-1.5">
-                                <span class="material-symbols-outlined text-accent animate-pulse text-[1.1rem]">explore</span> Explore
-                            </h1>
-                            <p class="text-on-surface-variant text-[9px] font-bold uppercase tracking-wider">Welcome, <span id="tenantName" class="font-black text-accent">Renter</span></p>
-                        </div>
 
-                        <!-- Keyword Search -->
-                        <div class="relative flex items-center group flex-1">
-                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-accent">search</span>
-                            <input id="tn-search" onkeyup="filterTenantRooms()" class="w-full pl-9 pr-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-accent outline-none text-[11px] font-bold text-on-surface transition-all" placeholder="Search Sichey, Tadong...">
-                        </div>
-                        
-                        <!-- Locality dropdown -->
-                        <div class="relative flex items-center group sm:w-48">
-                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-accent z-10">location_on</span>
-                            <select id="tn-locality-select" onchange="handleLocalityChange(this.value)" class="form-input-sm pl-9 py-2 text-[11px] font-bold text-on-surface bg-surface-container-lowest">
-                                <option value="">All Areas (Gangtok)</option>
-                                <option value="Tadong">Tadong</option>
-                                <option value="Sichey">Sichey</option>
-                                <option value="Majhitar">Majhitar</option>
-                                <option value="Ranipool">Ranipool</option>
-                            </select>
-                        </div>
-                    </div>
 
-                    <!-- Right: BHK, Price, Specs, Tabs -->
-                    <div class="flex flex-wrap items-center gap-3">
-                        <!-- BHK selectors -->
-                        <div class="flex gap-0.5 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
-                            <button onclick="setTenantBHK(1, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">1B</button>
-                            <button onclick="setTenantBHK(2, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">2B</button>
-                            <button onclick="setTenantBHK(3, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">3B</button>
-                            <button onclick="setTenantBHK(4, this)" class="tn-bhk-btn px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-transparent text-on-surface uppercase transition-colors">4B+</button>
-                            <button onclick="setTenantBHK(0, this)" class="tn-bhk-btn active-bhk px-3.5 py-1.5 rounded-lg text-[9px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">ALL</button>
-                        </div>
 
-                        <!-- Budget details slider -->
-                        <div class="flex items-center gap-2 bg-surface-container border border-outline-variant/30 px-3 py-1.5 rounded-xl w-48 sm:w-52">
-                            <span class="text-[9px] font-black uppercase text-on-surface-variant whitespace-nowrap">Max: <span id="tn-price-label" class="text-accent font-black">₹25K</span></span>
-                            <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="filterTenantRooms()" class="w-full accent-accent h-1 bg-outline-variant rounded-lg appearance-none cursor-pointer">
-                        </div>
+            <!-- RIGHT: Main Content -->
+            <div class="flex-grow flex flex-col overflow-y-auto relative">
 
-                        <!-- Spec toggle -->
-                        <button onclick="toggleAdvancedFilters()" class="py-2.5 px-3 bg-surface-container border border-outline-variant/30 text-on-surface hover:bg-outline-variant/20 rounded-xl text-[9px] font-black uppercase tracking-wider flex items-center justify-center gap-1 transition-all">
-                            <span class="material-symbols-outlined text-[1rem]">tune</span> Specs
-                        </button>
-
-                        <!-- Segmented Switcher (Explore/Saved) -->
-                        <div class="flex bg-surface-container p-0.5 rounded-xl border border-outline-variant/30 shadow-sm text-[10px] font-black uppercase tracking-wider">
-                            <button id="btn-tab-explore" onclick="setTenantTab('explore')" class="px-3.5 py-2 rounded-lg bg-primary text-white dark:text-surface shadow transition-all">Explore</button>
-                            <button id="btn-tab-saved" onclick="setTenantTab('saved')" class="px-3.5 py-2 rounded-lg bg-transparent text-on-surface hover:bg-outline-variant/20 transition-all flex items-center gap-1">
-                                Saved <span id="saved-badge" class="bg-error text-white dark:text-surface font-black px-1.5 py-0.5 rounded-full text-[8px] hidden">0</span>
-                            </button>
-                        </div>
-                    </div>
+            <!-- Glossy Top Navigation (Tenant) -->
+            <div class="flex-shrink-0 w-full px-4 py-3 bg-surface-lowest/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0 z-40 shadow-sm flex items-center justify-between">
+                <div class="w-full max-w-2xl mx-auto flex items-center justify-center gap-2 p-1 bg-surface-container-lowest/50 border border-outline-variant/50 rounded-full shadow-inner flex-grow">
+                    <button id="tn-nav-top-explore" onclick="setTenantTab('explore')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white dark:text-surface shadow-md">
+                        <span class="material-symbols-outlined text-sm md:text-base">search</span> Explore
+                    </button>
+                    <button id="tn-nav-top-saved" onclick="setTenantTab('saved')" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                        <span class="material-symbols-outlined text-sm md:text-base">favorite</span> Saved
+                    </button>
+                    <button id="tn-nav-top-featured" onclick="openFeaturedModal()" class="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-xs md:text-sm font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                        <span class="material-symbols-outlined text-sm md:text-base text-accent">grade</span> Featured
+                    </button>
                 </div>
-
-                <!-- Collapsible Specs Section -->
-                <div id="tn-advanced-filters" class="hidden border-t border-outline-variant/20 transition-all">
-                    <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                        <!-- Water supply -->
-                        <div class="space-y-1">
-                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Water Supply</label>
-                            <div class="flex gap-1 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
-                                <button onclick="setFilterWater('all', this)" class="water-pill active-water flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">All</button>
-                                <button onclick="setFilterWater('24/7', this)" class="water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">24/7</button>
-                                <button onclick="setFilterWater('Scheduled', this)" class="water-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Sched</button>
-                            </div>
-                        </div>
-
-                        <!-- Road Accessibility -->
-                        <div class="space-y-1">
-                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Road Access</label>
-                            <div class="flex gap-1 bg-surface-container p-0.5 rounded-xl border border-outline-variant/30">
-                                <button onclick="setFilterRoad('all', this)" class="road-pill active-road flex-1 py-1.5 rounded-lg text-[8px] font-black bg-primary text-white dark:text-surface shadow uppercase transition-colors">All</button>
-                                <button onclick="setFilterRoad('On Road', this)" class="road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Road</button>
-                                <button onclick="setFilterRoad('5m Walk', this)" class="road-pill flex-1 py-1.5 rounded-lg text-[8px] font-black bg-transparent text-on-surface uppercase transition-colors">Walk</button>
-                            </div>
-                        </div>
-
-                        <!-- Amenities Checkboxes -->
-                        <div class="space-y-1 sm:col-span-2 md:col-span-1">
-                            <label class="block text-[8px] font-black uppercase tracking-widest text-on-surface-variant">Amenities</label>
-                            <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-2 px-1 rounded-xl transition-colors h-[34px]">
-                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('sunlight', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Sunlight</label>
-                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('parking', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Parking</label>
-                                <label class="flex items-center gap-1 text-[10px] font-black cursor-pointer text-on-surface"><input onclick="toggleFilterAmenity('balcony', this)" type="checkbox" class="w-3.5 h-3.5 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow bg-surface-container-lowest"> Balcony</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Split Content Area -->
-            <div class="flex-grow flex overflow-hidden relative">
-                <!-- Left Panel: Listings scrollable feed -->
-                <div id="tn-listings-panel" class="w-full lg:w-[45%] xl:w-[40%] flex flex-col h-full bg-surface border-r border-outline-variant/30 relative z-10 transition-all duration-300">
-                    
-                    <!-- Search Results Summary Header -->
-                    <div class="px-6 py-3 bg-surface-container-lowest border-b border-outline-variant/20 flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-on-surface-variant">
-                        <span><span id="results-count" class="text-accent font-black">0</span> Rooms Found in Gangtok</span>
-                        <span id="tenant-current-tab-label" class="text-primary font-black">Explore Mode</span>
-                    </div>
-
-                    <!-- Scrollable Listings Feed Grid -->
-                    <div class="flex-grow scrollable-feed p-6 space-y-4">
-                        <div id="tn-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Cards populated dynamically via filterTenantRooms() -->
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Right Panel: Full screen Map Container -->
-                <div id="tn-map-panel" class="hidden lg:block lg:w-[55%] xl:w-[60%] h-full relative z-0 transition-all duration-300">
-                    <div id="main-tenant-map-container" class="w-full h-full"></div>
-                </div>
-
-                <!-- Floating Mobile Toggle Action Button -->
-                <button onclick="toggleMobileView()" id="btn-mobile-toggle-view" class="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-accent text-white dark:text-surface px-5 py-3 rounded-full font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-2xl transition-all duration-300 hover:scale-105 active:scale-95">
-                    <span class="material-symbols-outlined text-sm">map</span>
-                    <span id="mobile-toggle-text">Show Map</span>
+                <button onclick="signOut()" class="ml-4 flex-shrink-0 flex items-center gap-1.5 bg-error/10 text-error hover:bg-error hover:text-white px-4 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all">
+                    <span class="material-symbols-outlined text-[1rem]">logout</span> <span class="hidden md:inline">Logout</span>
                 </button>
             </div>
+
+
+                <!-- ═══ SEARCH HERO (default state, hidden when results show) ═══ -->
+                                <!-- ═══ SEARCH HERO (default state, hidden when results show) ═══ -->
+                <div id="tn-search-hero" class="flex-shrink-0 px-4 md:px-8 pt-4 pb-2 lg:pt-6 transition-all duration-300 relative z-10 bg-gradient-to-b from-surface-lowest to-surface flex flex-col items-center">
+                    
+                    <!-- Headline -->
+                    <div class="text-center mb-4 w-full max-w-4xl">
+                        <div class="inline-flex items-center gap-2 bg-primary/5 border border-primary/20 rounded-full px-4 py-1.5 mb-2 shadow-sm">
+                            <span class="material-symbols-outlined text-primary text-sm animate-pulse">explore</span>
+                            <span class="text-primary font-black text-[10px] uppercase tracking-widest">Find Your Room in Gangtok</span>
+                        </div>
+                        <h1 class="font-headline font-black text-2xl md:text-4xl lg:text-5xl text-primary leading-tight mb-2 tracking-tight">Search Rooms Across<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Gangtok & Nearby</span></h1>
+                    </div>
+
+                    <!-- PREMIUM SEARCH CONTAINER (Clean Light Dashboard) -->
+                    <div class="w-full max-w-[1400px] bg-surface-lowest rounded-3xl p-5 md:p-8 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] border border-outline-variant/30 space-y-5 mb-4 mx-auto">
+                        
+                        <!-- Row 1: Search & Button -->
+                        <div class="flex flex-col md:flex-row gap-4">
+                            <div class="relative flex-grow flex items-center bg-surface border border-outline-variant/30 rounded-2xl hover:border-outline-variant/60 transition-colors focus-within:border-primary shadow-sm">
+                                <span class="material-symbols-outlined absolute left-5 text-on-surface-variant/50 text-xl">search</span>
+                                <input id="tn-search" onkeypress="if(event.key === 'Enter') filterTenantRooms(true)" class="w-full pl-14 pr-12 py-4 bg-transparent outline-none text-base md:text-lg font-black text-on-surface placeholder:text-on-surface-variant/50" placeholder="Type locality, BHK, parking...">
+                                <button id="tn-search-clear" onclick="clearTenantSearch()" class="hidden absolute right-3 text-on-surface-variant/50 hover:text-error p-2"><span class="material-symbols-outlined text-xl">close</span></button>
+                            </div>
+                            <button onclick="filterTenantRooms(true)" class="bg-primary text-white px-10 py-4 rounded-2xl font-black text-base uppercase tracking-widest shadow-md hover:bg-primary/90 transition-all whitespace-nowrap flex items-center justify-center gap-2 flex-shrink-0">
+                                <span class="material-symbols-outlined text-xl">arrow_forward</span> Search
+                            </button>
+                        </div>
+
+                        <!-- Row 2: Grid for Filters -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                            <!-- Locality (Col 1) -->
+                            <div class="relative flex flex-col justify-center bg-surface border border-outline-variant/30 rounded-xl px-4 py-2 hover:border-outline-variant/60 transition-colors shadow-sm">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">location_on</span> Area</label>
+                                <select id="tn-locality-select" onchange="handleLocalityChange(this.value)" class="w-full bg-transparent text-sm md:text-base font-bold text-on-surface outline-none appearance-none cursor-pointer">
+                                    <option value="">All Areas</option>
+                                    <option value="Tadong">Tadong</option>
+                                    <option value="Upper Tadong">Upper Tadong</option>
+                                    <option value="Lower Tadong">Lower Tadong</option>
+                                    <option value="Deorali">Deorali</option>
+                                    <option value="Development Area">Development Area</option>
+                                    <option value="Bojoghari">Bojoghari</option>
+                                    <option value="Daragaon">Daragaon</option>
+                                    <option value="Gairigaon">Gairigaon</option>
+                                    <option value="Ranipool">Ranipool</option>
+                                    <option value="5th Mile">5th Mile</option>
+                                    <option value="6th Mile">6th Mile</option>
+                                    <option value="Metro Point">Metro Point</option>
+                                    <option value="Sichey">Sichey</option>
+                                    <option value="Lumsey">Lumsey</option>
+                                    <option value="Samdur">Samdur</option>
+                                    <option value="Marchak">Marchak</option>
+                                    <option value="Majhitar">Majhitar</option>
+                                </select>
+                                <span class="material-symbols-outlined absolute right-3 bottom-2.5 text-on-surface-variant/50 text-base pointer-events-none">expand_more</span>
+                            </div>
+
+                            <!-- Budget (Col 2) -->
+                            <div class="flex flex-col justify-center bg-surface border border-outline-variant/30 rounded-xl px-4 py-2 hover:border-outline-variant/60 transition-colors shadow-sm">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">currency_rupee</span> Max Budget</label>
+                                    <span id="tn-price-label" class="text-xs font-black text-accent bg-accent/10 px-2 py-0.5 rounded text-center">₹25K</span>
+                                </div>
+                                <input id="tn-price" type="range" min="1000" max="25000" step="500" value="25000" oninput="updatePriceLabel()" class="w-full accent-accent h-1.5 bg-outline-variant rounded-lg appearance-none cursor-pointer mt-1">
+                            </div>
+
+                            <!-- Water Supply (Col 3) -->
+                            <div class="flex flex-col justify-center bg-surface border border-outline-variant/30 rounded-xl px-4 py-2 hover:border-outline-variant/60 transition-colors shadow-sm">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-1 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">water_drop</span> Water Supply</label>
+                                <div class="flex bg-surface-container p-0.5 rounded-lg border border-outline-variant/20 items-center">
+                                    <button onclick="setFilterWater('all', this)" class="water-pill active-water flex-1 py-1.5 rounded-md text-[10px] font-bold bg-primary text-white uppercase transition-all shadow-sm">All</button>
+                                    <button onclick="setFilterWater('24/7', this)" class="water-pill flex-1 py-1.5 rounded-md text-[10px] font-bold bg-transparent text-on-surface hover:bg-surface-variant uppercase transition-all">24/7</button>
+                                    <button onclick="setFilterWater('Scheduled', this)" class="water-pill flex-1 py-1.5 rounded-md text-[10px] font-bold bg-transparent text-on-surface hover:bg-surface-variant uppercase transition-all">Scheduled</button>
+                                </div>
+                            </div>
+
+                            <!-- Road Access Dropdown (Col 4) -->
+                            <div class="relative flex flex-col justify-center bg-surface border border-outline-variant/30 rounded-xl px-4 py-2 hover:border-outline-variant/60 transition-colors shadow-sm">
+                                <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">directions_walk</span> Road Access</label>
+                                <select id="tn-road-select" class="w-full bg-transparent text-xs md:text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer">
+                                    <option value="all">Any Distance</option>
+                                    <option value="On Road">On Road (0 mins)</option>
+                                    <option value="< 2 mins">< 2 mins walk</option>
+                                    <option value="< 5 mins">< 5 mins walk</option>
+                                    <option value="< 10 mins">< 10 mins walk</option>
+                                    <option value="> 10 mins">> 10 mins walk</option>
+                                </select>
+                                <span class="material-symbols-outlined absolute right-3 bottom-2.5 text-on-surface-variant/50 text-base pointer-events-none">expand_more</span>
+                            </div>
+                        </div>
+
+                        <!-- Row 3: Amenities & Quick Tags -->
+                        <div class="flex flex-col xl:flex-row justify-between items-center gap-4 pt-4 border-t border-outline-variant/20">
+                            
+                            <!-- Amenities -->
+                            <div class="flex flex-wrap gap-2 items-center justify-center xl:justify-start w-full xl:w-auto">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mr-2 hidden sm:block">Amenities:</span>
+                                <label class="flex items-center gap-1.5 py-1.5 px-3 bg-surface border border-outline-variant/30 rounded-xl text-[10px] md:text-[11px] font-bold uppercase text-on-surface cursor-pointer hover:bg-surface-variant hover:border-outline-variant/60 transition-all shadow-sm">
+                                    <input onclick="toggleFilterAmenity('sunlight', this)" type="checkbox" class="w-4 h-4 rounded bg-surface border-outline-variant text-accent focus:ring-accent cursor-pointer"> Sunlight
+                                </label>
+                                <label class="flex items-center gap-1.5 py-1.5 px-3 bg-surface border border-outline-variant/30 rounded-xl text-[10px] md:text-[11px] font-bold uppercase text-on-surface cursor-pointer hover:bg-surface-variant hover:border-outline-variant/60 transition-all shadow-sm">
+                                    <input onclick="toggleFilterAmenity('parking', this)" type="checkbox" class="w-4 h-4 rounded bg-surface border-outline-variant text-accent focus:ring-accent cursor-pointer"> Parking
+                                </label>
+                                <label class="flex items-center gap-1.5 py-1.5 px-3 bg-surface border border-outline-variant/30 rounded-xl text-[10px] md:text-[11px] font-bold uppercase text-on-surface cursor-pointer hover:bg-surface-variant hover:border-outline-variant/60 transition-all shadow-sm">
+                                    <input onclick="toggleFilterAmenity('wifi', this)" type="checkbox" class="w-4 h-4 rounded bg-surface border-outline-variant text-accent focus:ring-accent cursor-pointer"> Wi-Fi
+                                </label>
+                                <label class="flex items-center gap-1.5 py-1.5 px-3 bg-surface border border-outline-variant/30 rounded-xl text-[10px] md:text-[11px] font-bold uppercase text-on-surface cursor-pointer hover:bg-surface-variant hover:border-outline-variant/60 transition-all shadow-sm">
+                                    <input onclick="toggleFilterAmenity('balcony', this)" type="checkbox" class="w-4 h-4 rounded bg-surface border-outline-variant text-accent focus:ring-accent cursor-pointer"> Balcony
+                                </label>
+                                <label class="flex items-center gap-1.5 py-1.5 px-3 bg-surface border border-outline-variant/30 rounded-xl text-[10px] md:text-[11px] font-bold uppercase text-on-surface cursor-pointer hover:bg-surface-variant hover:border-outline-variant/60 transition-all shadow-sm">
+                                    <input onclick="toggleFilterAmenity('attached bath', this)" type="checkbox" class="w-4 h-4 rounded bg-surface border-outline-variant text-accent focus:ring-accent cursor-pointer"> Attached Bath
+                                </label>
+                            </div>
+
+                            <!-- Quick Tags -->
+                            <div class="flex flex-wrap gap-2 items-center justify-center xl:justify-end w-full xl:w-auto">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant mr-2 hidden sm:block">Popular:</span>
+                                <button onclick="quickSearch('Tadong')" class="px-4 py-1.5 bg-surface border border-outline-variant/30 rounded-full text-xs font-bold text-on-surface hover:bg-primary hover:text-white hover:border-primary shadow-sm transition-all">📍 Tadong</button>
+                                <button onclick="quickSearch('2 BHK')" class="px-4 py-1.5 bg-surface border border-outline-variant/30 rounded-full text-xs font-bold text-on-surface hover:bg-primary hover:text-white hover:border-primary shadow-sm transition-all">🏠 2 BHK</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ═══ RESULTS AREA (shown when search active) ═══ -->
+                <div id="tn-results-area" class="hidden flex-grow flex flex-col bg-surface-lowest border-t border-outline-variant/30">
+                    <!-- Results bar -->
+                    <div class="px-6 py-4 bg-surface-container-lowest border-b border-outline-variant/20 flex justify-between items-center flex-shrink-0 sticky top-0 z-10 shadow-sm">
+                        <div class="flex items-center gap-3">
+                            <span id="tenant-current-tab-label" class="text-primary font-black text-sm uppercase tracking-wider">Search Results</span>
+                            <div id="tn-results-pill" class="flex items-center gap-1.5 bg-primary/10 border border-primary/20 px-3 py-1 rounded-full">
+                                <span class="text-[10px] font-black text-primary uppercase tracking-wider"><span id="results-count">0</span> rooms found</span>
+                            </div>
+                        </div>
+                        <button onclick="clearTenantSearch()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface border border-outline-variant/40 text-on-surface hover:bg-error/10 hover:text-error hover:border-error/30 text-[10px] font-black uppercase tracking-wider transition-all shadow-sm">
+                            <span class="material-symbols-outlined text-sm">arrow_back</span> Back to Search
+                        </button>
+                    </div>
+                    
+                    <!-- Grid -->
+                    <div class="flex-grow p-6 w-full max-w-7xl mx-auto">
+                        <div id="tn-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                            <!-- Cards populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
 
-        <footer class="bg-surface-container-high py-16 border-t border-outline-variant/30 mt-6 transition-colors">
-            <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-10">
-                <div class="md:col-span-6 space-y-4">
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="material-symbols-outlined text-primary text-3xl">terrain</span>
-                        <span class="text-2xl font-extrabold text-primary font-headline tracking-tight">GangtokNest</span>
-                    </div>
-                    <p class="text-on-surface-variant text-sm leading-relaxed max-w-md">GangtokNest is Sikkim’s premier digital rental platform, built to simplify housing for students, professionals, and locals. Developed as an MCA initiative at Sikkim University.</p>
-                </div>
-                <div class="md:col-span-6 flex flex-col items-start md:items-end">
-                    <h4 class="font-extrabold text-primary uppercase tracking-widest text-xs mb-4">Live Support</h4>
-                    <a href="https://wa.me/918116139401" target="_blank" class="inline-flex items-center gap-3 bg-[#25D366] text-white px-5 py-3.5 rounded-xl font-extrabold text-sm hover:bg-[#128C7E] transition-all shadow-md w-full md:w-auto justify-center">
-                        <span class="material-symbols-outlined">chat</span> WhatsApp Support
-                    </a>
-                </div>
-            </div>
-            <div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-outline-variant/40 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-extrabold text-on-surface-variant/70 tracking-widest uppercase">
-                <p>© 2026 GangtokNest Properties</p>
-                <p>Project by Ajay Sharma | Sikkim University MCA</p>
-            </div>
-        </footer>
-    </div>
+    <div id="view-landlord" class="hidden min-h-screen bg-surface font-body transition-colors duration-300">
+        <!-- Fixed Header Bar spacing is pt-16 on internal wrapper -->
+        <div class="flex flex-col min-h-[calc(100vh-64px)] pt-16 relative">
 
-    <div id="view-landlord" class="hidden min-h-screen">
-        <div class="flex flex-col lg:flex-row min-h-screen pt-16">
-            <!-- Left Sidebar: Live Portfolio -->
-            <div class="lg:w-2/5 xl:w-1/3 p-6 border-r border-outline-variant/20 bg-surface-container-lowest overflow-y-auto lg:h-[calc(100vh-64px)] lg:sticky lg:top-16 transition-colors">
-                <header class="pb-3 border-b border-outline-variant/30 mb-6 flex justify-between items-center">
-                    <h2 class="font-headline font-black text-sm text-primary uppercase tracking-wider flex items-center gap-1.5">
-                        <span class="material-symbols-outlined text-accent">apartment</span> Your Listings
-                    </h2>
-                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                </header>
+        <!-- Glossy Top Navigation (Landlord) -->
+        <div class="flex-shrink-0 w-full px-4 md:px-6 py-3 bg-surface-lowest/80 backdrop-blur-xl border-b border-outline-variant/30 sticky top-0 z-40 shadow-sm flex items-center justify-between">
+            <div class="flex items-center gap-2 min-w-max pb-1 overflow-x-auto no-scrollbar flex-grow mr-2">
+                <button id="ll-nav-top-dashboard" onclick="switchLandlordView('dashboard')" class="ll-nav-btn active flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white shadow-lg dark:text-surface border border-transparent">
+                    <span class="material-symbols-outlined text-sm">dashboard</span> Overview
+                </button>
+                <button id="ll-nav-top-listings" onclick="switchLandlordView('listings')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">list_alt</span> Active Listings
+                </button>
+                <button id="ll-nav-top-rented" onclick="switchLandlordView('rented')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">key</span> Rented Out
+                </button>
+                <button id="ll-nav-top-publish" onclick="switchLandlordView('publish')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">add_circle</span> Publish Room
+                </button>
+                <button id="ll-nav-top-analytics" onclick="switchLandlordView('analytics')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">bar_chart</span> Analytics
+                </button>
+                <button id="ll-nav-top-visits" onclick="switchLandlordView('visits')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">event</span> Visit Requests
+                </button>
+                <button id="ll-nav-top-profile" onclick="switchLandlordView('profile')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">person</span> Profile
+                </button>
+                <button id="ll-nav-top-settings" onclick="switchLandlordView('settings')" class="ll-nav-btn flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300 bg-surface border border-outline-variant/40 text-on-surface hover:bg-surface-container hover:shadow-sm">
+                    <span class="material-symbols-outlined text-sm">settings</span> Settings
+                </button>
+            </div>
+            
+            <button onclick="signOut()" class="ml-2 flex-shrink-0 flex items-center gap-1.5 bg-error/10 text-error hover:bg-error hover:text-white px-4 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[1rem]">logout</span> <span class="hidden md:inline">Logout</span>
+            </button>
+        </div>
 
-                <!-- Landlord Metrics Grid -->
-                <div class="grid grid-cols-3 gap-2 mb-6">
-                    <div class="bg-surface-container/50 border border-outline-variant/30 p-2.5 rounded-2xl text-center">
-                        <div id="ll-metric-total" class="font-headline font-black text-sm text-primary">0</div>
-                        <div class="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant">Active</div>
-                    </div>
-                    <div class="bg-surface-container/50 border border-outline-variant/30 p-2.5 rounded-2xl text-center">
-                        <div id="ll-metric-avg" class="font-headline font-black text-sm text-primary">₹0</div>
-                        <div class="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant">Avg Rent</div>
-                    </div>
-                    <div class="bg-surface-container/50 border border-outline-variant/30 p-2.5 rounded-2xl text-center">
-                        <div id="ll-metric-val" class="font-headline font-black text-sm text-primary">₹0</div>
-                        <div class="text-[8px] font-bold uppercase tracking-widest text-on-surface-variant">Total Rent</div>
-                    </div>
-                </div>
+            
+            <!-- Left Sidebar Menu -->
+            <!-- Overlay -->
+            
+            
+            
+
+            <!-- Right Main Content Panel -->
+            <main class="flex-1 bg-surface min-h-[calc(100vh-64px)] overflow-y-auto p-4 md:p-8 space-y-8">
                 
-                <!-- Active Grid inside sidebar -->
-                <div id="ll-active-grid" class="space-y-4">
-                    <!-- Loaded dynamically via fetchLandlordData(uid) -->
-                </div>
-            </div>
+                <!-- SECTION 1: DASHBOARD OVERVIEW -->
+                <section id="ll-section-dashboard" class="space-y-6">
+                    <header class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-extrabold tracking-tight text-primary">Overview</h1>
+                            <p class="text-on-surface-variant mt-1 text-sm">Monitor your property portfolio and listings metrics.</p>
+                        </div>
+                    </header>
+                    
+                    <!-- Dashboard Statistics Counters -->
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                        <div class="bg-surface-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-10 text-primary group-hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-6xl">apartment</span></div>
+                            <div id="ll-stat-total" class="font-headline font-extrabold text-3xl text-primary">0</div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mt-1">Total Properties</div>
+                        </div>
+                        <div class="bg-surface-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-10 text-success group-hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-6xl">verified</span></div>
+                            <div id="ll-stat-active" class="font-headline font-extrabold text-3xl text-success">0</div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mt-1">Active Listings</div>
+                        </div>
+                        <div class="bg-surface-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-10 text-secondary group-hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-6xl">home_work</span></div>
+                            <div id="ll-stat-rented" class="font-headline font-extrabold text-3xl text-secondary">0</div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mt-1">Rented Rooms</div>
+                        </div>
+                        <div class="bg-surface-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-10 text-accent group-hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-6xl">visibility</span></div>
+                            <div id="ll-stat-views" class="font-headline font-extrabold text-3xl text-accent">1,420</div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mt-1">Total Views</div>
+                        </div>
+                        <div class="bg-surface-lowest p-5 rounded-2xl border border-outline-variant/30 shadow-sm relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-10 text-cyan-600 group-hover:scale-110 transition-all duration-300"><span class="material-symbols-outlined text-6xl">chat</span></div>
+                            <div id="ll-stat-inquiries" class="font-headline font-extrabold text-3xl text-cyan-600">48</div>
+                            <div class="text-[9px] font-black uppercase tracking-widest text-on-surface-variant mt-1">Inquiries</div>
+                        </div>
+                    </div>
 
-            <!-- Right Column: Publish Form -->
-            <main class="lg:w-3/5 xl:w-2/3 flex-1 px-4 md:px-12 lg:px-20 pt-8 pb-32 overflow-y-auto">
-                <header class="mb-6">
-                    <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-primary">Publish Property</h1>
-                    <p class="text-on-surface-variant mt-1 text-sm">Enter accurate details to list your room instantly.</p>
-                </header>
-                
-                <form id="landlordForm" class="relative bg-surface-container-lowest/70 backdrop-blur-2xl p-6 md:p-8 rounded-[1.5rem] shadow-xl border border-outline-variant/30 transition-colors" onsubmit="event.preventDefault(); publishListing();">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 relative z-10">
-                        <div class="space-y-4">
-                            <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">1. Property Specs</h3>
+                    <!-- Quick Activity -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-surface-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-sm space-y-4">
+                            <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider">Quick Actions</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <button onclick="switchLandlordView('publish')" class="p-4 bg-primary/10 border border-primary/20 text-primary font-bold text-xs uppercase rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-primary/25 transition-all">
+                                    <span class="material-symbols-outlined text-2xl">add_circle</span> Publish New Property
+                                </button>
+                                <button onclick="switchLandlordView('listings')" class="p-4 bg-secondary/10 border border-secondary/20 text-secondary font-bold text-xs uppercase rounded-2xl flex flex-col items-center justify-center gap-2 hover:bg-secondary/25 transition-all">
+                                    <span class="material-symbols-outlined text-2xl">format_list_bulleted</span> View Portfolio
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-surface-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-sm space-y-4">
+                            <h3 class="font-headline font-black text-sm text-primary uppercase tracking-wider">Nest Activity</h3>
                             <div class="space-y-3">
+                                <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+                                    <span class="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span>
+                                    <span>Database synced successfully</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+                                    <span class="w-2 h-2 rounded-full bg-success flex-shrink-0"></span>
+                                    <span>Leaflet maps preloaded</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+                                    <span class="w-2 h-2 rounded-full bg-accent flex-shrink-0"></span>
+                                    <span>Views count updated</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: ACTIVE LISTINGS PORTFOLIO -->
+                <section id="ll-section-listings" class="hidden space-y-6">
+                    <header class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-extrabold tracking-tight text-primary">Your Listings</h1>
+                            <p class="text-on-surface-variant mt-1 text-sm">Manage published rentals and statuses.</p>
+                        </div>
+                    </header>
+
+                    <!-- Active listings search & filter row -->
+                    <div class="flex flex-col sm:flex-row gap-3 bg-surface-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-sm">
+                        <div class="relative flex items-center group flex-grow">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-primary">search</span>
+                            <input id="ll-search-listings" onkeyup="filterLandlordListings()" class="w-full pl-9 pr-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none text-xs font-bold text-on-surface transition-all" placeholder="Search title or location...">
+                        </div>
+                    </div>
+
+                    <!-- Listings grid wrapper -->
+                    <div id="ll-active-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <!-- Loaded dynamically via fetchLandlordData(uid) -->
+                    </div>
+                </section>
+
+                <!-- SECTION 3: RENTED ROOMS PAGE -->
+                <section id="ll-section-rented" class="hidden space-y-6">
+                    <header class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-extrabold tracking-tight text-primary">Rented Properties</h1>
+                            <p class="text-on-surface-variant mt-1 text-sm">Review active tenants and contract information.</p>
+                        </div>
+                    </header>
+
+                    <!-- Rented search filters -->
+                    <div class="flex flex-col sm:flex-row gap-3 bg-surface-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-sm">
+                        <div class="relative flex items-center group flex-grow">
+                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1rem] pointer-events-none group-focus-within:text-primary">search</span>
+                            <input id="ll-search-rented" onkeyup="renderRentedRooms()" class="w-full pl-9 pr-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl focus:ring-2 focus:ring-primary outline-none text-xs font-bold text-on-surface transition-all" placeholder="Search tenant or room title...">
+                        </div>
+                    </div>
+
+                    <!-- Responsive Rented Table Card -->
+                    <div class="bg-surface-lowest rounded-3xl border border-outline-variant/30 overflow-hidden shadow-sm">
+                        <div class="overflow-x-auto">
+                            <table class="w-full border-collapse text-left text-xs font-semibold">
+                                <thead class="bg-surface-container border-b border-outline-variant/30 text-primary uppercase text-[10px] tracking-wider font-black">
+                                    <tr>
+                                        <th class="p-4">Room / Property</th>
+                                        <th class="p-4">Tenant Name</th>
+                                        <th class="p-4">Contact No</th>
+                                        <th class="p-4 text-center">Rent</th>
+                                        <th class="p-4">Start Date</th>
+                                        <th class="p-4">Status</th>
+                                        <th class="p-4 text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ll-rented-tbody" class="divide-y divide-outline-variant/20 text-on-surface">
+                                    <!-- Rendered dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="ll-rented-empty-state" class="hidden py-16 flex flex-col items-center justify-center text-center space-y-3">
+                            <span class="material-symbols-outlined text-primary/30 text-5xl">home_work</span>
+                            <div>
+                                <h4 class="font-bold text-sm text-primary">No Rented Properties</h4>
+                                <p class="text-on-surface-variant text-[11px] mt-0.5">Properties marked as rented will display in this list.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: PUBLISH / MULTI-STEP PROPERTY UPLOAD -->
+                <section id="ll-section-publish" class="hidden space-y-6">
+                    <header class="flex justify-between items-center">
+                        <div>
+                            <h1 id="ll-publish-headline" class="text-3xl font-extrabold tracking-tight text-primary">Publish Property</h1>
+                            <p id="ll-publish-subheadline" class="text-on-surface-variant mt-1 text-sm">Enter accurate details to list your room instantly.</p>
+                        </div>
+                    </header>
+
+                    <!-- Multi-Step Card Form -->
+                    <div class="bg-surface-lowest p-6 md:p-8 rounded-[2rem] border border-outline-variant/30 shadow-sm max-w-4xl mx-auto space-y-6">
+                        
+                        <!-- Progress Stepper -->
+                        <div class="mb-8 flex items-center justify-between max-w-xl mx-auto">
+                            <div class="flex items-center gap-2">
+                                <div id="step-dot-1" class="step-dot active">1</div>
+                                <span class="text-[10px] font-black uppercase text-primary tracking-wider hidden sm:inline">Specs & Location</span>
+                            </div>
+                            <div class="flex-grow h-0.5 bg-outline-variant/30 mx-4"></div>
+                            <div class="flex items-center gap-2">
+                                <div id="step-dot-2" class="step-dot">2</div>
+                                <span class="text-[10px] font-black uppercase text-on-surface-variant tracking-wider hidden sm:inline">Details & Pricing</span>
+                            </div>
+                            <div class="flex-grow h-0.5 bg-outline-variant/30 mx-4"></div>
+                            <div class="flex items-center gap-2">
+                                <div id="step-dot-3" class="step-dot">3</div>
+                                <span class="text-[10px] font-black uppercase text-on-surface-variant tracking-wider hidden sm:inline">Amenities & Media</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Form Wrapper -->
+                        <form id="landlordForm" onsubmit="event.preventDefault();" class="space-y-6">
+                            
+                            <!-- STEP 1 CONTAINER -->
+                            <div id="ll-step-1" class="space-y-4">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-primary border-b border-outline-variant/20 pb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">explore</span> 1. Property Name & Location</h3>
+                                
                                 <div class="relative flex items-center group">
-                                    <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">apartment</span>
-                                    <input id="ll-title" class="form-input-sm pl-10" placeholder="Listing Title (e.g. Modern Studio)" required>
+                                    <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">apartment</span>
+                                    <input id="ll-title" class="form-input-sm pl-10" placeholder="Listing Title (e.g. Modern Spacious Flat near SMIT)" required>
                                 </div>
-                                <div class="flex flex-col gap-2">
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">pin_drop</span>
-                                        <input id="ll-loc" class="form-input-sm pl-10" placeholder="Enter Location Details (e.g. Near Sikkim University, Tadong)" required>
-                                    </div>
-                                    <button type="button" onclick="detectLocation()" id="btn-detect-loc" class="w-full py-2.5 bg-surface-container border border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-on-surface hover:bg-outline-variant/30 transition-colors shadow-sm">
-                                        <span class="material-symbols-outlined text-sm">my_location</span>
-                                        <span id="loc-text">Capture GPS Location</span>
-                                    </button>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">currency_rupee</span>
-                                        <input id="ll-rent" type="number" class="form-input-sm pl-10" placeholder="Rent / Mo" required>
-                                    </div>
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">meeting_room</span>
-                                        <select id="ll-bhk" class="form-input-sm pl-10 cursor-pointer">
-                                            <option value="1">1 BHK</option><option value="2">2 BHK</option><option value="3">3 BHK</option><option value="4">4+ / Homestay</option>
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">pin_drop</span>
+                                        <select id="ll-main-area-select" class="form-input-sm pl-10 cursor-pointer" required>
+                                            <option value="" disabled selected>Select Main Area / Locality</option>
+                                            <option value="Tadong">Tadong</option>
+                                            <option value="Upper Tadong">Upper Tadong</option>
+                                            <option value="Lower Tadong">Lower Tadong</option>
+                                            <option value="Deorali">Deorali</option>
+                                            <option value="Development Area">Development Area</option>
+                                            <option value="Bojoghari">Bojoghari</option>
+                                            <option value="Daragaon">Daragaon</option>
+                                            <option value="Gairigaon">Gairigaon</option>
+                                            <option value="Ranipool">Ranipool</option>
+                                            <option value="5th Mile">5th Mile</option>
+                                            <option value="6th Mile">6th Mile</option>
+                                            <option value="Metro Point">Metro Point</option>
+                                            <option value="Sichey">Sichey</option>
+                                            <option value="Chandmari">Chandmari</option>
+                                            <option value="Tibet Road">Tibet Road</option>
+                                            <option value="MG Marg Area">MG Marg Area</option>
+                                            <option value="Burtuk">Burtuk</option>
+                                            <option value="Syari">Syari</option>
+                                            <option value="Lingding">Lingding</option>
+                                            <option value="Pangthang">Pangthang</option>
+                                            <option value="Sokeythang">Sokeythang</option>
+                                            <option value="Nam Nam">Nam Nam</option>
+                                            <option value="Indira Bypass">Indira Bypass</option>
+                                            <option value="Baluwakhani">Baluwakhani</option>
+                                            <option value="Ranka">Ranka</option>
+                                            <option value="Tintek">Tintek</option>
+                                            <option value="Marchak">Marchak</option>
+                                            <option value="Bhanu Path">Bhanu Path</option>
+                                            <option value="Zero Point">Zero Point</option>
+                                            <option value="Tathangchen">Tathangchen</option>
+                                            <option value="Upper Sichey">Upper Sichey</option>
+                                            <option value="Lower Sichey">Lower Sichey</option>
+                                            <option value="Other">Other</option>
                                         </select>
                                     </div>
+
+                                    <div class="relative flex items-center group">
+                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">location_on</span>
+                                        <input id="ll-loc" class="form-input-sm pl-10" placeholder="Exact Location / Building (e.g. Sikkim University Road)" required>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col gap-2 pt-2">
+                                    <button type="button" onclick="detectLocation()" id="btn-detect-loc" class="w-full py-2.5 bg-surface-container border border-outline-variant/50 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center justify-center gap-1.5 text-on-surface hover:bg-outline-variant/30 transition-colors shadow-sm">
+                                        <span class="material-symbols-outlined text-sm">my_location</span>
+                                        <span id="loc-text">Capture GPS Location coordinates</span>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="space-y-4">
-                            <h3 class="text-[10px] font-black uppercase tracking-widest text-accent border-b border-outline-variant/30 pb-2">2. Logistics</h3>
-                            <div class="space-y-3">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">stairs</span>
-                                        <input id="ll-floor" class="form-input-sm pl-10" placeholder="Floor Level" required>
+
+                            <!-- STEP 2 CONTAINER -->
+                            <div id="ll-step-2" class="space-y-4 hidden">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-primary border-b border-outline-variant/20 pb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">payments</span> 2. Pricing & Property Specifications</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">BHK Type</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">meeting_room</span>
+                                            <input id="ll-bhk" class="form-input-sm pl-10" placeholder="Enter BHK Type (Example: 2 BHK)" required>
+                                        </div>
                                     </div>
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none">chat</span>
-                                        <input id="ll-phone" class="form-input-sm pl-10" placeholder="WhatsApp No." type="tel" required>
-                                    </div>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">water_drop</span>
-                                        <select id="ll-water" class="form-input-sm pl-10 cursor-pointer"><option value="24/7">Water: 24/7</option><option value="Scheduled">Scheduled</option></select>
-                                    </div>
-                                    <div class="relative flex items-center group">
-                                        <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-accent pointer-events-none z-10">add_road</span>
-                                        <select id="ll-road" class="form-input-sm pl-10 cursor-pointer"><option value="On Road">On Road</option><option value="5m Walk">5m Walk</option></select>
+
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Monthly Rent amount</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">currency_rupee</span>
+                                            <input id="ll-rent" type="number" class="form-input-sm pl-10" placeholder="Rent Amount / Month" required>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-3 px-2 rounded-xl transition-colors">
-                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-sun" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Sunlight</label>
-                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-park" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Parking</label>
-                                    <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-balc" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-accent focus:ring-accent cursor-pointer shadow-sm bg-surface-container-lowest"> Balcony</label>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Floor Level</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">stairs</span>
+                                            <input id="ll-floor" class="form-input-sm pl-10" placeholder="Floor Level (e.g. Ground Floor, 3rd Floor)" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">WhatsApp Contact Phone No.</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">chat</span>
+                                            <input id="ll-phone" class="form-input-sm pl-10" placeholder="WhatsApp Number (e.g. 8116139401)" type="tel" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        
-                        <div class="md:col-span-2 pt-2">
-                            <label class="border-2 border-dashed border-outline-variant bg-surface-container-lowest/50 rounded-xl p-4 flex flex-col items-center justify-center gap-1.5 hover:border-accent/50 hover:shadow-md transition-all cursor-pointer relative group">
-                                <span class="material-symbols-outlined text-primary/60 text-3xl group-hover:text-accent transition-colors">add_photo_alternate</span>
-                                <span class="font-extrabold text-sm text-on-surface" id="upload-text">Upload Room Image</span>
-                                <span class="text-[10px] text-on-surface-variant font-medium">Clear, bright photos perform best.</span>
-                                <input type="file" id="ll-photo" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" required onchange="document.getElementById('upload-text').innerText = this.files[0].name;">
-                            </label>
+
+                            <!-- STEP 3 CONTAINER -->
+                            <div id="ll-step-3" class="space-y-4 hidden">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-primary border-b border-outline-variant/20 pb-2 flex items-center gap-1.5"><span class="material-symbols-outlined text-[14px]">tune</span> 3. Logistics, Amenities & Photos</h3>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Water Supply</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">water_drop</span>
+                                            <select id="ll-water" class="form-input-sm pl-10 cursor-pointer">
+                                                <option value="24/7">Water: 24/7 Supply</option>
+                                                <option value="Scheduled">Scheduled Hours</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-1">
+                                        <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Road Accessibility</label>
+                                        <div class="relative flex items-center group">
+                                            <span class="material-symbols-outlined absolute left-3 text-on-surface-variant/50 text-[1.1rem] transition-colors group-focus-within:text-primary pointer-events-none z-10">add_road</span>
+                                            <select id="ll-road" class="form-input-sm pl-10 cursor-pointer">
+                                                <option value="Roadside (0 min)">Roadside (0 min)</option>
+                                                <option value="1 Minute Walk">1 Minute Walk</option>
+                                                <option value="2 Minutes Walk">2 Minutes Walk</option>
+                                                <option value="3 Minutes Walk">3 Minutes Walk</option>
+                                                <option value="4 Minutes Walk">4 Minutes Walk</option>
+                                                <option value="5 Minutes Walk">5 Minutes Walk</option>
+                                                <option value="6 Minutes Walk">6 Minutes Walk</option>
+                                                <option value="7 Minutes Walk">7 Minutes Walk</option>
+                                                <option value="8 Minutes Walk">8 Minutes Walk</option>
+                                                <option value="9 Minutes Walk">9 Minutes Walk</option>
+                                                <option value="10+ Minutes Walk">10+ Minutes Walk</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Amenities</label>
+                                    <div class="flex items-center justify-around bg-surface-container/50 border border-outline-variant/30 py-3.5 px-4 rounded-xl transition-colors">
+                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-sun" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer shadow-sm bg-surface-container-lowest"> Sunlight</label>
+                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-park" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer shadow-sm bg-surface-container-lowest"> Parking</label>
+                                        <label class="flex items-center gap-1.5 text-xs font-bold cursor-pointer text-on-surface"><input id="ll-balc" type="checkbox" class="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary cursor-pointer shadow-sm bg-surface-container-lowest"> Balcony</label>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label class="block text-[8px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Upload Photo</label>
+                                    <div id="ll-upload-zone" class="upload-zone relative">
+                                        <span class="material-symbols-outlined text-primary/60 text-3xl mb-2">add_photo_alternate</span>
+                                        <p class="font-extrabold text-xs text-on-surface" id="upload-text">Drag & Drop Image or Click to Browse</p>
+                                        <p class="text-[9px] text-on-surface-variant font-medium mt-0.5">Accepts JPG, PNG, WEBP</p>
+                                        <input type="file" id="ll-photo" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" onchange="handleFileSelect(this.files[0])">
+                                    </div>
+                                    <div id="ll-image-preview-container" class="hidden relative mt-2 rounded-xl overflow-hidden h-36 border border-outline-variant/20">
+                                        <img id="ll-image-preview" class="w-full h-full object-cover">
+                                        <button type="button" onclick="clearSelectedImage()" class="absolute top-2 right-2 p-1.5 bg-black/60 hover:bg-error text-white rounded-full transition-colors flex items-center justify-center">
+                                            <span class="material-symbols-outlined text-xs">close</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Navigation Controls -->
+                            <div class="flex gap-4 pt-4 border-t border-outline-variant/20">
+                                <button type="button" id="ll-btn-prev" onclick="prevStep()" class="hidden flex-1 py-3.5 bg-surface-container border border-outline-variant/40 hover:bg-outline-variant/30 text-on-surface rounded-xl font-black text-xs uppercase tracking-widest transition-all">Back</button>
+                                <button type="button" id="ll-btn-next" onclick="nextStep()" class="flex-1 py-3.5 bg-primary text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:opacity-90 transition-all">Continue</button>
+                                <button type="button" id="ll-btn-submit" onclick="publishListing()" class="hidden flex-1 py-3.5 bg-success text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg hover:opacity-90 transition-all">Publish Listing</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- SAAS PLACEHOLDER SECTIONS -->
+                <section id="ll-section-profile" class="hidden bg-surface-lowest p-8 rounded-3xl border border-outline-variant/30 space-y-4 max-w-4xl">
+                    <h1 class="text-2xl font-extrabold text-primary">Your Profile</h1>
+                    <p class="text-on-surface-variant text-sm">Manage landlord contact details, verification tags, and display avatar details.</p>
+                    <div class="h-px bg-outline-variant/20 my-4"></div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 bg-surface-container/30 p-4 rounded-xl">
+                            <span class="material-symbols-outlined text-3xl text-primary">account_circle</span>
+                            <div>
+                                <h4 class="font-bold text-xs uppercase text-primary">Ajay Sharma</h4>
+                                <p class="text-[10px] text-on-surface-variant uppercase tracking-wider font-semibold">MCA Sikkim University</p>
+                            </div>
                         </div>
                     </div>
-                    <button type="submit" id="ll-submit" class="w-full mt-5 py-4 cta-gradient text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 hover:-translate-y-0.5 transition-all relative z-10">Publish to Cloud</button>
-                </form>
+                </section>
+
+                <section id="ll-section-settings" class="hidden bg-surface-lowest p-8 rounded-3xl border border-outline-variant/30 space-y-4 max-w-4xl">
+                    <h1 class="text-2xl font-extrabold text-primary">System Settings</h1>
+                    <p class="text-on-surface-variant text-sm">Configure portal access parameters, coordinate maps boundaries, and notifications preferences.</p>
+                    <div class="h-px bg-outline-variant/20 my-4"></div>
+                    <p class="text-xs text-on-surface-variant">Settings controls will hook into local dashboard operations.</p>
+                </section>
+
+                <section id="ll-section-analytics" class="hidden bg-surface-lowest p-8 rounded-3xl border border-outline-variant/30 space-y-4 max-w-4xl">
+                    <h1 class="text-2xl font-extrabold text-primary">Nest Analytics</h1>
+                    <p class="text-on-surface-variant text-sm">Detailed telemetry logs on views count, clicks, and inquiry requests matching geographical markers.</p>
+                    <div class="h-px bg-outline-variant/20 my-4"></div>
+                    <p class="text-xs text-on-surface-variant">Views: 1,420 • Inquiries: 48 • Conversion: 3.38%</p>
+                </section>
+
+                <section id="ll-section-leads" class="hidden bg-surface-lowest p-8 rounded-3xl border border-outline-variant/30 space-y-4 max-w-4xl">
+                    <h1 class="text-2xl font-extrabold text-primary">Saved Leads</h1>
+                    <p class="text-on-surface-variant text-sm">Direct contact details from tenants who saved your properties or initiated inquiries.</p>
+                    <div class="h-px bg-outline-variant/20 my-4"></div>
+                    <p class="text-xs text-on-surface-variant">Saved leads repository is currently empty.</p>
+                </section>
+
+                <!-- Analytics View -->
+                <section id="ll-section-analytics" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h3 class="font-headline font-black text-2xl text-primary tracking-tight">Analytics Dashboard</h3>
+                        <p class="text-on-surface-variant font-medium text-sm mt-1">Track your property performance and engagement.</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Total Profile Views</p>
+                                <h4 class="text-3xl font-black text-primary" id="analytics-views">--</h4>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </div>
+                        </div>
+                        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Times Favorited</p>
+                                <h4 class="text-3xl font-black text-accent" id="analytics-favs">--</h4>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                                <span class="material-symbols-outlined">favorite</span>
+                            </div>
+                        </div>
+                        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/30 shadow-sm flex items-center justify-between">
+                            <div>
+                                <p class="text-on-surface-variant text-xs font-bold uppercase tracking-widest mb-1">Active Listings</p>
+                                <h4 class="text-3xl font-black text-emerald-600" id="analytics-listings">--</h4>
+                            </div>
+                            <div class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                                <span class="material-symbols-outlined">home</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-surface-container-lowest p-6 rounded-3xl border border-outline-variant/30 shadow-md">
+                        <h4 class="font-bold text-on-surface mb-6">Views Over Last 7 Days</h4>
+                        <div class="relative h-80 w-full">
+                            <canvas id="analyticsChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Visit Requests View -->
+                <section id="ll-section-visits" class="hidden animate-fade-in">
+                    <div class="mb-8">
+                        <h3 class="font-headline font-black text-2xl text-primary tracking-tight">Visit Requests</h3>
+                        <p class="text-on-surface-variant font-medium text-sm mt-1">Manage physical room inspection requests from prospective tenants.</p>
+                    </div>
+                    
+                    <div class="bg-surface-container-lowest rounded-3xl border border-outline-variant/30 shadow-md overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-surface-container border-b border-outline-variant/30 text-on-surface-variant font-bold uppercase tracking-wider text-[10px]">
+                                    <tr>
+                                        <th class="px-6 py-4">Tenant Info</th>
+                                        <th class="px-6 py-4">Property</th>
+                                        <th class="px-6 py-4">Requested Date</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ll-visits-tbody" class="divide-y divide-outline-variant/20">
+                                    <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div id="ll-visits-empty" class="hidden p-12 text-center">
+                            <span class="material-symbols-outlined text-4xl text-on-surface-variant/30 mb-3">event_busy</span>
+                            <h4 class="font-bold text-on-surface">No Pending Requests</h4>
+                            <p class="text-xs text-on-surface-variant mt-1">You're all caught up!</p>
+                        </div>
+                    </div>
+                </section>
+
             </main>
+        </div>
+    </div>
+    
+    <!-- Mark as Rented Modal -->
+    <div id="rented-modal" class="fixed inset-0 z-[100] bg-primary/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-surface-container-lowest rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden border border-outline-variant/20 relative transition-colors">
+            <button onclick="closeRentedModal()" class="material-symbols-outlined absolute top-4 right-4 text-on-surface-variant hover:text-error transition-colors p-2 rounded-full hover:bg-outline-variant/30 z-20">close</button>
+            <div class="h-2 bg-success w-full"></div>
+            
+            <div class="p-8 space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="font-headline text-2xl font-extrabold text-primary tracking-tight">Mark as Rented</h2>
+                    <p class="text-on-surface-variant text-xs font-medium">Enter rental details to update records</p>
+                </div>
+
+                <form class="space-y-4" onsubmit="event.preventDefault(); submitRentedDetails();">
+                    <input type="hidden" id="rented-modal-listing-id">
+                    
+                    <div class="space-y-1.5">
+                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Tenant Name</label>
+                        <input id="rented-tenant-name" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary outline-none transition-all text-on-surface" placeholder="John Doe" required>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Tenant Contact Number</label>
+                        <input id="rented-tenant-contact" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary outline-none transition-all text-on-surface" placeholder="e.g. 9876543210" type="tel" required>
+                    </div>
+
+                    <div class="space-y-1.5">
+                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Rental Start Date</label>
+                        <input id="rented-start-date" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-primary outline-none transition-all text-on-surface" type="date" required>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-success text-white rounded-xl font-black text-sm uppercase tracking-widest shadow-xl hover:opacity-90 transition-all">Confirm Rented Status</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Rooms Side Drawer -->
+    <!-- Backdrop -->
+    <div id="featured-backdrop" onclick="closeFeaturedModal()" class="fixed inset-0 z-[99] bg-black/50 backdrop-blur-sm hidden transition-opacity duration-300 opacity-0"></div>
+    <!-- Drawer Panel -->
+    <div id="featured-modal" class="fixed top-0 right-0 z-[100] h-full w-full sm:w-[480px] lg:w-[520px] bg-surface-container-lowest shadow-2xl border-l border-outline-variant/20 flex flex-col translate-x-full transition-transform duration-400 ease-out">
+        <!-- Drawer Header -->
+        <div class="p-5 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-accent/15 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-accent font-filled text-xl">grade</span>
+                </div>
+                <div>
+                    <h3 class="font-headline font-black text-primary text-base uppercase tracking-wider">Featured Rooms</h3>
+                    <p class="text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">Top picks in Gangtok</p>
+                </div>
+            </div>
+            <button onclick="closeFeaturedModal()" class="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container-high text-on-surface-variant hover:bg-error/10 hover:text-error transition-all">
+                <span class="material-symbols-outlined text-xl">close</span>
+            </button>
+        </div>
+        <!-- Drawer Body -->
+        <div class="overflow-y-auto flex-grow scrollable-feed p-5">
+            <div id="tn-featured-grid" class="flex flex-col gap-4">
+                <!-- Populated dynamically -->
+            </div>
+            <div id="tn-featured-empty" class="hidden py-16 flex flex-col items-center justify-center text-center space-y-3">
+                <span class="material-symbols-outlined text-primary/30 text-5xl">grade</span>
+                <div>
+                    <h4 class="font-bold text-sm text-primary">No Featured Rooms</h4>
+                    <p class="text-on-surface-variant text-[11px] mt-0.5">Check back later for curated rental units.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -474,52 +993,65 @@
     </div>
 
     <!-- Landlord Portal Auth Modal -->
-    <div id="auth-modal" class="fixed inset-0 z-[100] bg-primary/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-surface-container-lowest rounded-[2rem] shadow-2xl w-full max-w-md overflow-hidden border border-outline-variant/20 relative transition-colors">
-            <button onclick="closeAuthModal()" class="material-symbols-outlined absolute top-4 right-4 text-on-surface-variant hover:text-error transition-colors p-2 rounded-full hover:bg-outline-variant/30 z-20">close</button>
-            <div class="h-2 cta-gradient w-full"></div>
-            
-            <div class="p-8 space-y-6">
-                <!-- Role selector inside modal -->
-                <div class="grid grid-cols-2 gap-2 bg-surface-container p-1 rounded-2xl transition-colors">
-                    <button id="btn-role-landlord" onclick="selectRole('landlord')" class="py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 bg-primary text-white dark:text-surface shadow-md">Landlord</button>
-                    <button id="btn-role-tenant" onclick="selectRole('tenant')" class="py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all duration-300 text-on-surface hover:bg-outline-variant/20">Tenant</button>
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center">
+        <!-- Netflix-style Cinematic Background -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-60">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40"></div>
+            <div class="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>
+        </div>
+
+        <div class="z-10 w-full max-w-[450px] p-4 md:p-0">
+            <div class="bg-black/70 backdrop-blur-xl md:rounded-[2rem] rounded-3xl shadow-2xl w-full border border-white/10 relative overflow-hidden flex flex-col pt-12 pb-16 px-8 md:px-16 transition-all">
+                <button onclick="closeAuthModal()" class="material-symbols-outlined absolute top-6 right-6 text-white/50 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10 z-20">close</button>
+                
+                <div class="text-left space-y-2 mb-8">
+                    <h2 id="loginHeading" class="text-3xl font-black text-white tracking-tight">Sign In</h2>
+                    <p id="loginSubheading" class="text-white/60 text-sm font-medium">Access your landlord portfolio</p>
                 </div>
 
-                <div class="text-center space-y-1">
-                    <h2 id="loginHeading" class="font-headline text-2xl font-extrabold text-primary tracking-tight">Landlord Access</h2>
-                    <p id="loginSubheading" class="text-on-surface-variant text-xs font-medium">Log in to manage your listings portfolio</p>
-                </div>
-
-                <form class="space-y-4" onsubmit="event.preventDefault(); handleAuthAction();">
-                    <div id="nameWrapper" class="space-y-1.5 hidden">
-                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Full Name</label>
-                        <input id="authName" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-accent outline-none transition-all text-on-surface" placeholder="your name" type="text">
+                <form class="space-y-5" onsubmit="event.preventDefault(); handleAuthAction();">
+                    <div id="nameWrapper" class="relative hidden">
+                        <input id="authName" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="text">
+                        <label for="authName" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Full Name</label>
                     </div>
-                    <div class="space-y-1.5">
-                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Email Address</label>
-                        <input id="authEmail" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-accent outline-none transition-all text-on-surface" placeholder="name@example.com" type="email" required>
+                    
+                    <div class="relative">
+                        <input id="authEmail" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all" placeholder=" " type="email" required>
+                        <label for="authEmail" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Email Address</label>
                     </div>
-                    <div class="space-y-1.5 relative">
-                        <label class="block text-[9px] font-extrabold uppercase tracking-widest text-on-surface-variant ml-1">Password</label>
-                        <input id="authPassword" class="w-full bg-surface-container border border-outline-variant/40 rounded-xl p-3 text-sm focus:ring-2 focus:ring-accent outline-none transition-all text-on-surface pr-12" placeholder="••••••••" type="password" required>
-                        <button onclick="togglePassword()" class="absolute right-4 bottom-2.5 text-on-surface-variant hover:text-accent transition-colors" type="button">
-                            <span class="material-symbols-outlined text-[20px]">visibility</span>
+                    
+                    <div class="relative">
+                        <input id="authPassword" class="block rounded-xl px-5 pb-3 pt-6 w-full text-base text-white bg-white/5 border border-white/20 appearance-none focus:outline-none focus:ring-0 focus:border-white focus:bg-white/10 peer transition-all pr-12" placeholder=" " type="password" required>
+                        <label for="authPassword" class="absolute text-sm text-white/50 duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 pointer-events-none">Password</label>
+                        <button onclick="togglePassword()" class="absolute right-4 top-4 text-white/40 hover:text-white transition-colors" type="button">
+                            <span class="material-symbols-outlined text-[24px]">visibility</span>
                         </button>
                     </div>
-                    <button type="submit" id="authSubmitBtn" class="w-full cta-gradient text-white font-extrabold text-xs tracking-widest uppercase py-3.5 rounded-xl shadow-xl hover:opacity-90 hover:-translate-y-1 transition-all mt-2">
-                        <span id="authBtnText">Access Portal</span>
+
+                    <button type="submit" id="authSubmitBtn" class="w-full bg-[#E50914] text-white font-bold text-base tracking-wide py-4 rounded-xl shadow-[0_4px_14px_rgba(229,9,20,0.4)] hover:bg-[#b80710] transition-colors mt-4">
+                        <span id="authBtnText">Sign In</span>
                     </button>
                 </form>
                 
-                <div class="pt-4 border-t border-outline-variant/20 text-center">
-                    <p id="authToggleMsg" class="text-on-surface-variant text-xs font-bold tracking-wide mb-2.5">New Partner?</p>
-                    <button onclick="toggleAuthMode()" id="authToggleBtn" class="w-full py-3 rounded-xl font-extrabold text-[10px] tracking-widest uppercase transition-all duration-300 relative overflow-hidden group border border-accent/40 bg-accent/5 text-accent hover:bg-accent hover:text-white shadow-sm hover:shadow-[0_8px_20px_-6px_rgba(234,88,12,0.5)]">
-                        <span class="relative z-10 flex items-center justify-center gap-2">
-                            <span id="authToggleIcon" class="material-symbols-outlined text-[1rem] transition-transform duration-500 group-hover:rotate-180">person_add</span> 
-                            <span id="authBtnInner">Create Account</span>
-                        </span>
-                    </button>
+                <div class="mt-8 flex items-center justify-between text-sm text-white/50">
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="rememberMe" class="rounded bg-white/10 border-white/20 text-[#E50914] focus:ring-[#E50914] focus:ring-offset-0 w-4 h-4">
+                        <label for="rememberMe">Remember me</label>
+                    </div>
+                    <a href="#" class="hover:underline">Need help?</a>
+                </div>
+
+                <div class="pt-8 mt-8 border-t border-white/10">
+                    <p class="text-white/50 text-base mb-2">
+                        <span id="authToggleMsg">New to GangtokNest?</span> 
+                        <button onclick="toggleAuthMode()" id="authToggleBtn" class="text-white font-bold hover:underline ml-1 transition-all">
+                            <span id="authBtnInner">Sign up now</span>.
+                        </button>
+                    </p>
+                    <p class="text-[11px] text-white/40 leading-relaxed mt-4">
+                        This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#" class="text-blue-500 hover:underline">Learn more.</a>
+                    </p>
                 </div>
             </div>
         </div>

@@ -2,29 +2,37 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #062c30;          /* Deep Forest Teal */
-    --color-secondary: #0f5257;        /* Slate Teal */
-    --color-accent: #f08a5d;           /* Warm Apricot */
-    --color-surface: #f9f7f7;          /* Creamy Ash Background */
-    --color-surface-container: #ecebeb;/* Subtle Off-white */
-    --color-surface-lowest: #ffffff;
-    --color-surface-high: #dedede;
-    --color-on-surface: #062c30;
-    --color-on-surface-variant: #40686a;
-    --color-outline-variant: #ccd5d6;
+    --color-primary: #4f46e5;          /* Deep Indigo */
+    --color-secondary: #7c3aed;        /* Violet */
+    --color-accent: #06b6d4;           /* Cyan */
+    --color-surface: #f8fafc;          /* Soft slate background */
+    --color-surface-container: #f1f5f9;/* Light slate container */
+    --color-surface-lowest: #ffffff;   /* Pure white card bg */
+    --color-surface-high: #e2e8f0;
+    --color-on-surface: #0f172a;       /* Slate-900 text */
+    --color-on-surface-variant: #475569;/* Slate-600 */
+    --color-outline-variant: #cbd5e1;  /* Slate-300 border */
+    
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
 }
 
 html.dark {
-    --color-primary: #f9f7f7;
-    --color-secondary: #89a5a8;
-    --color-accent: #f08a5d;
-    --color-surface: #04171a;          /* Deep Forest Teal Black */
-    --color-surface-container: #082326;/* Elevated Forest Teal */
-    --color-surface-lowest: #020e10;
-    --color-surface-high: #0d3236;
-    --color-on-surface: #f9f7f7;
-    --color-on-surface-variant: #89a5a8;
-    --color-outline-variant: #164246;
+    --color-primary: #6366f1;          /* Bright Indigo */
+    --color-secondary: #a78bfa;        /* Light Violet */
+    --color-accent: #22d3ee;           /* Light Cyan */
+    --color-surface: #0f172a;          /* Dark slate bg */
+    --color-surface-container: #1e293b;/* Slate-800 container */
+    --color-surface-lowest: #1e293b;   /* Slate-800 card */
+    --color-surface-high: #334155;
+    --color-on-surface: #f8fafc;       /* Light slate-50 text */
+    --color-on-surface-variant: #cbd5e1;/* Slate-300 */
+    --color-outline-variant: #334155;  /* Slate-700 border */
+    
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
 }
 
 /* ============================================== */
@@ -110,9 +118,29 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 .font-filled { font-variation-settings: 'FILL' 1 !important; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ============================================== */
-/* SPLIT-SCREEN MAP & LISTINGS LAYOUT */
-/* ============================================== */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+.modal-animate-in {
+    animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Featured Rooms Side Drawer */
+#featured-modal {
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+#featured-backdrop {
+    transition: opacity 0.3s ease;
+}
+
+/* Split-Screen Map & Listings Layout */
 .split-screen-container {
     height: calc(100vh - 64px); /* Subtract header height */
     overflow: hidden;
@@ -178,4 +206,88 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
     .mobile-panel-visible {
         display: flex !important;
     }
+}
+
+
+
+/* Landlord Sidebar Navigation Menu Items */
+.ll-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-on-surface-variant);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.ll-menu-item:hover {
+    background-color: var(--color-surface-container);
+    color: var(--color-primary);
+    transform: translateX(4px);
+}
+
+.ll-menu-item.active {
+    background-color: rgba(79, 70, 229, 0.08) !important;
+    color: var(--color-primary) !important;
+    box-shadow: inset 4px 0 0 var(--color-primary);
+}
+
+/* Tenant Side Navigation */
+.tn-nav-item.active-nav-item {
+    background-color: rgba(79, 70, 229, 0.08) !important;
+    color: var(--color-primary) !important;
+    box-shadow: inset 4px 0 0 var(--color-primary);
+}
+
+.tn-nav-item.active-nav-item:hover {
+    background-color: rgba(79, 70, 229, 0.12) !important;
+}
+
+/* Publish Form Multi-Step Progress Tracker */
+.step-dot {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.875rem;
+    border: 2px solid var(--color-outline-variant);
+    background-color: var(--color-surface-lowest);
+    color: var(--color-on-surface-variant);
+    transition: all 0.3s ease;
+}
+
+.step-dot.active {
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-lowest);
+    color: var(--color-primary);
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+}
+
+.step-dot.completed {
+    border-color: #22c55e;
+    background-color: #22c55e;
+    color: white;
+}
+
+/* Drag and Drop Upload Area */
+.upload-zone {
+    border: 2px dashed var(--color-outline-variant);
+    background-color: var(--color-surface-lowest);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-zone:hover, .upload-zone.dragover {
+    border-color: var(--color-primary);
+    background-color: var(--color-surface-container);
 }
