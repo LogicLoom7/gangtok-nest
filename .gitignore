@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+.env
+script_backup.js
+test*.js
+test*.py
+update_tenant.py

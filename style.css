@@ -2,9 +2,9 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #4f46e5;          /* Deep Indigo */
-    --color-secondary: #7c3aed;        /* Violet */
-    --color-accent: #06b6d4;           /* Cyan */
+    --color-primary: #5D3FD3;          /* Vibrant Purple */
+    --color-secondary: #7158E2;        /* Light Purple */
+    --color-accent: #00D0E4;           /* Bright Cyan matching reference */
     --color-surface: #f8fafc;          /* Soft slate background */
     --color-surface-container: #f1f5f9;/* Light slate container */
     --color-surface-lowest: #ffffff;   /* Pure white card bg */
@@ -19,9 +19,9 @@
 }
 
 html.dark {
-    --color-primary: #6366f1;          /* Bright Indigo */
-    --color-secondary: #a78bfa;        /* Light Violet */
-    --color-accent: #22d3ee;           /* Light Cyan */
+    --color-primary: #7158E2;          /* Bright Purple */
+    --color-secondary: #8E78FF;        /* Light Violet */
+    --color-accent: #00e0ff;           /* Brighter Cyan for Dark Mode */
     --color-surface: #0f172a;          /* Dark slate bg */
     --color-surface-container: #1e293b;/* Slate-800 container */
     --color-surface-lowest: #1e293b;   /* Slate-800 card */
@@ -40,6 +40,17 @@ html.dark {
 /* ============================================== */
 .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
 
+/* Global Select cleanup for native arrows */
+select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    background-image: none !important;
+}
+select::-ms-expand {
+    display: none;
+}
+
 /* Dynamic Glass based on CSS Variables */
 .premium-glass { 
     background: color-mix(in srgb, var(--color-surface) 85%, transparent); 
@@ -47,22 +58,22 @@ html.dark {
     -webkit-backdrop-filter: blur(16px); 
 }
 
-.hero-gradient { background: linear-gradient(135deg, rgba(6, 44, 48, 0.9) 0%, rgba(15, 82, 87, 0.5) 100%); }
-.cta-gradient { background: linear-gradient(135deg, #f08a5d 0%, #e27341 100%); }
-.soft-elevation { box-shadow: 0 20px 50px -10px rgba(6, 44, 48, 0.15); }
-.segmented-control-active { box-shadow: 0 4px 15px rgba(6, 44, 48, 0.1); }
+.hero-gradient { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); opacity: 0.1; }
+.cta-gradient { background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-danger) 100%); }
+.soft-elevation { box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15); }
+.segmented-control-active { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
 
 /* Premium Mesh Gradient for Hero Background */
 .hero-mesh-bg {
-    background: radial-gradient(at 0% 0%, rgba(240, 138, 93, 0.12) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(15, 82, 87, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(6, 44, 48, 0.04) 0px, transparent 50%),
+    background: radial-gradient(at 0% 0%, color-mix(in srgb, var(--color-primary) 12%, transparent) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, color-mix(in srgb, var(--color-secondary) 15%, transparent) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, color-mix(in srgb, var(--color-accent) 4%, transparent) 0px, transparent 50%),
                 var(--color-surface-container);
 }
 html.dark .hero-mesh-bg {
-    background: radial-gradient(at 0% 0%, rgba(240, 138, 93, 0.22) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(15, 82, 87, 0.3) 0px, transparent 50%),
-                radial-gradient(at 50% 100%, rgba(2, 14, 16, 0.4) 0px, transparent 50%),
+    background: radial-gradient(at 0% 0%, color-mix(in srgb, var(--color-primary) 22%, transparent) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, color-mix(in srgb, var(--color-secondary) 30%, transparent) 0px, transparent 50%),
+                radial-gradient(at 50% 100%, color-mix(in srgb, var(--color-accent) 40%, transparent) 0px, transparent 50%),
                 var(--color-surface-container);
 }
 
@@ -100,10 +111,10 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 
 .form-input-sm:focus { 
     background-color: var(--color-surface-lowest); 
-    border-color: var(--color-accent); 
-    box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.1), 0 4px 6px -2px rgba(234, 88, 12, 0.05), 0 0 0 3px rgba(234, 88, 12, 0.15);
+    border-color: var(--color-primary); 
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
     outline: none; 
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 /* ============================================== */
@@ -119,14 +130,8 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
 @keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: scale(0.95) translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
+    from { opacity: 0; transform: scale(0.95) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 .modal-animate-in {
     animation: modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -142,7 +147,7 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 
 /* Split-Screen Map & Listings Layout */
 .split-screen-container {
-    height: calc(100vh - 64px); /* Subtract header height */
+    height: calc(100dvh - 64px);
     overflow: hidden;
 }
 
@@ -152,22 +157,10 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
     scrollbar-color: var(--color-outline-variant) transparent;
 }
 
-.scrollable-feed::-webkit-scrollbar {
-    width: 6px;
-}
-
-.scrollable-feed::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.scrollable-feed::-webkit-scrollbar-thumb {
-    background: var(--color-outline-variant);
-    border-radius: 99px;
-}
-
-.scrollable-feed::-webkit-scrollbar-thumb:hover {
-    background: var(--color-accent);
-}
+.scrollable-feed::-webkit-scrollbar { width: 6px; }
+.scrollable-feed::-webkit-scrollbar-track { background: transparent; }
+.scrollable-feed::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 99px; }
+.scrollable-feed::-webkit-scrollbar-thumb:hover { background: var(--color-accent); }
 
 /* Featured Room Glowing Border Animation */
 .featured-glow {
@@ -200,40 +193,44 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 
 /* Mobile Panel Display States */
 @media (max-width: 1023px) {
-    .mobile-panel-hidden {
-        display: none !important;
-    }
-    .mobile-panel-visible {
-        display: flex !important;
-    }
+    .mobile-panel-hidden { display: none !important; }
+    .mobile-panel-visible { display: flex !important; }
 }
 
-
-
-/* Landlord Sidebar Navigation Menu Items */
+/* ============================================== */
+/* LANDLORD SIDEBAR NAVIGATION */
+/* ============================================== */
 .ll-menu-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
+    gap: 0.625rem;
+    padding: 0.65rem 0.875rem;
     border-radius: 0.75rem;
-    font-size: 0.875rem;
+    font-size: 0.8rem;
     font-weight: 700;
     color: var(--color-on-surface-variant);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    outline: none;
 }
 
 .ll-menu-item:hover {
     background-color: var(--color-surface-container);
     color: var(--color-primary);
-    transform: translateX(4px);
 }
 
 .ll-menu-item.active {
-    background-color: rgba(79, 70, 229, 0.08) !important;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.12) 0%, rgba(79, 70, 229, 0.06) 100%) !important;
     color: var(--color-primary) !important;
-    box-shadow: inset 4px 0 0 var(--color-primary);
+    font-weight: 800;
+}
+
+html.dark .ll-menu-item.active {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(99, 102, 241, 0.1) 100%) !important;
 }
 
 /* Tenant Side Navigation */
@@ -247,10 +244,173 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
     background-color: rgba(79, 70, 229, 0.12) !important;
 }
 
-/* Publish Form Multi-Step Progress Tracker */
+/* ============================================== */
+/* LANDLORD SIDEBAR LAYOUT */
+/* ============================================== */
+#ll-sidebar {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+}
+
+#ll-sidebar::-webkit-scrollbar { width: 4px; }
+#ll-sidebar::-webkit-scrollbar-track { background: transparent; }
+#ll-sidebar::-webkit-scrollbar-thumb { background: var(--color-outline-variant); border-radius: 99px; }
+
+#ll-sidebar-backdrop {
+    transition: opacity 0.3s ease;
+}
+
+.ll-main-content {
+    transition: margin-left 0.3s ease;
+}
+
+/* ============================================== */
+/* AMENITY CHECKBOX CARDS */
+/* ============================================== */
+.amenity-card {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    border-radius: 0.875rem;
+    border: 1.5px solid var(--color-outline-variant);
+    background: var(--color-surface-lowest);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-on-surface);
+    user-select: none;
+    letter-spacing: 0.02em;
+}
+
+.amenity-card:hover {
+    border-color: rgba(79, 70, 229, 0.4);
+    background: rgba(79, 70, 229, 0.03);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.amenity-card:has(input:checked) {
+    border-color: var(--color-primary);
+    background: rgba(79, 70, 229, 0.07);
+    color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.12);
+}
+
+.amenity-card input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+    flex-shrink: 0;
+    border-radius: 4px;
+}
+
+/* ============================================== */
+/* SUITABLE FOR CHIPS */
+/* ============================================== */
+.suitable-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 2rem;
+    border: 1.5px solid var(--color-outline-variant);
+    background: var(--color-surface-lowest);
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--color-on-surface-variant);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    letter-spacing: 0.02em;
+}
+
+.suitable-chip:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: rgba(79, 70, 229, 0.04);
+}
+
+.suitable-chip:has(input:checked) {
+    border-color: var(--color-primary);
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+.suitable-chip input[type="checkbox"] {
+    display: none;
+}
+
+/* ============================================== */
+/* TOAST NOTIFICATIONS */
+/* ============================================== */
+#ll-toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    pointer-events: none;
+}
+
+.ll-toast {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 1rem;
+    background: var(--color-surface-lowest);
+    border: 1px solid var(--color-outline-variant);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-on-surface);
+    min-width: 280px;
+    max-width: 360px;
+    pointer-events: all;
+    animation: toastSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes toastSlideIn {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastFadeOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+}
+
+.ll-toast.hiding {
+    animation: toastFadeOut 0.3s ease forwards;
+}
+
+/* ============================================== */
+/* SKELETON LOADERS */
+/* ============================================== */
+@keyframes skeleton-pulse {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+}
+
+.skeleton {
+    background: var(--color-surface-container);
+    border-radius: 0.5rem;
+    animation: skeleton-pulse 1.5s ease-in-out infinite;
+}
+
+/* ============================================== */
+/* PUBLISH FORM MULTI-STEP STEPPER */
+/* ============================================== */
 .step-dot {
-    width: 2.25rem;
-    height: 2.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: 9999px;
     display: flex;
     align-items: center;
@@ -260,23 +420,54 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
     border: 2px solid var(--color-outline-variant);
     background-color: var(--color-surface-lowest);
     color: var(--color-on-surface-variant);
-    transition: all 0.3s ease;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
 }
 
 .step-dot.active {
     border-color: var(--color-primary);
-    background-color: var(--color-surface-lowest);
-    color: var(--color-primary);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    background-color: var(--color-primary);
+    color: white;
+    box-shadow: 0 0 0 5px rgba(79, 70, 229, 0.15), 0 4px 12px rgba(79, 70, 229, 0.3);
 }
 
 .step-dot.completed {
     border-color: #22c55e;
     background-color: #22c55e;
     color: white;
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
 }
 
-/* Drag and Drop Upload Area */
+.step-connector {
+    flex-grow: 1;
+    height: 2px;
+    background: var(--color-outline-variant);
+    margin: 0 0.5rem;
+    border-radius: 9999px;
+    transition: background 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.step-connector.completed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: #22c55e;
+    border-radius: 9999px;
+    animation: connectorFill 0.4s ease forwards;
+}
+
+@keyframes connectorFill {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* ============================================== */
+/* DRAG AND DROP UPLOAD AREA */
+/* ============================================== */
 .upload-zone {
     border: 2px dashed var(--color-outline-variant);
     background-color: var(--color-surface-lowest);
@@ -289,5 +480,429 @@ html.dark .mountain-pattern { background-image: url("data:image/svg+xml,%3Csvg w
 
 .upload-zone:hover, .upload-zone.dragover {
     border-color: var(--color-primary);
-    background-color: var(--color-surface-container);
+    background-color: rgba(79, 70, 229, 0.03);
+    transform: scale(1.01);
+}
+
+/* ============================================== */
+/* LANDLORD LISTING CARD */
+/* ============================================== */
+.ll-listing-card {
+    background: var(--color-surface-lowest);
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-outline-variant);
+    overflow: hidden;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.ll-listing-card:hover {
+    box-shadow: 0 12px 32px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* ============================================== */
+/* STAT CARDS */
+/* ============================================== */
+.stat-card {
+    background: var(--color-surface-lowest);
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-outline-variant);
+    padding: 1.25rem;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* ============================================== */
+/* NO-SCROLLBAR UTILITY */
+/* ============================================== */
+.no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* ============================================== */
+/* SECTION ANIMATE IN */
+/* ============================================== */
+@keyframes sectionFadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.ll-section-animate {
+    animation: sectionFadeIn 0.3s ease forwards;
+}
+
+/* ============================================== */
+/* TENANT DISCOVERY ENGINE — 3-COLUMN LAYOUT     */
+/* ============================================== */
+
+/* Left filter sidebar scrollable sticky positioning */
+.tn-filter-sidebar {
+    position: sticky;
+    top: 80px;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-outline-variant) transparent;
+}
+
+.tn-filter-sidebar::-webkit-scrollbar { width: 4px; }
+.tn-filter-sidebar::-webkit-scrollbar-track { background: transparent; }
+.tn-filter-sidebar::-webkit-scrollbar-thumb {
+    background: var(--color-outline-variant);
+    border-radius: 99px;
+}
+
+/* Right widget sidebar sticky */
+.tn-widget-sidebar {
+    position: sticky;
+    top: 80px;
+}
+
+/* ============================================== */
+/* TENANT PROPERTY CARD                          */
+/* ============================================== */
+.tn-property-card {
+    background: var(--color-surface-lowest);
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-outline-variant);
+    overflow: hidden;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: relative;
+}
+
+.tn-property-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(79,70,229,0.08);
+}
+
+.tn-property-card .card-image-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 176px;
+    background: var(--color-surface-container);
+}
+
+.tn-property-card .card-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tn-property-card:hover .card-image-wrap img {
+    transform: scale(1.06);
+}
+
+/* Featured badge on card */
+.tn-featured-badge {
+    background: linear-gradient(135deg, var(--color-primary) 0%, #6366f1 50%, var(--color-accent) 100%);
+    color: white;
+    font-size: 0.5rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+/* Highlight badge chips on card */
+.tn-highlight-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.5625rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+/* Suitable-for small pill tags on cards */
+.tn-suitable-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2rem;
+    border: 1px solid var(--color-outline-variant);
+    background: var(--color-surface);
+    color: var(--color-on-surface-variant);
+    font-size: 0.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ============================================== */
+/* WATER SUPPLY PILL BUTTONS                     */
+/* ============================================== */
+.water-pill {
+    flex: 1;
+    padding: 0.25rem 0;
+    border-radius: 0.375rem;
+    font-size: 0.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--color-on-surface);
+    transition: background 0.2s ease, color 0.2s ease;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+}
+
+.water-pill.active-water,
+.water-pill:focus {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(79, 70, 229, 0.25);
+}
+
+/* ============================================== */
+/* TENANT SIDEBAR FILTER CHECKBOX ROWS           */
+/* ============================================== */
+.tn-filter-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-on-surface);
+    transition: background 0.15s ease;
+}
+
+.tn-filter-row:hover {
+    background: var(--color-surface-container);
+}
+
+.tn-filter-row input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-primary);
+    border-radius: 0.25rem;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+/* ============================================== */
+/* TENANT RESULTS HEADER BAR                     */
+/* ============================================== */
+.tn-results-bar {
+    background: var(--color-surface-lowest);
+    border-radius: 1rem;
+    border: 1px solid var(--color-outline-variant);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* ============================================== */
+/* TENANT RIGHT WIDGET CARDS                     */
+/* ============================================== */
+.tn-widget-card {
+    background: var(--color-surface-lowest);
+    border-radius: 1.25rem;
+    border: 1px solid var(--color-outline-variant);
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.tn-widget-card-accent {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.03) 100%);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(79, 70, 229, 0.12);
+    padding: 1.25rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Trust badges row in widget */
+.tn-trust-badge {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    padding: 0.25rem 0;
+}
+
+/* ============================================== */
+/* TENANT SEARCH HERO GRADIENT                   */
+/* ============================================== */
+.tn-hero-gradient {
+    background: linear-gradient(180deg, var(--color-surface-lowest) 0%, transparent 100%);
+}
+
+/* ============================================== */
+/* SMART SEARCH CARD                             */
+/* ============================================== */
+.tn-search-card {
+    background: var(--color-surface-lowest);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
+    border: 1px solid var(--color-outline-variant);
+}
+
+/* ============================================== */
+/* TENANT RESULTS EMPTY STATE                    */
+/* ============================================== */
+.tn-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    gap: 1rem;
+    grid-column: 1 / -1;
+}
+
+/* ============================================== */
+/* MOBILE RESPONSIVE TENANT LAYOUT               */
+/* ============================================== */
+@media (max-width: 1023px) {
+    .tn-filter-sidebar {
+        position: static;
+        max-height: none;
+    }
+
+    .tn-widget-sidebar {
+        position: static;
+    }
+}
+
+/* Tenant Dashboard Tab Active State */
+#tn-nav-top-explore.active-tab,
+#tn-nav-top-saved.active-tab,
+#tn-nav-top-shortlist.active-tab {
+    background: var(--color-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+}
+
+/* Tenant grid fade animation */
+@keyframes tnCardIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+#tn-grid article {
+    animation: tnCardIn 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+}
+
+#tn-grid article:nth-child(2) { animation-delay: 0.05s; }
+#tn-grid article:nth-child(3) { animation-delay: 0.1s; }
+#tn-grid article:nth-child(4) { animation-delay: 0.15s; }
+#tn-grid article:nth-child(5) { animation-delay: 0.2s; }
+#tn-grid article:nth-child(6) { animation-delay: 0.25s; }
+
+/* ============================================== */
+/* AUTH MODAL COMPACT OVERRIDE                   */
+/* ============================================== */
+#auth-modal .bg-black\/70 {
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+}
+
+/* Property card image placeholder */
+.card-img-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(124, 58, 237, 0.05) 100%);
+}
+
+/* ============================================== */
+/* PRICE RANGE INPUT SLIDER                      */
+/* ============================================== */
+input[type="range"].accent-accent {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: var(--color-outline-variant);
+    border-radius: 99px;
+    cursor: pointer;
+    outline: none;
+}
+
+input[type="range"].accent-accent::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+    cursor: pointer;
+    transition: box-shadow 0.2s ease;
+}
+
+input[type="range"].accent-accent::-webkit-slider-thumb:hover {
+    box-shadow: 0 0 0 5px rgba(6, 182, 212, 0.3);
+}
+
+input[type="range"].accent-accent::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2);
+    cursor: pointer;
+    border: none;
+}
+
+/* ============================================== */
+/* DARK MODE TENANT OVERRIDES                    */
+/* ============================================== */
+html.dark .tn-property-card {
+    background: var(--color-surface-lowest);
+    border-color: var(--color-outline-variant);
+}
+
+html.dark .tn-widget-card {
+    background: var(--color-surface-lowest);
+    border-color: var(--color-outline-variant);
+}
+
+html.dark .tn-search-card {
+    background: var(--color-surface-lowest);
+    border-color: var(--color-outline-variant);
 }
