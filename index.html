@@ -78,7 +78,7 @@
                 <button onclick="openTenantAuthModal()" class="bg-surface-container hover:bg-outline-variant/30 text-on-surface px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm transition-all">
                     Login
                 </button>
-                <button onclick="openTenantAuthModal()" class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm hover:opacity-90 transition-all shadow-md flex items-center gap-2">
+                <button onclick="openTenantAuthModal(true)" class="bg-primary text-white px-5 py-2.5 rounded-xl font-bold text-xs md:text-sm hover:opacity-90 transition-all shadow-md flex items-center gap-2">
                     <span class="material-symbols-outlined text-[18px]">person</span> Register
                 </button>
             </div>
@@ -1898,13 +1898,6 @@
                                 <div id="strengthBar3" class="h-full w-1/4 rounded-full transition-all duration-300 bg-transparent"></div>
                                 <div id="strengthBar4" class="h-full w-1/4 rounded-full transition-all duration-300 bg-transparent"></div>
                             </div>
-                            <ul class="text-[10px] text-white/50 space-y-1 mt-1.5 bg-white/5 p-2.5 rounded-xl border border-white/5">
-                                <li id="ruleLength" class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[10px] text-red-400">cancel</span> Minimum 8 characters</li>
-                                <li id="ruleUpper" class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[10px] text-red-400">cancel</span> One uppercase letter (A-Z)</li>
-                                <li id="ruleLower" class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[10px] text-red-400">cancel</span> One lowercase letter (a-z)</li>
-                                <li id="ruleNumber" class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[10px] text-red-400">cancel</span> One number (0-9)</li>
-                                <li id="ruleSpecial" class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[10px] text-red-400">cancel</span> One special character</li>
-                            </ul>
                         </div>
  
                         <!-- Confirm Password -->

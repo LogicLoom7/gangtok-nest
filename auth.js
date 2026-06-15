@@ -236,9 +236,16 @@ function openAuthModal() {
     document.getElementById('auth-modal').classList.remove('hidden');
 }
 
-function openTenantAuthModal() {
+function openTenantAuthModal(forceSignUp = false) {
     selectRole('tenant');
     document.getElementById('auth-modal').classList.remove('hidden');
+    
+    // Toggle to requested state if needed
+    if (forceSignUp && !isSignUpMode) {
+        toggleAuthMode();
+    } else if (!forceSignUp && isSignUpMode) {
+        toggleAuthMode();
+    }
 }
 
 function closeAuthModal() {
@@ -461,27 +468,13 @@ function validatePassword(realTime = false) {
         return true;
     }
     
-    const rules = {
-        length: val.length >= 8,
-        upper: /[A-Z]/.test(val),
-        lower: /[a-z]/.test(val),
-        number: /\d/.test(val),
-        special: /[^A-Za-z0-9]/.test(val)
-    };
-    
-    updateChecklistRule('ruleLength', rules.length);
-    updateChecklistRule('ruleUpper', rules.upper);
-    updateChecklistRule('ruleLower', rules.lower);
-    updateChecklistRule('ruleNumber', rules.number);
-    updateChecklistRule('ruleSpecial', rules.special);
-    
-    updatePasswordStrength(val);
-    
-    const allPassed = Object.values(rules).every(v => v);
-    if (!allPassed) {
-        showFieldError(el, errEl, "Password must meet all requirements below.");
+    // Simplified validation: just check minimum 6 characters (Supabase default)
+    if (val.length < 6) {
+        showFieldError(el, errEl, "Password must be at least 6 characters long.");
         return false;
     }
+    
+    updatePasswordStrength(val);
     
     showFieldSuccess(el, errEl);
     return true;
