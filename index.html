@@ -395,6 +395,7 @@
                                             <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-family"> Family</label>
                                             <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-male"> Male Bachelors</label>
                                             <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-female"> Female Bachelors</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-anyone"> Anyone</label>
                                         </div>
                                     </div>
 
@@ -402,11 +403,14 @@
                                     <div>
                                         <h4 class="text-[10px] font-black text-on-surface uppercase tracking-widest mb-3">Must-Have Amenities</h4>
                                         <div class="flex flex-wrap gap-2">
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-wifi"> WiFi</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-sunlight"> Sunlight</label>
                                             <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-parking"> Parking</label>
                                             <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-balcony"> Balcony</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-water"> 24/7 Water</label>
                                             <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-furnished"> Furnished</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-wifi"> WiFi</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-lift"> Lift Available</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-gated"> Gated Property</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-water"> 24/7 Water</label>
                                         </div>
                                     </div>
                                 </div>
@@ -1114,7 +1118,7 @@
                                     </div>
 
                                     <div class="space-y-1.5">
-                                        <label class="block text-[9px] font-black uppercase tracking-widest text-on-surface-variant ml-1">Security Deposit (₹)</label>
+                                        <label class="block text-[9px] font-black uppercase tracking-widest text-on-surface-variant ml-1">Security Deposit (₹) <span class="normal-case font-bold text-on-surface-variant/70">(Optional)</span></label>
                                         <div class="relative flex items-center group">
                                             <span class="material-symbols-outlined absolute left-3.5 text-on-surface-variant/50 text-lg pointer-events-none group-focus-within:text-primary transition-colors z-10">shield</span>
                                             <input id="ll-deposit" type="number" class="form-input-sm pl-11" placeholder="e.g. 20000">
@@ -1782,6 +1786,16 @@
                         <span class="material-symbols-outlined text-primary mb-1">water_drop</span>
                         <span class="text-[9px] uppercase font-bold text-on-surface-variant">Water Supply</span>
                         <span id="rd-water" class="text-xs font-black text-on-surface mt-0.5">24/7</span>
+                    </div>
+                    <div class="bg-surface-container/40 p-3 rounded-xl border border-outline-variant/20 flex flex-col items-center justify-center text-center">
+                        <span class="material-symbols-outlined text-primary mb-1">add_road</span>
+                        <span class="text-[9px] uppercase font-bold text-on-surface-variant">Road Access</span>
+                        <span id="rd-road" class="text-xs font-black text-on-surface mt-0.5">N/A</span>
+                    </div>
+                    <div class="bg-surface-container/40 p-3 rounded-xl border border-outline-variant/20 flex flex-col items-center justify-center text-center">
+                        <span class="material-symbols-outlined text-primary mb-1">roofing</span>
+                        <span class="text-[9px] uppercase font-bold text-on-surface-variant">Terrace</span>
+                        <span id="rd-terrace" class="text-xs font-black text-on-surface mt-0.5">N/A</span>
                     </div>
                 </div>
 

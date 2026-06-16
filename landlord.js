@@ -500,12 +500,12 @@ function renderLandlordGrid(searchQuery = '') {
         const isPaused = localStorage.getItem('gn_paused_' + r.id) === 'true';
 
         let statusText = 'Active';
-        let badgeClass = 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
-        let dotColor   = 'bg-emerald-500';
+        let badgeClass = 'bg-[#25D366] text-white border-[#1DA851]';
+        let dotColor   = 'bg-white';
         if (isRented) {
-            statusText = 'Rented';  badgeClass = 'bg-secondary/10 text-secondary border-secondary/20'; dotColor = 'bg-secondary';
+            statusText = 'Rented';  badgeClass = 'bg-surface-lowest/90 backdrop-blur-sm text-secondary border-secondary/20'; dotColor = 'bg-secondary';
         } else if (isPaused) {
-            statusText = 'Paused';  badgeClass = 'bg-warning/10 text-warning border-warning/20';   dotColor = 'bg-warning';
+            statusText = 'Paused';  badgeClass = 'bg-surface-lowest/90 backdrop-blur-sm text-warning border-warning/20';   dotColor = 'bg-warning';
         }
 
         const { customBhk, floorLevel, buildingType } = parseFloorAndBhk(r);
@@ -515,7 +515,7 @@ function renderLandlordGrid(searchQuery = '') {
         const escapedRoad     = escapeHtml(r.road_dist);
         const escapedImage    = escapeHtml(r.image_url);
         const safeTitleForClick = String(r.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-        const views           = parseInt(localStorage.getItem('gn_views_' + r.id) || 0);
+        const views           = r.views || 0;
 
         // Load extras from localStorage
         const extras = JSON.parse(localStorage.getItem('gn_extras_' + r.id) || '{}');
@@ -532,7 +532,7 @@ function renderLandlordGrid(searchQuery = '') {
                 }
                 <!-- Status badge overlay -->
                 <div class="absolute top-3 left-3">
-                    <span class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${badgeClass} bg-surface-lowest/90 backdrop-blur-sm">
+                    <span class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider border ${badgeClass}">
                         <span class="w-1.5 h-1.5 rounded-full ${dotColor} flex-shrink-0"></span>${statusText}
                     </span>
                 </div>
@@ -1016,19 +1016,12 @@ async function fetchLandlordData(uid) {
     
     landlordListings = data || [];
     
-    landlordListings.forEach(r => {
-        const key = 'gn_views_' + r.id;
-        if (!localStorage.getItem(key)) {
-            localStorage.setItem(key, Math.floor(Math.random() * 120) + 80);
-        }
-    });
-    
     const totalActive = landlordListings.length;
     const activeCount = landlordListings.filter(r => !r.is_rented && localStorage.getItem('gn_paused_' + r.id) !== 'true').length;
     const rentedCount = landlordListings.filter(r => r.is_rented).length;
     
-    const totalViews = landlordListings.reduce((sum, r) => sum + parseInt(localStorage.getItem('gn_views_' + r.id) || 0), 0);
-    const totalInquiries = Math.round(totalViews * 0.03) + (totalActive > 0 ? 2 : 0);
+    const totalViews = landlordListings.reduce((sum, r) => sum + (r.views || 0), 0);
+    const totalInquiries = landlordListings.reduce((sum, r) => sum + (r.inquiries || 0), 0);
     
     const statTotal = document.getElementById('ll-stat-total');
     const statActive = document.getElementById('ll-stat-active');
@@ -1050,7 +1043,6 @@ async function deleteListing(id) {
     if(confirm("Delete Listing? This action cannot be undone.")) { 
         try {
             await supabaseClient.from('listings').delete().eq('id', id); 
-            localStorage.removeItem('gn_views_' + id);
             localStorage.removeItem('gn_paused_' + id);
             localStorage.removeItem('gn_rented_details_' + id);
             const { data: { user } } = await supabaseClient.auth.getUser();

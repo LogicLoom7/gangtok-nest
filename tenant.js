@@ -184,7 +184,8 @@ function filterTenantRooms(explicitSearch = false) {
         const suitFamily = document.getElementById('tn-filter-suitable-family')?.checked;
         const suitBachelorMale = document.getElementById('tn-filter-suitable-bachelor-male')?.checked;
         const suitBachelorFemale = document.getElementById('tn-filter-suitable-bachelor-female')?.checked;
-        const hasSuitableFilter = suitStudents || suitProfessionals || suitGovt || suitFamily || suitBachelorMale || suitBachelorFemale;
+        const suitAnyone = document.getElementById('tn-filter-suitable-anyone')?.checked;
+        const hasSuitableFilter = suitStudents || suitProfessionals || suitGovt || suitFamily || suitBachelorMale || suitBachelorFemale || suitAnyone;
 
         // Get Amenity checkboxes & chips
         const filterAmenityBathroom = document.getElementById('tn-filter-amenity-bathroom')?.checked || document.getElementById('tn-chip-bathroom')?.checked;
@@ -200,6 +201,9 @@ function filterTenantRooms(explicitSearch = false) {
         const filterAmenityFood = document.getElementById('tn-filter-amenity-food')?.checked;
         
         const filterSunlightChip = document.getElementById('tn-chip-sunlight')?.checked;
+        const filterAmenitySunlight = document.getElementById('tn-filter-amenity-sunlight')?.checked;
+        const filterAmenityLift = document.getElementById('tn-filter-amenity-lift')?.checked;
+        const filterAmenityGated = document.getElementById('tn-filter-amenity-gated')?.checked;
         const filterCollegeChip = document.getElementById('tn-chip-college')?.checked;
 
         // Array Filter
@@ -286,11 +290,12 @@ function filterTenantRooms(explicitSearch = false) {
                 if (suitFamily && (suitableList.includes('family') || suitableList.includes('anyone'))) matchedSuitable = true;
                 if (suitBachelorMale && (suitableList.includes('bachelor-male') || suitableList.includes('anyone'))) matchedSuitable = true;
                 if (suitBachelorFemale && (suitableList.includes('bachelor-female') || suitableList.includes('anyone'))) matchedSuitable = true;
+                if (suitAnyone && (suitableList.length > 0)) matchedSuitable = true;
                 if (!matchedSuitable) return false;
             }
 
             // 7. Amenities Checks
-            if (filterSunlight || filterSunlightChip) {
+            if (filterSunlight || filterSunlightChip || filterAmenitySunlight) {
                 if (!r.sunlight) return false;
             }
             if (filterParking || filterAmenityParking) {
@@ -335,6 +340,14 @@ function filterTenantRooms(explicitSearch = false) {
                 const hasFood = extras.extraAmenities && extras.extraAmenities.includes('ll-mess');
                 if (!hasFood) return false;
             }
+            if (filterAmenityLift) {
+                const hasLift = extras.extraAmenities && extras.extraAmenities.includes('ll-lift');
+                if (!hasLift) return false;
+            }
+            if (filterAmenityGated) {
+                const hasGated = extras.extraAmenities && extras.extraAmenities.includes('ll-gated');
+                if (!hasGated) return false;
+            }
             if (filterCollegeChip) {
                 const hasNearCol = extras.extraAmenities && extras.extraAmenities.includes('ll-near-college');
                 if (!hasNearCol) return false;
@@ -360,9 +373,19 @@ function filterTenantRooms(explicitSearch = false) {
             let matchedPrefs = 0;
             const extras = JSON.parse(localStorage.getItem('gn_extras_' + r.id) || '{}');
             
-            if (filterSunlight || filterSunlightChip) {
+            if (filterSunlight || filterSunlightChip || filterAmenitySunlight) {
                 totalPrefs++;
                 if (r.sunlight) matchedPrefs++;
+            }
+            if (filterAmenityLift) {
+                totalPrefs++;
+                const hasLift = extras.extraAmenities && extras.extraAmenities.includes('ll-lift');
+                if (hasLift) matchedPrefs++;
+            }
+            if (filterAmenityGated) {
+                totalPrefs++;
+                const hasGated = extras.extraAmenities && extras.extraAmenities.includes('ll-gated');
+                if (hasGated) matchedPrefs++;
             }
             if (filterParking || filterAmenityParking) {
                 totalPrefs++;
@@ -392,7 +415,7 @@ function filterTenantRooms(explicitSearch = false) {
             filtered.sort((a, b) => b.rent - a.rent);
         } else {
             // Default "Most Relevant" score sorting
-            const hasPreferences = (filterSunlight || filterParking || filterBalcony || filterWifi || filterAmenityParking || filterAmenityBalcony || filterAmenityWifi || filterSunlightChip);
+            const hasPreferences = (filterSunlight || filterParking || filterBalcony || filterWifi || filterAmenityParking || filterAmenityBalcony || filterAmenityWifi || filterSunlightChip || filterAmenitySunlight || filterAmenityLift || filterAmenityGated);
             if (hasPreferences) {
                 filtered.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
             }
@@ -463,6 +486,32 @@ function filterTenantRooms(explicitSearch = false) {
             const hasWifi = String(r.wifi) === 'true' || (extras.extraAmenities && extras.extraAmenities.includes('ll-wifi'));
             if (hasWifi) highlightsHtml += `<span class="bg-indigo-500/10 text-indigo-600 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider flex items-center gap-1 border border-indigo-500/15"><span class="material-symbols-outlined text-[10px]">wifi</span>WiFi</span>`;
 
+            const extraAmenitiesMap = {
+                'll-furnished': { label: 'Furnished', icon: 'chair', classes: 'bg-purple-500/10 text-purple-600 border-purple-500/15' },
+                'll-power-backup': { label: 'Power Backup', icon: 'battery_charging_full', classes: 'bg-orange-500/10 text-orange-600 border-orange-500/15' },
+                'll-lift': { label: 'Lift', icon: 'elevator', classes: 'bg-slate-500/10 text-slate-600 border-slate-500/15' },
+                'll-cctv': { label: 'CCTV', icon: 'videocam', classes: 'bg-red-500/10 text-red-600 border-red-500/15' },
+                'll-gated': { label: 'Gated', icon: 'gate', classes: 'bg-indigo-500/10 text-indigo-600 border-indigo-500/15' },
+                'll-study-table': { label: 'Study Table', icon: 'desk', classes: 'bg-stone-500/10 text-stone-600 border-stone-500/15' },
+                'll-wardrobe': { label: 'Wardrobe', icon: 'checkroom', classes: 'bg-pink-500/10 text-pink-600 border-pink-500/15' },
+                'll-laundry': { label: 'Laundry', icon: 'local_laundry_service', classes: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/15' },
+                'll-mess': { label: 'Food/Mess', icon: 'restaurant', classes: 'bg-rose-500/10 text-rose-600 border-rose-500/15' },
+                'll-near-college': { label: 'Near College', icon: 'school', classes: 'bg-primary/10 text-primary border-primary/15' },
+                'll-near-market': { label: 'Near Market', icon: 'shopping_bag', classes: 'bg-orange-500/10 text-orange-600 border-orange-500/15' },
+                'll-near-hospital': { label: 'Near Hospital', icon: 'local_hospital', classes: 'bg-red-500/10 text-red-600 border-red-500/15' },
+                'll-near-bus': { label: 'Near Bus Stand', icon: 'directions_bus', classes: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/15' }
+            };
+
+            if (extras.extraAmenities && Array.isArray(extras.extraAmenities)) {
+                extras.extraAmenities.forEach(amenityId => {
+                    if (amenityId === 'll-wifi') return; // Handled separately above
+                    const mapped = extraAmenitiesMap[amenityId];
+                    if (mapped) {
+                        highlightsHtml += `<span class="${mapped.classes} px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-wider flex items-center gap-1 border"><span class="material-symbols-outlined text-[10px]">${mapped.icon}</span>${mapped.label}</span>`;
+                    }
+                });
+            }
+
             // Suitable tags
             const suitableTagsHtml = suitableList.map(tag => `<span class="px-2 py-0.5 border border-outline-variant/35 bg-surface text-on-surface-variant text-[8px] font-bold rounded-full uppercase tracking-wider">${tag}</span>`).join('');
 
@@ -494,7 +543,7 @@ function filterTenantRooms(explicitSearch = false) {
                     </div>
                     ` : `
                     <div class="absolute top-3 left-3">
-                        <span class="bg-surface-lowest/90 backdrop-blur-sm border border-outline-variant/30 text-primary px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider shadow-sm">
+                        <span class="bg-[#25D366] text-white border border-[#1DA851] px-2 py-1 rounded-lg text-[8px] font-black uppercase tracking-wider shadow-sm">
                             ${category}
                         </span>
                     </div>
@@ -781,6 +830,13 @@ function viewRoomDetails(roomId) {
     const r = allRooms.find(x => x.id === roomId);
     if (!r) return;
     
+    // Increment view counter in Supabase
+    try {
+        supabaseClient.rpc('increment_view', { row_id: roomId }).catch(err => console.error('View tracking failed:', err));
+    } catch(e) {
+        console.error('Supabase client error (view):', e);
+    }
+    
     const rdImage = document.getElementById('rd-image');
     const rdNoImage = document.getElementById('rd-no-image');
     if (r.image_url && r.image_url !== 'null' && r.image_url !== 'undefined' && r.image_url !== '') {
@@ -803,6 +859,8 @@ function viewRoomDetails(roomId) {
     document.getElementById('rd-room-type').innerText = customBhk;
     document.getElementById('rd-floor').innerText = floorLevel || 'N/A';
     document.getElementById('rd-water').innerText = r.water || 'N/A';
+    document.getElementById('rd-road').innerText = r.road_dist || 'N/A';
+    document.getElementById('rd-terrace').innerText = extras.terrace || 'No';
     
     const descContainer = document.getElementById('rd-desc-container');
     const descEl = document.getElementById('rd-desc');
@@ -846,7 +904,16 @@ function viewRoomDetails(roomId) {
     // Contact buttons
     document.getElementById('rd-call-btn').href = `tel:${r.contact}`;
     const waMessage = `Hi! I found your property (${customBhk} in ${r.location}) on GangtokNest. I am interested to know more.`;
-    document.getElementById('rd-wa-btn').href = `https://wa.me/91${r.contact}?text=${encodeURIComponent(waMessage)}`;
+    const waBtn = document.getElementById('rd-wa-btn');
+    waBtn.href = `https://wa.me/91${r.contact}?text=${encodeURIComponent(waMessage)}`;
+    waBtn.onclick = () => {
+        // Increment inquiry counter in Supabase
+        try {
+            supabaseClient.rpc('increment_inquiry', { row_id: r.id }).catch(err => console.error('Inquiry tracking failed:', err));
+        } catch(e) {
+            console.error('Supabase client error (inquiry):', e);
+        }
+    };
     
     document.getElementById('rd-map-btn').onclick = () => {
         closeRoomDetails();
@@ -863,7 +930,7 @@ function viewRoomDetails(roomId) {
         badge.className = 'px-3 py-1 bg-warning text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg';
     } else {
         badge.innerText = 'Active';
-        badge.className = 'px-3 py-1 bg-primary/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg';
+        badge.className = 'px-3 py-1 bg-[#25D366] border border-[#1DA851] text-white text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg';
     }
     
     document.getElementById('room-details-modal').classList.remove('hidden');
