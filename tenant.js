@@ -16,6 +16,22 @@ async function fetchTenantData() {
         const data = await response.json();
         allRooms = data || [];
         
+        // Fetch User Favorites if logged in
+        if (typeof currentUserProfile !== 'undefined' && currentUserProfile) {
+            try {
+                const { data: favData, error: favError } = await supabaseClient
+                    .from('tenant_favorites')
+                    .select('room_id')
+                    .eq('tenant_id', currentUserProfile.id);
+                
+                if (!favError && favData) {
+                    favorites = favData.map(f => f.room_id);
+                }
+            } catch(e) {
+                console.error("Error fetching favorites:", e);
+            }
+        }
+        
         // Initialize the Leaflet map dynamically
         setTimeout(() => {
             initTenantMap();

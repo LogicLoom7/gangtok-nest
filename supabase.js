@@ -26,7 +26,7 @@ let filterBalcony = false;
 let filterWifi = false;
 
 // Favorites Database
-let favorites = JSON.parse(localStorage.getItem('gn_favorites') || '[]');
+let favorites = [];
 let filterFavorites = false;
 
 document.addEventListener('DOMContentLoaded', async () => {

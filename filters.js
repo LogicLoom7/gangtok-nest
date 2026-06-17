@@ -34,15 +34,40 @@ function handleLocalityChange(value) {
 }
 
 // Favorites toggle state action
-function toggleFavorite(roomId) {
+async function toggleFavorite(roomId) {
+    if (typeof currentUserProfile === 'undefined' || !currentUserProfile) {
+        alert("Please log in to save properties.");
+        return;
+    }
+
     const idx = favorites.indexOf(roomId);
     if (idx === -1) {
         favorites.push(roomId);
+        filterTenantRooms(); // Optimistic update
+        
+        try {
+            await supabaseClient.from('tenant_favorites').insert({
+                tenant_id: currentUserProfile.id,
+                room_id: roomId
+            });
+        } catch (err) {
+            console.error('Failed to save favorite:', err);
+        }
     } else {
         favorites.splice(idx, 1);
+        filterTenantRooms(); // Optimistic update
+        
+        try {
+            await supabaseClient.from('tenant_favorites')
+                .delete()
+                .match({
+                    tenant_id: currentUserProfile.id,
+                    room_id: roomId
+                });
+        } catch (err) {
+            console.error('Failed to remove favorite:', err);
+        }
     }
-    localStorage.setItem('gn_favorites', JSON.stringify(favorites));
-    filterTenantRooms();
 }
 
 // Locality fast filter control (Retained for backwards compatibility)
