@@ -2,10 +2,10 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #2563eb;          /* Deep Blue 600 */
-    --color-secondary: #3b82f6;        /* Bright Blue 500 */
-    --color-accent: #0ea5e9;           /* Sky Blue 500 */
-    --color-surface: #f8fafc;          /* Soft slate background */
+    --color-primary: #059669;          /* Emerald 600 */
+    --color-secondary: #0f766e;        /* Teal 700 */
+    --color-accent: #10b981;           /* Emerald 500 */
+    --color-surface: #f8fafc;          /* Clean slate background */
     --color-surface-container: #f1f5f9;/* Light slate container */
     --color-surface-lowest: #ffffff;   /* Pure white card bg */
     --color-surface-high: #e2e8f0;     /* Darker slate container */
@@ -19,10 +19,10 @@
 }
 
 html.dark {
-    --color-primary: #3b82f6;          /* Bright Blue 500 */
-    --color-secondary: #60a5fa;        /* Light Blue 400 */
-    --color-accent: #38bdf8;           /* Sky Blue 400 */
-    --color-surface: #0f172a;          /* Dark slate bg */
+    --color-primary: #10b981;          /* Emerald 500 */
+    --color-secondary: #34d399;        /* Emerald 400 */
+    --color-accent: #059669;           /* Emerald 600 */
+    --color-surface: #0f172a;          /* Deep slate bg */
     --color-surface-container: #1e293b;/* Slate-800 container */
     --color-surface-lowest: #1e293b;   /* Slate-800 card */
     --color-surface-high: #334155;     /* Slate-700 */
