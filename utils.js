@@ -2,25 +2,22 @@
 // DARK MODE ENGINE
 // ==========================================
 function applyThemeForRole(role) {
-    if (role === 'landlord') {
-        const savedTheme = localStorage.getItem('theme');
-        const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (isDark) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-        document.querySelectorAll('.theme-icon').forEach(icon => {
-            icon.innerText = isDark ? 'light_mode' : 'dark_mode';
-        });
+    const savedTheme = localStorage.getItem('theme');
+    const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    if (isDark) {
+        document.documentElement.classList.add('dark');
     } else {
         document.documentElement.classList.remove('dark');
-        document.querySelectorAll('.theme-icon').forEach(icon => icon.innerText = 'dark_mode');
     }
+    
+    document.querySelectorAll('.theme-icon').forEach(icon => {
+        icon.innerText = isDark ? 'light_mode' : 'dark_mode';
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme will be applied by auth.js once role is determined
+    applyThemeForRole('anonymous');
 });
 
 function toggleDarkMode() {

@@ -2,9 +2,9 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #059669;          /* Emerald 600 */
-    --color-secondary: #0f766e;        /* Teal 700 */
-    --color-accent: #10b981;           /* Emerald 500 */
+    --color-primary: #4f46e5;          /* Indigo 600 */
+    --color-secondary: #4338ca;        /* Deep Royal 700 */
+    --color-accent: #6366f1;           /* Electric Indigo 500 */
     --color-surface: #f8fafc;          /* Clean slate background */
     --color-surface-container: #f1f5f9;/* Light slate container */
     --color-surface-lowest: #ffffff;   /* Pure white card bg */
@@ -19,16 +19,16 @@
 }
 
 html.dark {
-    --color-primary: #10b981;          /* Emerald 500 */
-    --color-secondary: #34d399;        /* Emerald 400 */
-    --color-accent: #059669;           /* Emerald 600 */
-    --color-surface: #0f172a;          /* Deep slate bg */
-    --color-surface-container: #1e293b;/* Slate-800 container */
+    --color-primary: #6366f1;          /* Electric Indigo 500 */
+    --color-secondary: #818cf8;        /* Soft Indigo 400 */
+    --color-accent: #4f46e5;           /* Deep Indigo 600 */
+    --color-surface: #0b0f19;          /* Very Deep Midnight */
+    --color-surface-container: #111827;/* Gray 900 container */
     --color-surface-lowest: #1e293b;   /* Slate-800 card */
-    --color-surface-high: #334155;     /* Slate-700 */
+    --color-surface-high: #374151;     /* Gray 700 */
     --color-on-surface: #f8fafc;       /* Light slate-50 text */
     --color-on-surface-variant: #cbd5e1;/* Slate-300 */
-    --color-outline-variant: #334155;  /* Slate-700 border */
+    --color-outline-variant: #374151;  /* Gray 700 border */
     
     --color-success: #22c55e;          /* Green 500 */
     --color-warning: #f59e0b;          /* Amber 500 */
