@@ -2,37 +2,37 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #5D3FD3;          /* Vibrant Purple */
-    --color-secondary: #7158E2;        /* Light Purple */
-    --color-accent: #00D0E4;           /* Bright Cyan matching reference */
+    --color-primary: #2563eb;          /* Deep Blue 600 */
+    --color-secondary: #3b82f6;        /* Bright Blue 500 */
+    --color-accent: #0ea5e9;           /* Sky Blue 500 */
     --color-surface: #f8fafc;          /* Soft slate background */
     --color-surface-container: #f1f5f9;/* Light slate container */
     --color-surface-lowest: #ffffff;   /* Pure white card bg */
-    --color-surface-high: #e2e8f0;
-    --color-on-surface: #0f172a;       /* Slate-900 text */
-    --color-on-surface-variant: #475569;/* Slate-600 */
+    --color-surface-high: #e2e8f0;     /* Darker slate container */
+    --color-on-surface: #0f172a;       /* Slate-900 text (high contrast) */
+    --color-on-surface-variant: #475569;/* Slate-600 text */
     --color-outline-variant: #cbd5e1;  /* Slate-300 border */
     
-    --color-success: #22c55e;
-    --color-warning: #f59e0b;
-    --color-danger: #ef4444;
+    --color-success: #16a34a;          /* Green 600 */
+    --color-warning: #d97706;          /* Amber 600 */
+    --color-danger: #dc2626;           /* Red 600 */
 }
 
 html.dark {
-    --color-primary: #7158E2;          /* Bright Purple */
-    --color-secondary: #8E78FF;        /* Light Violet */
-    --color-accent: #00e0ff;           /* Brighter Cyan for Dark Mode */
+    --color-primary: #3b82f6;          /* Bright Blue 500 */
+    --color-secondary: #60a5fa;        /* Light Blue 400 */
+    --color-accent: #38bdf8;           /* Sky Blue 400 */
     --color-surface: #0f172a;          /* Dark slate bg */
     --color-surface-container: #1e293b;/* Slate-800 container */
     --color-surface-lowest: #1e293b;   /* Slate-800 card */
-    --color-surface-high: #334155;
+    --color-surface-high: #334155;     /* Slate-700 */
     --color-on-surface: #f8fafc;       /* Light slate-50 text */
     --color-on-surface-variant: #cbd5e1;/* Slate-300 */
     --color-outline-variant: #334155;  /* Slate-700 border */
     
-    --color-success: #22c55e;
-    --color-warning: #f59e0b;
-    --color-danger: #ef4444;
+    --color-success: #22c55e;          /* Green 500 */
+    --color-warning: #f59e0b;          /* Amber 500 */
+    --color-danger: #ef4444;           /* Red 500 */
 }
 
 /* ============================================== */
