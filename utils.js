@@ -4,20 +4,8 @@
 function applyThemeForRole(role) {
     if (role === 'tenant' || role === 'anonymous') {
         document.documentElement.classList.add('dark');
-        document.querySelectorAll('.theme-icon').forEach(icon => icon.innerText = 'light_mode');
     } else {
-        const savedTheme = localStorage.getItem('theme');
-        const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-        
-        if (isDark) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-        
-        document.querySelectorAll('.theme-icon').forEach(icon => {
-            icon.innerText = isDark ? 'light_mode' : 'dark_mode';
-        });
+        document.documentElement.classList.remove('dark');
     }
 }
 
