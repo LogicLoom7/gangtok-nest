@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html class="dark" lang="en">
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>GangtokNest | Smart Rentals for Students & Professionals</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -37,7 +37,7 @@
                         "danger": "var(--color-danger)",
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "full": "9999px" },
-                    fontFamily: { "headline": ["Manrope", "sans-serif"], "body": ["Inter", "sans-serif"] }
+                    fontFamily: { "headline": ["Plus Jakarta Sans", "sans-serif"], "body": ["Plus Jakarta Sans", "sans-serif"] }
                 }
             }
         }
@@ -46,7 +46,7 @@
 </head>
 <body class="bg-surface text-on-surface font-body selection:bg-secondary/20 mountain-pattern min-h-screen transition-colors duration-300">
 
-    <header id="header-landing" class="fixed top-0 w-full z-50 bg-white shadow-sm transition-all duration-300">
+    <header id="header-landing" class="fixed top-0 w-full z-50 bg-[#051424]/80 backdrop-blur-md shadow-sm transition-all duration-300">
         <div class="flex justify-between items-center px-4 md:px-10 py-3 w-full max-w-[1400px] mx-auto">
             <!-- Logo & Subtitle -->
             <div class="flex items-center gap-2 md:gap-3 cursor-pointer">
@@ -274,7 +274,7 @@
                             </div>
                         </div>
 
-                        <button onclick="signOut()" class="bg-accent text-black hover:bg-[#00e0ff] px-5 py-2.5 rounded-full font-black text-xs uppercase tracking-wider transition-all shadow-[0_0_20px_rgba(0,201,224,0.3)]">
+                        <button onclick="signOut()" class="bg-primary text-black hover:bg-secondary px-6 py-2 rounded-lg font-bold text-sm uppercase tracking-wider transition-all">
                             Logout
                         </button>
                     </div>
@@ -284,18 +284,18 @@
                 <div class="flex-grow overflow-y-auto pb-12 bg-surface">
 
                     <!-- Dark Split Hero Section with Background Image -->
-                    <div class="w-full relative bg-[#111518]">
+                    <div class="w-full relative bg-[#051424]">
                         <!-- Background Image with Overlay -->
                         <div class="absolute inset-0 w-full h-[85%] z-0">
-                            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600&h=800&fit=crop" class="w-full h-full object-cover opacity-30">
-                            <div class="absolute inset-0 bg-gradient-to-b from-[#111518]/60 via-[#111518]/80 to-[#111518]"></div>
+                            <img src="./assets/gangtok-hero.png" class="w-full h-full object-cover opacity-60">
+                            <div class="absolute inset-0 bg-gradient-to-b from-[#051424]/60 via-[#051424]/80 to-[#051424]"></div>
                         </div>
                         
                         <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-40 text-center">
                             <!-- Centered Headline -->
                             <div class="max-w-3xl mx-auto text-white">
                                 <h1 class="text-4xl md:text-6xl font-black font-headline leading-tight tracking-tight mb-4 drop-shadow-xl">
-                                    Find Your <span class="text-accent drop-shadow-[0_0_15px_rgba(0,208,228,0.5)]">Perfect Room</span>
+                                    Find Your <span class="text-primary drop-shadow-[0_0_15px_rgba(0,206,209,0.5)]">Perfect Room</span>
                                 </h1>
                                 <p class="text-sm md:text-base font-medium text-white/80 mb-8 max-w-xl mx-auto">
                                     Search across Gangtok's best verified properties, hostels, and independent houses tailored for students and professionals.
@@ -305,12 +305,12 @@
 
                         <!-- Massive Search Card (Pulled up higher) -->
                         <div class="w-full max-w-6xl mx-auto px-4 relative z-20 -mt-36 mb-16">
-                            <div class="w-full bg-white rounded-[2rem] p-6 sm:p-8 shadow-[0_20px_50px_-10px_rgba(0,0,0,0.15)] border border-outline-variant/30 flex flex-col gap-6 relative overflow-visible">
+                            <div class="w-full bg-[#0a1f33] rounded-lg p-6 sm:p-8 shadow-2xl border border-outline-variant flex flex-col gap-6 relative overflow-visible">
                                 
                                 <!-- Keyword Input Row -->
                                 <div class="relative w-full">
-                                    <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-on-surface-variant/40 text-2xl pointer-events-none">search</span>
-                                    <input id="tn-search" onkeypress="if(event.key === 'Enter') executeCentralSearch()" class="w-full pl-14 pr-10 py-4 bg-surface border border-outline-variant/40 rounded-2xl text-base font-bold text-on-surface placeholder:text-on-surface-variant/50 focus:border-accent focus:ring-4 focus:ring-accent/10 transition-all outline-none shadow-inner" placeholder="Search keywords, e.g., 'Sunny 2BHK near university'">
+                                    <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-primary text-[22px] pointer-events-none">search</span>
+                                    <input id="tn-search" onkeypress="if(event.key === 'Enter') executeCentralSearch()" class="w-full pl-14 pr-10 py-4 bg-surface border border-outline-variant rounded-lg text-base font-bold text-on-surface placeholder:text-on-surface-variant/50 focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none shadow-inner" placeholder="Search keywords, e.g., 'Sunny 2BHK near university'">
                                 </div>
 
                                 <!-- Primary Selects Row -->
@@ -320,7 +320,8 @@
                                     <div class="relative">
                                         <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 ml-1">Location</label>
                                         <div class="relative w-full">
-                                            <select id="tn-locality-select" class="w-full pl-4 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 transition-colors">
+                                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none text-[18px]">location_on</span>
+                                            <select id="tn-locality-select" class="w-full pl-10 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-colors">
                                                 <option value="">All Areas</option>
                                                 <option value="Tadong">Tadong</option>
                                                 <option value="Deorali">Deorali</option>
@@ -339,7 +340,8 @@
                                     <div class="relative">
                                         <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 ml-1">Property Type</label>
                                         <div class="relative w-full">
-                                            <select id="tn-property-type-select" class="w-full pl-4 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 transition-colors">
+                                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none text-[18px]">apartment</span>
+                                            <select id="tn-property-type-select" class="w-full pl-10 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-colors">
                                                 <option value="">All Types</option>
                                                 <option value="Flat / Apartment">Flat / Apartment</option>
                                                 <option value="Hostel / PG">Hostel / PG</option>
@@ -353,7 +355,8 @@
                                     <div class="relative">
                                         <label class="block text-[10px] font-black uppercase tracking-widest text-on-surface-variant mb-2 ml-1">Room Type</label>
                                         <div class="relative w-full">
-                                            <select id="tn-bhk-select" class="w-full pl-4 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 transition-colors">
+                                            <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-primary pointer-events-none text-[18px]">bed</span>
+                                            <select id="tn-bhk-select" class="w-full pl-10 pr-10 py-3.5 bg-surface border border-outline-variant/30 rounded-xl text-sm font-bold text-on-surface outline-none appearance-none cursor-pointer hover:border-outline-variant/60 focus:border-primary focus:ring-2 focus:ring-primary/10 transition-colors">
                                                 <option value="0">Any Room</option>
                                                 <option value="1rk">1 RK</option>
                                                 <option value="1">1 BHK</option>
@@ -370,15 +373,15 @@
                                     <div class="relative w-full pb-2">
                                         <div class="flex justify-between items-center mb-2 ml-1">
                                             <label class="text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Max Rent</label>
-                                            <span id="tn-price-label" class="text-[10px] font-black text-accent bg-accent/10 px-2 py-0.5 rounded border border-accent/20">₹50K</span>
+                                            <span id="tn-price-label" class="text-[10px] font-black text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">₹50K</span>
                                         </div>
-                                        <input id="tn-price" type="range" min="3000" max="50000" step="500" value="50000" oninput="document.getElementById('tn-price-label').innerText = '₹' + (this.value >= 1000 ? (this.value/1000).toFixed(1).replace('.0','') + 'K' : this.value);" class="w-full accent-accent h-2 bg-surface-container rounded-full appearance-none cursor-pointer">
+                                        <input id="tn-price" type="range" min="3000" max="50000" step="500" value="50000" oninput="document.getElementById('tn-price-label').innerText = '₹' + (this.value >= 1000 ? (this.value/1000).toFixed(1).replace('.0','') + 'K' : this.value);" class="w-full accent-primary h-2 bg-surface-container rounded-full appearance-none cursor-pointer">
                                     </div>
 
                                     <!-- Massive Search Button (Aligned) -->
                                     <div>
-                                        <button onclick="executeCentralSearch()" class="w-full py-3.5 bg-accent text-white hover:bg-[#00e0ff] rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-[0_5px_15px_rgba(0,201,224,0.3)] hover:-translate-y-1 flex items-center justify-center gap-2">
-                                            <span class="material-symbols-outlined text-lg">manage_search</span> Search
+                                        <button onclick="executeCentralSearch()" class="w-full py-3.5 bg-primary text-white hover:bg-secondary rounded-xl font-black text-sm uppercase tracking-widest transition-all shadow-[0_5px_15px_rgba(93,63,211,0.3)] hover:-translate-y-1 flex items-center justify-center gap-2">
+                                            <span class="material-symbols-outlined text-lg">search</span> SEARCH
                                         </button>
                                     </div>
                                 </div>
@@ -390,12 +393,12 @@
                                     <div>
                                         <h4 class="text-[10px] font-black text-on-surface uppercase tracking-widest mb-3">Suitable For</h4>
                                         <div class="flex flex-wrap gap-2">
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-students"> Students</label>
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-professionals"> Professionals</label>
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-family"> Family</label>
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-male"> Male Bachelors</label>
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-female"> Female Bachelors</label>
-                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-anyone"> Anyone</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-students"> <span class="material-symbols-outlined text-[14px]">school</span> Students</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-professionals"> <span class="material-symbols-outlined text-[14px]">work</span> Professionals</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-family"> <span class="material-symbols-outlined text-[14px]">family_restroom</span> Family</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-male"> <span class="material-symbols-outlined text-[14px]">person</span> Male Bachelors</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-bachelor-female"> <span class="material-symbols-outlined text-[14px]">person_3</span> Female Bachelors</label>
+                                            <label class="suitable-chip"><input type="checkbox" id="tn-filter-suitable-anyone"> <span class="material-symbols-outlined text-[14px]">group</span> Anyone</label>
                                         </div>
                                     </div>
 
@@ -403,14 +406,77 @@
                                     <div>
                                         <h4 class="text-[10px] font-black text-on-surface uppercase tracking-widest mb-3">Must-Have Amenities</h4>
                                         <div class="flex flex-wrap gap-2">
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-sunlight"> Sunlight</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-parking"> Parking</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-balcony"> Balcony</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-furnished"> Furnished</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-wifi"> WiFi</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-lift"> Lift Available</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-gated"> Gated Property</label>
-                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-water"> 24/7 Water</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-sunlight"> <span class="material-symbols-outlined text-[14px]">light_mode</span> Sunlight</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-parking"> <span class="material-symbols-outlined text-[14px]">directions_car</span> Parking</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-balcony"> <span class="material-symbols-outlined text-[14px]">balcony</span> Balcony</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-furnished"> <span class="material-symbols-outlined text-[14px]">chair</span> Furnished</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-wifi"> <span class="material-symbols-outlined text-[14px]">wifi</span> WiFi</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-lift"> <span class="material-symbols-outlined text-[14px]">elevator</span> Lift Available</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-gated"> <span class="material-symbols-outlined text-[14px]">security</span> Gated Property</label>
+                                            <label class="amenity-card !p-2 !px-3 !text-[11px]"><input type="checkbox" id="tn-filter-amenity-water"> <span class="material-symbols-outlined text-[14px]">water_drop</span> 24/7 Water</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recently Added / Featured Content -->
+                    <div class="w-full max-w-6xl mx-auto mb-20 px-4 mt-8">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <span class="text-accent font-bold text-sm tracking-widest uppercase mb-1 block">Featured</span>
+                                <h2 class="text-3xl font-black text-on-surface">Recently Added</h2>
+                            </div>
+                            <a href="#" class="text-primary hover:text-secondary text-sm font-bold uppercase tracking-wider flex items-center gap-1">
+                                View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                            </a>
+                        </div>
+                        
+                        <!-- Asymmetrical Grid -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[500px]">
+                            <!-- Primary Card (Left 2 cols) -->
+                            <div class="lg:col-span-2 relative rounded-lg overflow-hidden group cursor-pointer h-[400px] lg:h-full shadow-2xl border border-outline-variant">
+                                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
+                                
+                                <div class="absolute top-6 left-6 flex gap-2">
+                                    <span class="bg-[#25D366] text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md">Verified</span>
+                                    <span class="bg-primary text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md">New</span>
+                                </div>
+                                
+                                <div class="absolute bottom-6 left-6 right-6 flex flex-col md:flex-row justify-between md:items-end gap-2">
+                                    <div>
+                                        <h3 class="text-white font-black text-2xl mb-1">Premium 2BHK with Balcony</h3>
+                                        <p class="text-on-surface-variant flex items-center gap-1 text-sm font-medium"><span class="material-symbols-outlined text-[16px]">location_on</span> Development Area, Gangtok</p>
+                                    </div>
+                                    <div class="md:text-right">
+                                        <div class="text-primary font-black text-2xl">₹18,500<span class="text-sm text-on-surface-variant font-medium">/mo</span></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Secondary Cards (Right 1 col) -->
+                            <div class="flex flex-col gap-6 h-full">
+                                <div class="flex-1 relative rounded-lg overflow-hidden group cursor-pointer shadow-xl border border-outline-variant">
+                                    <img src="https://images.unsplash.com/photo-1502672260266-1c1de2d96674?w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
+                                    <div class="absolute bottom-4 left-4 right-4">
+                                        <h3 class="text-white font-bold text-lg leading-tight mb-1">Cozy 1RK Studio</h3>
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-on-surface-variant text-[11px]"><span class="material-symbols-outlined text-[12px] align-middle">location_on</span> Tadong</p>
+                                            <div class="text-primary font-black text-sm">₹8,000<span class="text-[10px] text-on-surface-variant font-normal">/mo</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-1 relative rounded-lg overflow-hidden group cursor-pointer shadow-xl border border-outline-variant">
+                                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
+                                    <div class="absolute bottom-4 left-4 right-4">
+                                        <h3 class="text-white font-bold text-lg leading-tight mb-1">Modern Student Hostel</h3>
+                                        <div class="flex justify-between items-center">
+                                            <p class="text-on-surface-variant text-[11px]"><span class="material-symbols-outlined text-[12px] align-middle">location_on</span> Sichey</p>
+                                            <div class="text-primary font-black text-sm">₹6,500<span class="text-[10px] text-on-surface-variant font-normal">/mo</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -569,6 +635,29 @@
                 <span class="material-symbols-outlined text-sm">map</span>
                 <span id="mobile-toggle-text">Show Map</span>
             </button>
+            
+            <!-- Footer -->
+            <footer class="w-full bg-surface-container-high border-t border-outline-variant py-10 mt-12">
+                <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1">holiday_village</span>
+                        <span class="text-2xl font-black font-headline text-white tracking-tighter">GangtokNest</span>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6 text-sm font-bold text-on-surface-variant">
+                        <a href="#" class="hover:text-primary transition-colors">About Us</a>
+                        <a href="#" class="hover:text-primary transition-colors">Contact</a>
+                        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
+                        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
+                    </div>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-lg">share</span></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-lg">mail</span></a>
+                    </div>
+                </div>
+                <div class="text-center text-on-surface-variant text-xs mt-8">
+                    &copy; 2026 GangtokNest. All rights reserved.
+                </div>
+            </footer>
         </div>
     </div><!-- /view-landing -->
 
@@ -1814,14 +1903,17 @@
                 </div>
 
                 <!-- Contact & Actions -->
-                <div class="pt-4 border-t border-outline-variant/20 flex flex-col sm:flex-row gap-3">
-                    <a id="rd-call-btn" href="#" class="flex-1 bg-surface border border-outline-variant/50 hover:bg-primary/10 hover:border-primary/50 text-primary font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-sm text-sm uppercase tracking-wider">
+                <div class="pt-4 border-t border-outline-variant/20 flex flex-col sm:flex-row flex-wrap gap-3">
+                    <button id="rd-visit-btn" class="flex-1 bg-primary hover:bg-primary/90 text-white font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-[0_4px_14px_rgba(var(--primary),0.4)] text-sm uppercase tracking-wider min-w-[120px]">
+                        <span class="material-symbols-outlined text-[18px]">calendar_month</span> Schedule Visit
+                    </button>
+                    <a id="rd-call-btn" href="#" class="flex-1 bg-surface border border-outline-variant/50 hover:bg-primary/10 hover:border-primary/50 text-primary font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-sm text-sm uppercase tracking-wider min-w-[100px]">
                         <span class="material-symbols-outlined text-[18px]">phone</span> Call
                     </a>
-                    <a id="rd-wa-btn" target="_blank" href="#" class="flex-1 bg-[#25D366] hover:bg-[#1DA851] text-white font-black py-3 rounded-xl shadow-[0_4px_14px_rgba(37,211,102,0.4)] transition-all flex justify-center items-center gap-2 text-sm uppercase tracking-wider">
+                    <a id="rd-wa-btn" target="_blank" href="#" class="flex-1 bg-[#25D366] hover:bg-[#1DA851] text-white font-black py-3 rounded-xl shadow-[0_4px_14px_rgba(37,211,102,0.4)] transition-all flex justify-center items-center gap-2 text-sm uppercase tracking-wider min-w-[120px]">
                         <span class="material-symbols-outlined text-[18px]">forum</span> WhatsApp
                     </a>
-                    <button id="rd-map-btn" class="flex-1 bg-surface-container hover:bg-surface-container-high text-on-surface font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-sm text-sm uppercase tracking-wider">
+                    <button id="rd-map-btn" class="flex-1 bg-surface-container hover:bg-surface-container-high text-on-surface font-black py-3 rounded-xl transition-all flex justify-center items-center gap-2 shadow-sm text-sm uppercase tracking-wider min-w-[100px]">
                         <span class="material-symbols-outlined text-[18px]">map</span> Map
                     </button>
                 </div>

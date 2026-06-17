@@ -522,7 +522,7 @@ function filterTenantRooms(explicitSearch = false) {
             const isFeatured = idx <= 2 && !filterFavorites;
 
             return `
-            <article id="room-${r.id}" class="bg-white rounded-2xl overflow-hidden border border-outline-variant/30 flex flex-col group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 relative cursor-pointer" onclick="viewRoomDetails('${r.id}')">
+            <article id="room-${r.id}" class="bg-surface-lowest rounded-lg overflow-hidden border border-outline-variant flex flex-col group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 relative cursor-pointer" onclick="viewRoomDetails('${r.id}')">
                 
                 <!-- Media Container -->
                 <div class="h-44 relative overflow-hidden bg-surface-container">
@@ -537,7 +537,7 @@ function filterTenantRooms(explicitSearch = false) {
                     <!-- Featured Tag -->
                     ${isFeatured ? `
                     <div class="absolute top-3 left-3">
-                        <span class="bg-gradient-to-r from-primary via-indigo-600 to-accent text-white px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest shadow-md flex items-center gap-1">
+                        <span class="bg-primary text-black px-2.5 py-1 rounded-lg text-[8px] font-black uppercase tracking-widest shadow-md flex items-center gap-1">
                             <span class="material-symbols-outlined text-[10px] font-filled" style="font-variation-settings: 'FILL' 1">grade</span>Featured
                         </span>
                     </div>
@@ -551,7 +551,7 @@ function filterTenantRooms(explicitSearch = false) {
 
                     <!-- Favorite action -->
                     <div class="absolute top-3 right-3 flex flex-col gap-2">
-                        <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="bg-white/85 backdrop-blur-sm text-error hover:scale-115 active:scale-95 w-8.5 h-8.5 rounded-full flex items-center justify-center shadow-lg transition-all" title="${isFav ? 'Remove from Saved' : 'Save Property'}">
+                        <button onclick="toggleFavorite('${r.id}'); event.stopPropagation();" class="bg-surface-container/85 backdrop-blur-sm text-error hover:scale-115 active:scale-95 w-8.5 h-8.5 rounded-lg flex items-center justify-center shadow-lg transition-all border border-outline-variant" title="${isFav ? 'Remove from Saved' : 'Save Property'}">
                             <span class="material-symbols-outlined ${isFav ? 'font-filled' : ''} text-base">${isFav ? 'favorite' : 'favorite_border'}</span>
                         </button>
                     </div>
@@ -693,7 +693,7 @@ function renderFeaturedRooms() {
         const rankLabel = ['#1 Pick', '#2 Pick', '#3 Pick'];
 
         return `
-        <div class="bg-surface-container rounded-2xl overflow-hidden shadow-md border border-outline-variant/20 group hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 cursor-pointer" onclick="closeFeaturedModal(); setTimeout(() => viewRoomDetails('${r.id}'), 350);">
+        <div class="bg-surface-lowest rounded-lg overflow-hidden shadow-2xl border border-outline-variant group hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200 cursor-pointer" onclick="closeFeaturedModal(); setTimeout(() => viewRoomDetails('${r.id}'), 350);">
             <div class="relative h-44 overflow-hidden">
                 ${escapedImage && escapedImage !== 'null' && escapedImage !== 'undefined' && escapedImage !== ''
                     ? `<img src="${escapedImage}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="${escapedTitle}">`
@@ -918,6 +918,11 @@ function viewRoomDetails(roomId) {
     document.getElementById('rd-map-btn').onclick = () => {
         closeRoomDetails();
         setTimeout(() => focusMapOnRoom(r.id), 350);
+    };
+    
+    document.getElementById('rd-visit-btn').onclick = () => {
+        closeRoomDetails();
+        setTimeout(() => requestVisit(r.id), 350);
     };
     
     const isPaused = localStorage.getItem('gn_paused_' + r.id) === 'true';
