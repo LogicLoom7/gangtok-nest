@@ -37,7 +37,7 @@
                         "danger": "var(--color-danger)",
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "full": "9999px" },
-                    fontFamily: { "headline": ["Plus Jakarta Sans", "sans-serif"], "body": ["Plus Jakarta Sans", "sans-serif"] }
+                    fontFamily: { "headline": ["Inter", "sans-serif"], "body": ["Inter", "sans-serif"] }
                 }
             }
         }
@@ -421,69 +421,6 @@
                         </div>
                     </div>
 
-                    <!-- Recently Added / Featured Content -->
-                    <div class="w-full max-w-6xl mx-auto mb-20 px-4 mt-8">
-                        <div class="flex justify-between items-end mb-8">
-                            <div>
-                                <span class="text-accent font-bold text-sm tracking-widest uppercase mb-1 block">Featured</span>
-                                <h2 class="text-3xl font-black text-on-surface">Recently Added</h2>
-                            </div>
-                            <a href="#" class="text-primary hover:text-secondary text-sm font-bold uppercase tracking-wider flex items-center gap-1">
-                                View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                            </a>
-                        </div>
-                        
-                        <!-- Asymmetrical Grid -->
-                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[500px]">
-                            <!-- Primary Card (Left 2 cols) -->
-                            <div class="lg:col-span-2 relative rounded-lg overflow-hidden group cursor-pointer h-[400px] lg:h-full shadow-2xl border border-outline-variant">
-                                <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
-                                
-                                <div class="absolute top-6 left-6 flex gap-2">
-                                    <span class="bg-[#25D366] text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md">Verified</span>
-                                    <span class="bg-primary text-white px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md">New</span>
-                                </div>
-                                
-                                <div class="absolute bottom-6 left-6 right-6 flex flex-col md:flex-row justify-between md:items-end gap-2">
-                                    <div>
-                                        <h3 class="text-white font-black text-2xl mb-1">Premium 2BHK with Balcony</h3>
-                                        <p class="text-on-surface-variant flex items-center gap-1 text-sm font-medium"><span class="material-symbols-outlined text-[16px]">location_on</span> Development Area, Gangtok</p>
-                                    </div>
-                                    <div class="md:text-right">
-                                        <div class="text-primary font-black text-2xl">₹18,500<span class="text-sm text-on-surface-variant font-medium">/mo</span></div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Secondary Cards (Right 1 col) -->
-                            <div class="flex flex-col gap-6 h-full">
-                                <div class="flex-1 relative rounded-lg overflow-hidden group cursor-pointer shadow-xl border border-outline-variant">
-                                    <img src="https://images.unsplash.com/photo-1502672260266-1c1de2d96674?w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
-                                    <div class="absolute bottom-4 left-4 right-4">
-                                        <h3 class="text-white font-bold text-lg leading-tight mb-1">Cozy 1RK Studio</h3>
-                                        <div class="flex justify-between items-center">
-                                            <p class="text-on-surface-variant text-[11px]"><span class="material-symbols-outlined text-[12px] align-middle">location_on</span> Tadong</p>
-                                            <div class="text-primary font-black text-sm">₹8,000<span class="text-[10px] text-on-surface-variant font-normal">/mo</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex-1 relative rounded-lg overflow-hidden group cursor-pointer shadow-xl border border-outline-variant">
-                                    <img src="https://images.unsplash.com/photo-1554995207-c18c203602cb?w=600&q=80" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-[#051424] via-[#051424]/40 to-transparent opacity-90"></div>
-                                    <div class="absolute bottom-4 left-4 right-4">
-                                        <h3 class="text-white font-bold text-lg leading-tight mb-1">Modern Student Hostel</h3>
-                                        <div class="flex justify-between items-center">
-                                            <p class="text-on-surface-variant text-[11px]"><span class="material-symbols-outlined text-[12px] align-middle">location_on</span> Sichey</p>
-                                            <div class="text-primary font-black text-sm">₹6,500<span class="text-[10px] text-on-surface-variant font-normal">/mo</span></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Why Choose GangtokNest -->
                     <div class="w-full max-w-5xl mx-auto mb-20 px-4 mt-8">
                         <div class="text-center mb-10">
@@ -635,29 +572,6 @@
                 <span class="material-symbols-outlined text-sm">map</span>
                 <span id="mobile-toggle-text">Show Map</span>
             </button>
-            
-            <!-- Footer -->
-            <footer class="w-full bg-surface-container-high border-t border-outline-variant py-10 mt-12">
-                <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1">holiday_village</span>
-                        <span class="text-2xl font-black font-headline text-white tracking-tighter">GangtokNest</span>
-                    </div>
-                    <div class="flex flex-wrap justify-center gap-6 text-sm font-bold text-on-surface-variant">
-                        <a href="#" class="hover:text-primary transition-colors">About Us</a>
-                        <a href="#" class="hover:text-primary transition-colors">Contact</a>
-                        <a href="#" class="hover:text-primary transition-colors">Privacy Policy</a>
-                        <a href="#" class="hover:text-primary transition-colors">Terms of Service</a>
-                    </div>
-                    <div class="flex gap-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-lg">share</span></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:bg-primary hover:text-white transition-all"><span class="material-symbols-outlined text-lg">mail</span></a>
-                    </div>
-                </div>
-                <div class="text-center text-on-surface-variant text-xs mt-8">
-                    &copy; 2026 GangtokNest. All rights reserved.
-                </div>
-            </footer>
         </div>
     </div><!-- /view-landing -->
 
