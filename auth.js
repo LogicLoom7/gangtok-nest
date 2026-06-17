@@ -178,12 +178,18 @@ async function handleAuthAction() {
     }
 }
 
-async function signOut() { await supabaseClient.auth.signOut(); location.reload(); }
+async function signOut() { 
+    if (typeof applyThemeForRole === 'function') applyThemeForRole('tenant');
+    await supabaseClient.auth.signOut(); 
+    location.reload(); 
+}
 
 function loadDashboard(user) {
     currentUserProfile = user;
     const role = user.user_metadata?.role || authRole;
     closeAuthModal();
+    
+    if (typeof applyThemeForRole === 'function') applyThemeForRole(role);
     
     document.getElementById('header-landing').classList.add('hidden');
     document.getElementById('header-dashboard').classList.remove('hidden');

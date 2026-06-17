@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('view-landlord').classList.add('hidden');
         document.getElementById('landing-anonymous').classList.remove('hidden');
         document.getElementById('landing-tenant').classList.add('hidden');
+        if (typeof applyThemeForRole === 'function') applyThemeForRole('tenant');
     }
 });
 
