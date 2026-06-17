@@ -46,10 +46,19 @@ async function toggleFavorite(roomId) {
         filterTenantRooms(); // Optimistic update
         
         try {
-            await supabaseClient.from('tenant_favorites').insert({
+            const { error } = await supabaseClient.from('tenant_favorites').insert({
                 tenant_id: currentUserProfile.id,
                 room_id: roomId
             });
+            if (error) {
+                console.error('Supabase Error:', error);
+                alert("Database Error: " + error.message + "\n\n(Note: If this is an RLS policy error, please make sure you disabled Row Level Security for the tenant_favorites table or added an INSERT policy in Supabase!)");
+                
+                // Revert optimistic update on failure
+                const revertIdx = favorites.indexOf(roomId);
+                if (revertIdx > -1) favorites.splice(revertIdx, 1);
+                filterTenantRooms();
+            }
         } catch (err) {
             console.error('Failed to save favorite:', err);
         }
@@ -58,12 +67,20 @@ async function toggleFavorite(roomId) {
         filterTenantRooms(); // Optimistic update
         
         try {
-            await supabaseClient.from('tenant_favorites')
+            const { error } = await supabaseClient.from('tenant_favorites')
                 .delete()
                 .match({
                     tenant_id: currentUserProfile.id,
                     room_id: roomId
                 });
+            if (error) {
+                console.error('Supabase Error:', error);
+                alert("Database Error: " + error.message);
+                
+                // Revert optimistic update on failure
+                favorites.push(roomId);
+                filterTenantRooms();
+            }
         } catch (err) {
             console.error('Failed to remove favorite:', err);
         }
