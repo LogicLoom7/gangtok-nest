@@ -201,6 +201,8 @@ function loadDashboard(user) {
         document.getElementById('view-landing').classList.add('hidden');
         document.getElementById('view-landlord').classList.remove('hidden');
         if (headerLogout) headerLogout.classList.add('hidden');
+        const dmBtn = document.getElementById('btn-global-dark-mode');
+        if (dmBtn) dmBtn.style.display = '';
         
         // Populate Profile
         const pName = document.getElementById('ll-profile-name');
@@ -223,6 +225,8 @@ function loadDashboard(user) {
         const tNameEl = document.getElementById('tenantName');
         if (tNameEl) tNameEl.innerText = user.user_metadata?.full_name || 'Renter';
         if (headerLogout) headerLogout.classList.remove('hidden');
+        const dmBtn = document.getElementById('btn-global-dark-mode');
+        if (dmBtn) dmBtn.style.display = 'none';
         fetchTenantData();
     }
 }
