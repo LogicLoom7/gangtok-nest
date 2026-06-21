@@ -2,37 +2,33 @@
 /* DYNAMIC CSS VARIABLES FOR THEME SWITCHING */
 /* ============================================== */
 :root {
-    --color-primary: #4f46e5;          /* Indigo 600 */
-    --color-secondary: #4338ca;        /* Deep Royal 700 */
-    --color-accent: #6366f1;           /* Electric Indigo 500 */
-    --color-surface: #f8fafc;          /* Clean slate background */
-    --color-surface-container: #f1f5f9;/* Light slate container */
-    --color-surface-lowest: #ffffff;   /* Pure white card bg */
-    --color-surface-high: #e2e8f0;     /* Darker slate container */
-    --color-on-surface: #0f172a;       /* Slate-900 text (high contrast) */
-    --color-on-surface-variant: #475569;/* Slate-600 text */
-    --color-outline-variant: #cbd5e1;  /* Slate-300 border */
+    --color-primary: #4F46E5;          /* Electric Indigo */
+    --color-secondary: #312E81;        /* Deep Indigo */
+    --color-accent: #6366F1;           /* Bright Blurple */
+    --color-surface: #F8FAFC;          /* Ultra-light slate */
+    --color-surface-container: #F1F5F9;
+    --color-surface-lowest: #FFFFFF;   /* Pure White */
+    --color-surface-high: #E2E8F0;
+    --color-on-surface: #0B1120;       /* Midnight Blue */
+    --color-on-surface-variant: #475569;
+    --color-outline-variant: #E2E8F0;  
     
-    --color-success: #16a34a;          /* Green 600 */
-    --color-warning: #d97706;          /* Amber 600 */
-    --color-danger: #dc2626;           /* Red 600 */
+    --color-success: #10B981;          /* Emerald */
+    --color-warning: #F59E0B;          /* Amber */
+    --color-danger: #EF4444;           /* Rose */
 }
 
 html.dark {
-    --color-primary: #6366f1;          /* Electric Indigo 500 */
-    --color-secondary: #818cf8;        /* Soft Indigo 400 */
-    --color-accent: #4f46e5;           /* Deep Indigo 600 */
-    --color-surface: #0b0f19;          /* Very Deep Midnight */
-    --color-surface-container: #111827;/* Gray 900 container */
-    --color-surface-lowest: #1e293b;   /* Slate-800 card */
-    --color-surface-high: #374151;     /* Gray 700 */
-    --color-on-surface: #f8fafc;       /* Light slate-50 text */
-    --color-on-surface-variant: #cbd5e1;/* Slate-300 */
-    --color-outline-variant: #374151;  /* Gray 700 border */
-    
-    --color-success: #22c55e;          /* Green 500 */
-    --color-warning: #f59e0b;          /* Amber 500 */
-    --color-danger: #ef4444;           /* Red 500 */
+    --color-primary: #6366F1;
+    --color-secondary: #4F46E5;
+    --color-accent: #818CF8;
+    --color-surface: #0B1120;          /* Deep Midnight */
+    --color-surface-container: #0F172A;
+    --color-surface-lowest: #1E293B;   
+    --color-surface-high: #334155;
+    --color-on-surface: #F8FAFC;
+    --color-on-surface-variant: #94A3B8;
+    --color-outline-variant: #1E293B;
 }
 
 /* ============================================== */
@@ -54,13 +50,13 @@ select::-ms-expand {
 /* Dynamic Glass based on CSS Variables */
 .premium-glass { 
     background: color-mix(in srgb, var(--color-surface) 85%, transparent); 
-    backdrop-filter: blur(16px); 
-    -webkit-backdrop-filter: blur(16px); 
+    backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.05); 
+    -webkit-backdrop-filter: blur(24px) saturate(180%); border-bottom: 1px solid rgba(255,255,255,0.05); 
 }
 
 .hero-gradient { background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%); opacity: 0.1; }
 .cta-gradient { background: linear-gradient(135deg, var(--color-warning) 0%, var(--color-danger) 100%); }
-.soft-elevation { box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.15); }
+.soft-elevation { box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); }
 .segmented-control-active { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); }
 
 /* Premium Mesh Gradient for Hero Background */
@@ -596,8 +592,7 @@ html.dark .ll-menu-item.active {
     position: relative;
 }
 
-.tn-property-card:hover {
-    transform: translateY(-4px);
+.tn-property-card:hover { transform: translateY(-4px) scale(1.01);
     box-shadow: 0 20px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(79,70,229,0.08);
 }
 

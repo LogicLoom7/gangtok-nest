@@ -5,7 +5,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>GangtokNest | Smart Rentals for Students & Professionals</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
@@ -37,7 +37,7 @@
                         "danger": "var(--color-danger)",
                     },
                     borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1rem", "full": "9999px" },
-                    fontFamily: { "headline": ["Inter", "sans-serif"], "body": ["Inter", "sans-serif"] }
+                    fontFamily: { "headline": ["Outfit", "sans-serif"], "body": ["Inter", "sans-serif"] }
                 }
             }
         }
@@ -46,7 +46,7 @@
 </head>
 <body class="bg-surface text-on-surface font-body selection:bg-secondary/20 mountain-pattern min-h-screen transition-colors duration-300">
 
-    <header id="header-landing" class="fixed top-0 w-full z-50 bg-[#051424]/80 backdrop-blur-md shadow-sm transition-all duration-300">
+    <header id="header-landing" class="fixed top-0 w-full z-50 bg-[#0B1120]/80 backdrop-blur-md shadow-sm transition-all duration-300">
         <div class="flex justify-between items-center px-4 md:px-10 py-3 w-full max-w-[1400px] mx-auto">
             <!-- Logo & Subtitle -->
             <div class="flex items-center gap-2 md:gap-3 cursor-pointer">
@@ -111,10 +111,10 @@
             <!-- Hero Section -->
             <section class="relative w-full min-h-[85vh] flex items-center justify-start overflow-hidden pt-20">
                 <!-- Background Image & Gradients -->
-                <div class="absolute inset-0 z-0 bg-[#0b0f19]">
-                    <img src="./assets/mountain-monastery-bg.jpg" alt="Gangtok Monastery" class="w-full h-full object-cover opacity-70">
-                    <div class="absolute inset-0 bg-gradient-to-r from-[#0b0f19]/90 via-[#0b0f19]/60 to-transparent"></div>
-                    <div class="absolute inset-0 bg-gradient-to-t from-[#0b0f19] via-transparent to-transparent"></div>
+                <div class="absolute inset-0 z-0 bg-[#0B1120]">
+                    <img src="./assets/gangtok_scenery_hero.png" alt="Panoramic Gangtok Scenery" class="w-full h-full object-cover opacity-70">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#0B1120]/90 via-[#0B1120]/60 to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent"></div>
                 </div>
 
                 <div class="relative z-10 w-full max-w-7xl mx-auto px-6 md:px-12 space-y-6">
@@ -238,7 +238,7 @@
             <div id="tn-listings-panel" class="w-full flex flex-col mobile-panel-visible">
 
                 <!-- Premium Header for Tenant Dashboard (Dark Theme) -->
-                <div class="flex-shrink-0 w-full px-6 py-4 bg-[#111518] text-white flex items-center justify-between relative z-40">
+                <div class="flex-shrink-0 w-full px-6 py-4 bg-[#0F172A] text-white flex items-center justify-between relative z-40">
                     <div class="flex items-center gap-2.5">
                         <div class="w-10 h-10 rounded-xl bg-accent flex items-center justify-center text-white shadow-[0_0_15px_rgba(0,201,224,0.4)]">
                             <span class="material-symbols-outlined text-xl">terrain</span>
@@ -281,7 +281,7 @@
                 <div class="flex-grow overflow-y-auto pb-12 bg-surface">
 
                     <!-- Midnight Indigo Hero Section -->
-                    <div class="w-full relative bg-gradient-to-br from-[#1e1b4b] via-[#3730a3] to-[#1e3a8a]">
+                    <div class="w-full relative bg-gradient-to-br from-[#0B1120] via-[#1E293B] to-[#0F172A]">
                         <!-- Overlay for smooth transition to surface -->
                         <div class="absolute inset-0 w-full h-[100%] z-0">
                             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-surface"></div>
@@ -301,7 +301,7 @@
 
                         <!-- Massive Search Card (Pulled up higher) -->
                         <div class="w-full max-w-6xl mx-auto px-4 relative z-20 -mt-36 mb-16">
-                            <div class="w-full bg-[#1e293b]/95 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/10 flex flex-col gap-6 relative overflow-visible">
+                            <div class="w-full bg-[#1E293B]/95 backdrop-blur-xl rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/10 flex flex-col gap-6 relative overflow-visible">
                                 
                                 <!-- Keyword Input Row -->
                                 <div class="relative w-full">
@@ -426,7 +426,7 @@
                         
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <!-- Feature 1 -->
-                            <div class="bg-[#111518] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+                            <div class="bg-[#0F172A] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
                                 <div class="w-16 h-16 rounded-full bg-surface/5 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,201,224,0.15)] group-hover:shadow-[0_0_30px_rgba(0,201,224,0.3)] transition-all">
                                     <span class="material-symbols-outlined text-success text-3xl">verified</span>
                                 </div>
@@ -436,7 +436,7 @@
                                 </p>
                             </div>
                             <!-- Feature 2 -->
-                            <div class="bg-[#111518] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+                            <div class="bg-[#0F172A] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
                                 <div class="w-16 h-16 rounded-full bg-surface/5 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,201,224,0.15)] group-hover:shadow-[0_0_30px_rgba(0,201,224,0.3)] transition-all">
                                     <span class="material-symbols-outlined text-accent text-3xl">handshake</span>
                                 </div>
@@ -446,7 +446,7 @@
                                 </p>
                             </div>
                             <!-- Feature 3 -->
-                            <div class="bg-[#111518] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
+                            <div class="bg-[#0F172A] rounded-[2rem] p-8 flex flex-col items-center text-center transform hover:-translate-y-2 transition-all duration-300 shadow-xl group">
                                 <div class="w-16 h-16 rounded-full bg-surface/5 flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(0,201,224,0.15)] group-hover:shadow-[0_0_30px_rgba(0,201,224,0.3)] transition-all">
                                     <span class="material-symbols-outlined text-warning text-3xl">school</span>
                                 </div>
